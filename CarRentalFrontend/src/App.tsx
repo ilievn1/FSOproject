@@ -1,3 +1,4 @@
+import Catalogue from './components/Catalogue.tsx';
 import ContactForm from './components/ContactForm.tsx';
 import DividedTopModels from './components/DividedTopModels.tsx';
 import Footer from './components/Footer.tsx';
@@ -11,6 +12,7 @@ const App = () => {
       <Hero />
       <DividedTopModels />
       <ContactForm />
+      <Catalogue />
       <Footer />
     </>
   )

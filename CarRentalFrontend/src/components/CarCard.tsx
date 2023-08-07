@@ -1,9 +1,9 @@
 const CarCard = () => {
     return (
-        <div className="card card-side md:card card-compact lg:card-normal bg-base-100 shadow-xl">
-            <figure className="max-md:w-1/2"><img src="https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg" alt="Shoes" /></figure>
-            <div className="card-body max-md:w-1/2">
-                <h2 className="card-title">Brand/Model (Diesel/Petrol/Hybrid)</h2>
+        <div className="card xs:card-side md:card card-compact lg:card-normal bg-base-100 shadow-xl">
+            <figure className="xs:max-md:w-1/2"><img src="https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg" alt="Shoes" /></figure>
+            <div className="card-body sm:max-md:w-1/2">
+                <h2 className="card-title">Brand/Model (Diesel)</h2>
                 <ul>
                     <li><strong>Engine:</strong> Litres cylinders</li>
                     <li><strong>Transmission:</strong> Manual/Automatic</li>
