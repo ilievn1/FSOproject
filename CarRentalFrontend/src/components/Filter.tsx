@@ -2,9 +2,10 @@
 
 import { useRef, useState } from "react";
 import classNames from "classnames";
+import { Car } from "../types";
 
 type Props = {
-    items: object[];
+    items: Array<Car>;
     value: string;
     onChange(val: string): void;
 };
@@ -42,12 +43,12 @@ const Filter = (props: Props) => {
                                 key={index}
                                 tabIndex={index + 1}
                                 onClick={() => {
-                                    onChange(item);
+                                    onChange(item.brand);
                                     setOpen(false);
                                 }}
                                 className="border-b border-b-base-content/10 w-full"
                             >
-                                <button>{item}</button>
+                                <button>{item.brand}</button>
                             </li>
                         );
                     })}
