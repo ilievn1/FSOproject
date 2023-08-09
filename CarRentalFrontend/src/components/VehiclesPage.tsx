@@ -5,6 +5,7 @@ import { data } from "../mockData/cars";
 import Pagination from "./Pagination";
 import { Car } from "../types";
 import usePagination from "../hooks/usePagination";
+import Parallax from "./Parallax";
 
 // TODO: possibly extract Pagination to separate custom hook
 
@@ -77,6 +78,7 @@ const VehiclesPage = () => {
 
     return (
         <div>
+            <Parallax/>
             <Filter items={filteredCars} value={filterQuery} onChange={setFilterQuery} />
             <Catalogue displayedCars={displayedCars} />
             <Pagination

@@ -12,7 +12,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 4
+
 }, {
     id: 2,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -25,7 +27,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 2
+
 }, {
     id: 3,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -38,7 +42,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 4
+
 }, {
     id: 4,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -51,7 +57,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 2
+
 }
     , {
     id: 5,
@@ -65,7 +73,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 4
+
 }, {
     id: 6,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -78,7 +88,8 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 4
 }, {
     id: 7,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -91,7 +102,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 1
+
 }, {
     id: 8,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -104,7 +117,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 1
+
 }, {
     id: 9,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -117,7 +132,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 1
+
 },
 {
     id: 10,
@@ -131,7 +148,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 1
+
 },
 {
     id: 11,
@@ -145,7 +164,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 1
+
 },
 {
     id: 12,
@@ -159,7 +180,8 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 4
 },
 {
     id: 13,
@@ -173,9 +195,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 5
 },
-// Entry 2
 {
     id: 14,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -188,7 +210,8 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 2
 },
 {
     id: 15,
@@ -196,14 +219,15 @@ export const data: Array<Car> = [{
     brand: 'Subaru',
     model: 'Outback',
     year: 2020,
-    transmittion: 'CVT',
+    transmittion: 'Manual',
     fuel: 'Hybrid',
-
     engine: '2.5 Litre 4 cylinder',
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 3
+
 }, {
     id: 16,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -216,7 +240,8 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 5
 },
 {
     id: 17,
@@ -230,7 +255,8 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 1
 }, {
     id: 18,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -243,7 +269,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 2
+
 }, {
     id: 19,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -256,7 +284,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 3
+
 }, {
     id: 20,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -269,7 +299,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 4
+
 }, {
     id: 21,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -282,7 +314,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 5
+
 }, {
     id: 22,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -295,7 +329,9 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 2
+
 }, {
     id: 23,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -308,5 +344,6 @@ export const data: Array<Car> = [{
     fuelEfficiencyCity: 4,
     fuelEfficiencyHighway: 4,
     seats: 4,
-    rentPrice: 50
+    rentPrice: 50,
+    rating: 1
 },]
