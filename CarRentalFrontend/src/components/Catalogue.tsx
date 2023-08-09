@@ -1,45 +1,22 @@
-import classNames from 'classnames';
+import { Car } from '../types';
 import CarCard from './CarCard';
 
 type Props = {
-    displayedCars: Array<{
-        id: number;
-        carImage: string;
-        brand: string;
-        model: string;
-        year: number;
-        transmittion: string;
-        engine: string;
-    }>;
+    displayedCars: Array<Car>;
 };
 
 const Catalogue = ({ displayedCars }: Props) => {
 
     return (
         <>
-            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-                {displayedCars.map((item, index) => {
-                    const gridRowClass = classNames({
-                        'flex flex-col w-full mb-4': true,
-                        // Add margin-bottom to cards except the last in a row
-                        ' md:mb-0': (index + 1) % 3 !== 0 ? true : false 
-                    });
-                    return (
-                        <div key={item.id} className={gridRowClass}>
-                            <CarCard />
-                        </div>
-                    )
-                })}
-            </div> */}
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 grid-rows-3">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-11 md:place-items-center md:gap-y-8">
                 {displayedCars.map((item, index) => (
-                    <div key={item.id}>
-                        <CarCard />
-                        {(index + 1) % 3 !== 0 && <div className="divider md:divider-vertical">O</div>}
-                    </div>  
+                    <>
+                        <div key={item.id} className='col-span-3'><CarCard car={item} /></div>
+                        <div key={index*100} className={`divider md:divider-horizontal ${(index + 1) % 3 !== 0 ? 'md:col-span-1' : 'md:hidden'}`}></div>
+                    </>
                 ))}
-                </div>
-                
+            </div>
         </>
     )
 }

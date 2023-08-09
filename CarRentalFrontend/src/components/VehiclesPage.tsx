@@ -1,24 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Catalogue from "./Catalogue"
 import Filter from "./Filter"
 import { data } from "../mockData/cars";
 import Pagination from "./Pagination";
+import { Car } from "../types";
 
 // TODO: possibly extract Pagination to separate custom hook
 
 const VehiclesPage = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [filterQuery, setFilterQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [filterQuery, setFilterQuery] = useState<string>('');
+    const [filteredCars, setFilteredCars] = useState<Array<Car>>(data);
     
-    // Pagination consts
     const carsPerPage = 9;
-    const lastPage = Math.ceil(data.length / carsPerPage);
+    useEffect(() => {
+        setFilteredCars(data.filter(c => c.brand.toLowerCase().includes(filterQuery.toLowerCase())))
+        setCurrentPage(1)
+    }, [filterQuery])
+
 
     const indexOfLastItem = currentPage * carsPerPage;
     const indexOfFirstItem = indexOfLastItem - carsPerPage;
 
-    const filteredCars = filterQuery === '' ? data : data.filter(c => c.brand === filterQuery)
+    // refers to cars on current page    
     const displayedCars = filteredCars.slice(indexOfFirstItem, indexOfLastItem);
+    const lastPage = Math.ceil(filteredCars.length / carsPerPage);
+
 
     // Event handlers
     const paginate = (pageNumber: number) => {
@@ -38,10 +45,10 @@ const VehiclesPage = () => {
     };
     return (
         <div>
-            <Filter items={data} value={filterQuery} onChange={setFilterQuery} />
-            <Catalogue displayedCars={displayedCars}/>
+            <Filter items={filteredCars} value={filterQuery} onChange={setFilterQuery} />
+            <Catalogue displayedCars={displayedCars} />
             <Pagination
-                totalCars={data.length}
+                totalCars={filteredCars.length}
                 carsPerPage={carsPerPage}
                 currentPage={currentPage}
                 changePage={paginate}

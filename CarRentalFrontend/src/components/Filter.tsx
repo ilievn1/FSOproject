@@ -11,10 +11,12 @@ type Props = {
 };
 
 const Filter = (props: Props) => {
-
     const { items, value, onChange } = props;
     const ref = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState(false);
+    const brands = items.map(c => c.brand)
+    const distinctBrands = [... new Set(brands)];
+
     return (
         <div
             className={classNames({
@@ -29,26 +31,24 @@ const Filter = (props: Props) => {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="Search brand..."
-                tabIndex={0}
             />
-            <div className="dropdown-content bg-base-200 top-14 max-h-96 overflow-auto flex-col rounded-md">
+            <div className="dropdown-content bg-base-200 top-14 max-h-96 overflow-auto flex-col rounded-md z-10">
                 <ul
                     className="menu menu-compact "
                     // width of menu to match width of parent
                     style={{ width: ref.current?.clientWidth }}
                 >
-                    {items.map((item, index) => {
+                    {distinctBrands.map((item) => {
                         return (
                             <li
-                                key={index}
-                                tabIndex={index + 1}
+                                key={item}
                                 onClick={() => {
-                                    onChange(item.brand);
+                                    onChange(item);
                                     setOpen(false);
                                 }}
                                 className="border-b border-b-base-content/10 w-full"
                             >
-                                <button>{item.brand}</button>
+                                <button>{item}</button>
                             </li>
                         );
                     })}

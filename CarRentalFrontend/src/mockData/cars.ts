@@ -7,15 +7,25 @@ export const data: Array<Car> = [{
     model: 'Camry',
     year: 2023,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 2,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
     brand: 'Honda',
-    model: 'Civic',
+    model: 'Accord',
     year: 2018,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 3,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -23,7 +33,12 @@ export const data: Array<Car> = [{
     model: 'LFA',
     year: 2016,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 4,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -31,7 +46,12 @@ export const data: Array<Car> = [{
     model: 'Escalade',
     year: 2017,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }
     , {
     id: 5,
@@ -40,39 +60,64 @@ export const data: Array<Car> = [{
     model: 'Golf',
     year: 2003,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 6,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
     brand: 'Honda',
-    model: 'Civic',
-    year: 2018,
+    model: 'NSX',
+    year: 2003,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 7,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
     brand: 'Honda',
-    model: 'Civic',
-    year: 2018,
+    model: 'CR-V',
+    year: 2020,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 8,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
     brand: 'Honda',
-    model: 'Civic',
-    year: 2018,
+    model: 'Jazz',
+    year: 2017,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 9,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
     brand: 'Honda',
     model: 'Civic',
-    year: 2018,
+    year: 2019,
     transmittion: 'Manual',
-    engine: '2.4 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 },
 {
     id: 10,
@@ -81,7 +126,12 @@ export const data: Array<Car> = [{
     model: 'Corolla',
     year: 2020,
     transmittion: 'Automatic',
-    engine: '1.8 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '1.8 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 },
 {
     id: 11,
@@ -89,8 +139,13 @@ export const data: Array<Car> = [{
     brand: 'Ford',
     model: 'Mustang',
     year: 2021,
+    fuel: 'Petrol',
     transmittion: 'Automatic',
-    engine: '5.0 Litre V8'
+    engine: '5.0 Litre V8',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 },
 {
     id: 12,
@@ -99,7 +154,12 @@ export const data: Array<Car> = [{
     model: 'Camaro',
     year: 2019,
     transmittion: 'Manual',
-    engine: '6.2 Litre V8'
+    fuel: 'Petrol',
+    engine: '6.2 Litre V8',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 },
 {
     id: 13,
@@ -108,7 +168,12 @@ export const data: Array<Car> = [{
     model: 'Altima',
     year: 2019,
     transmittion: 'Automatic',
-    engine: '2.5 Litre 4 cylinder'
+    fuel: 'Petrol',
+    engine: '2.5 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 },
 // Entry 2
 {
@@ -118,9 +183,13 @@ export const data: Array<Car> = [{
     model: 'CX-5',
     year: 2022,
     transmittion: 'Automatic',
-    engine: '2.5 Litre 4 cylinder'
+    fuel: 'Hybrid',
+    engine: '2.5 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 },
-// Entry 3
 {
     id: 15,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -128,15 +197,26 @@ export const data: Array<Car> = [{
     model: 'Outback',
     year: 2020,
     transmittion: 'CVT',
-    engine: '2.5 Litre 4 cylinder'
+    fuel: 'Hybrid',
+
+    engine: '2.5 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 }, {
     id: 16,
     carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
-    brand: 'Volkswagen',
+    brand: 'Volkswaggen',
     model: 'Golf',
     year: 2021,
     transmittion: 'Automatic',
-    engine: '1.4 Litre 4 cylinder'
+    fuel: 'Diesel',
+    engine: '1.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
 },
 {
     id: 17,
@@ -145,5 +225,88 @@ export const data: Array<Car> = [{
     model: '3 Series',
     year: 2022,
     transmittion: 'Automatic',
-    engine: '2.0 Litre 4 cylinder'
-}]
+    fuel: 'Petrol',
+    engine: '2.0 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
+}, {
+    id: 18,
+    carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
+    brand: 'Honda',
+    model: 'Airwave',
+    year: 2000,
+    transmittion: 'Manual',
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
+}, {
+    id: 19,
+    carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
+    brand: 'Honda',
+    model: 'AN600',
+    year: 2000,
+    transmittion: 'Manual',
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
+}, {
+    id: 20,
+    carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
+    brand: 'Honda',
+    model: 'Concerto',
+    year: 2000,
+    transmittion: 'Manual',
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
+}, {
+    id: 21,
+    carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
+    brand: 'Honda',
+    model: 'Airwave',
+    year: 2000,
+    transmittion: 'Manual',
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
+}, {
+    id: 22,
+    carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
+    brand: 'Honda',
+    model: 'S2000',
+    year: 2000,
+    transmittion: 'Manual',
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
+}, {
+    id: 23,
+    carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
+    brand: 'Honda',
+    model: 'Prelude',
+    year: 2000,
+    transmittion: 'Manual',
+    fuel: 'Diesel',
+    engine: '2.4 Litre 4 cylinder',
+    fuelEfficiencyCity: 4,
+    fuelEfficiencyHighway: 4,
+    seats: 4,
+    rentPrice: 50
+},]
