@@ -12,7 +12,7 @@ type Props = {
 
 const Filter = (props: Props) => {
     const { items, value, onChange } = props;
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLInputElement>(null);
     const [open, setOpen] = useState(false);
     const brands = items.map(c => c.brand)
     const distinctBrands = [... new Set(brands)];
@@ -20,17 +20,18 @@ const Filter = (props: Props) => {
     return (
         <div
             className={classNames({
-                "dropdown w-full": true,
+                "dropdown w-full flex place-content-center": true,
                 "dropdown-open": open,
             })}
-            ref={ref}
         >
             <input
                 type="text"
-                className="input input-bordered w-full"
+                className="input input-bordered w-1/3"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="Search brand..."
+                ref={ref}
+
             />
             <div className="dropdown-content bg-base-200 top-14 max-h-96 overflow-auto flex-col rounded-md z-10">
                 <ul
