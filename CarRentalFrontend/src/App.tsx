@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import VehiclesPage from './components/VehiclesPage.tsx';
 import MainPage from './components/MainPage.tsx';
+import ReservationPage from './components/ReservationPage.tsx';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/vehicles" element={<VehiclesPage />} />
+          <Route path="/reservations" element={<ReservationPage />} />
         </Routes>
         <Footer />
       </Router>
