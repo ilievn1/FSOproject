@@ -26,7 +26,7 @@ const Filter = (props: Props) => {
         >
             <input
                 type="text"
-                className="input input-bordered w-1/3"
+                className="input input-bordered w-full md:w-1/3"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="Search brand..."

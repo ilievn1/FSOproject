@@ -13,7 +13,7 @@ const Catalogue = ({ displayedCars }: Props) => {
                 {displayedCars.map((item, index) => (
                     <>
                         <div key={item.id} className='col-span-3'><CarCard car={item} /></div>
-                        <div key={index*100} className={`divider md:divider-horizontal ${(index + 1) % 3 !== 0 ? 'md:col-span-1' : 'md:hidden'}`}></div>
+                        <div key={index} className={`divider md:divider-horizontal ${(index + 1) % 3 !== 0 ? 'md:col-span-1' : 'md:hidden'}`}></div>
                     </>
                 ))}
             </div>
