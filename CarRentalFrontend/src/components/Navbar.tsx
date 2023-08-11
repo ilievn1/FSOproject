@@ -1,30 +1,16 @@
 import { Link } from "react-router-dom"
 
 const Navbar = () => {
+
+    // Component library keeps menu focused all the time, even if clicked, handleMenuClick
+    const handleMenuClick = () => {
+        const elem = document.activeElement;
+        if (elem && elem instanceof HTMLElement) {
+            elem.blur();
+        }
+    };
+
     return (
-        // <div className="navbar bg-base-100">
-        //     <div className="flex-1">
-        //         <a className="btn btn-ghost normal-case text-xl">Rent-A-Car</a>
-        //     </div>
-        //     <div className="flex-none">
-        //         <ul className="menu menu-horizontal px-1">
-        //             <li><Link to="/vehicles">Vehicles</Link></li>
-        //             <li><Link to="/register">Register</Link></li>
-        //             <li><Link to="/login">Login</Link></li>
-        //         </ul>
-        //         <div className="dropdown dropdown-end">
-        //             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-        //                 <div className="w-8 rounded-full">
-        //                     <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-        //                 </div>
-        //             </label>
-        //             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box">
-        //                 <li><Link to="/profile">Profile</Link></li>
-        //                 <li>Logout</li>
-        //             </ul>
-        //         </div>
-        //     </div>
-        // </div>
         <div className="drawer">
             <input id="mobile-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col">
@@ -51,8 +37,9 @@ const Navbar = () => {
                                     <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                                 </div>
                             </label>
-                            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box">
+                            <ul tabIndex={0} onClick={handleMenuClick} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box">
                                 <li><Link to="/profile">Profile</Link></li>
+                                <li><Link to="/reservations">Reservations</Link></li>
                                 <li>Logout</li>
                             </ul>
                         </div>
@@ -67,6 +54,7 @@ const Navbar = () => {
                     <li><Link to="/register">Register</Link></li>
                     <li><Link to="/login">Login</Link></li>
                     <li><Link to="/profile">Profile</Link></li>
+                    <li><Link to="/reservations">Reservations</Link></li>
                     <li>Logout</li>
                 </ul>
 

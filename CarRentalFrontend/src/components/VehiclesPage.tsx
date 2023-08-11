@@ -6,6 +6,9 @@ import Pagination from "./Pagination";
 import { Car } from "../types";
 import usePagination from "../hooks/usePagination";
 import Parallax from "./Parallax";
+import { useLocation } from 'react-router-dom';
+
+import Breadcrumbs from "./Breadcrumbs";
 
 // TODO: possibly extract Pagination to separate custom hook
 
@@ -13,7 +16,7 @@ import Parallax from "./Parallax";
 //     const [currentPage, setCurrentPage] = useState<number>(1);
 //     const [filterQuery, setFilterQuery] = useState<string>('');
 //     const [filteredCars, setFilteredCars] = useState<Array<Car>>(data);
-    
+
 //     const carsPerPage = 9;
 //     useEffect(() => {
 //         setFilteredCars(data.filter(c => c.brand.toLowerCase().includes(filterQuery.toLowerCase())))
@@ -61,24 +64,28 @@ import Parallax from "./Parallax";
 //     )
 // }
 const VehiclesPage = () => {
+
+    const { pathname } = useLocation();
+
     const [filterQuery, setFilterQuery] = useState<string>('');
     const [filteredCars, setFilteredCars] = useState<Array<Car>>(data);
-    
+
     const carsPerPage = 9;
     const { currentPage, paginate, previousPage, nextPage, getCurrentPageCars } = usePagination(filteredCars, carsPerPage)
-    
+
     useEffect(() => {
         setFilteredCars(data.filter(c => c.brand.toLowerCase().includes(filterQuery.toLowerCase())))
         paginate(1)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterQuery])
 
     // refers to cars on current page    
     const displayedCars = getCurrentPageCars()
 
     return (
-        <div>
-            <Parallax/>
+        <>
+            <Breadcrumbs currentRoute={pathname} />
+            <Parallax />
             <Filter items={filteredCars} value={filterQuery} onChange={setFilterQuery} />
             <Catalogue displayedCars={displayedCars} />
             <Pagination
@@ -89,7 +96,7 @@ const VehiclesPage = () => {
                 previousPage={previousPage}
                 nextPage={nextPage}
             />
-        </div>
+        </>
     )
 }
 

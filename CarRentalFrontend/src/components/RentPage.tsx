@@ -1,9 +1,13 @@
+import { useLocation } from 'react-router-dom';
+import Breadcrumbs from "./Breadcrumbs";
 
 
 const RentPage = () => {
+    const { pathname } = useLocation();
     return (
-
         <>
+            <Breadcrumbs currentRoute={pathname} />
+
             <ul className="steps">
                 <li className="step step-primary">Register</li>
                 <li className="step step-primary">Choose plan</li>
