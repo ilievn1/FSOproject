@@ -22,3 +22,19 @@ export interface Car {
     rentPrice: number;
     rating: Rating;
 }
+
+export type LoginFormValues = {
+    username: string;
+    password: string;
+};
+export type RegisterFormValues = {
+    name: string;
+    username: string;
+    password: string;
+};
+export type ContactFormValues = {
+    name: string;
+    phone: string;
+    email: string;
+    inquery: string;
+};

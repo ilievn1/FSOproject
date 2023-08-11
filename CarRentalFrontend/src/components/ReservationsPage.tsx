@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 
 // TODO: as many collapse elements as active reservations User.reservations.map(...)
 // TODO: remove feedback btn when feedback for corresponding reservation ID has been given 
+// TODO: remove individual reservation when feedback is given or delete button is clicked
 const ReservationsPage = () => {
     const { pathname } = useLocation();
     const [modalOpen, setModalOpen] = useState<boolean>(false);

@@ -12,6 +12,9 @@
 |      | 2    | Add additional typing, add rating similar to Patientor (course part 9), add parallax hero to replace original hero |
 |      | 2    | spend unjustified amount of time on fighting with CSS grid just to configure parallax, barely looks presentable |
 | 10.8 | 2    | Look into some tutorials on grid/flexbox, get the parallax to look presentable |
+|      | 2    | Enable user to view reserved cars, no login required yet |
+| 11.8 | 6    | Responsive nav (smaller devices), add breadcrumbs(handle any route), user reg/login, routing for new pages|
+|      | 2    | Plow thru react-form-hook docs to adapt forms to use the library|
 |       | 5    | testaus |
 | 4.3.  | 1    | koodin refaktorointia |
 | 5.3.  | 2    | arkkitehtuurikuvauksen tarkennus |

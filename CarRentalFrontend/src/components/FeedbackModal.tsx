@@ -9,7 +9,7 @@ interface Props {
 
 const FeedbackModal = ({ isOpened, closeModal }: Props) => {
     const [rating, setRating] = useState(1);
-    const comment = useRef<HTMLTextAreaElement>(null);
+    const commentRef = useRef<HTMLTextAreaElement>(null);
 
     return (
         <>
@@ -32,7 +32,7 @@ const FeedbackModal = ({ isOpened, closeModal }: Props) => {
                     </div>
                     <div className="mb-4 form-control w-full">
                         <label className="label label-text">Additional comment</label>
-                        <textarea ref={comment} className="textarea textarea-bordered h-24"></textarea>
+                        <textarea ref={commentRef} className="textarea textarea-bordered h-24"></textarea>
                     </div>
                     <button type="submit" className="btn btn-success w-full">Submit</button>
                 </form>

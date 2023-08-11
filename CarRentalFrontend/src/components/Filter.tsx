@@ -12,7 +12,7 @@ type Props = {
 
 const Filter = (props: Props) => {
     const { items, value, onChange } = props;
-    const ref = useRef<HTMLInputElement>(null);
+    const filterRef = useRef<HTMLInputElement>(null);
     const [open, setOpen] = useState(false);
     const brands = items.map(c => c.brand)
     const distinctBrands = [... new Set(brands)];
@@ -30,14 +30,14 @@ const Filter = (props: Props) => {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="Search brand..."
-                ref={ref}
+                ref={filterRef}
 
             />
             <div className="dropdown-content bg-base-200 top-14 max-h-96 overflow-auto flex-col rounded-md z-10">
                 <ul
                     className="menu menu-compact "
                     // width of menu to match width of parent
-                    style={{ width: ref.current?.clientWidth }}
+                    style={{ width: filterRef.current?.clientWidth }}
                 >
                     {distinctBrands.map((item) => {
                         return (

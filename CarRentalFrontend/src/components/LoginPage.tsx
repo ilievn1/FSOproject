@@ -1,21 +1,23 @@
-import { SyntheticEvent, useState } from "react"
 import { Link } from "react-router-dom"
 import { useLocation } from 'react-router-dom';
 import Breadcrumbs from "./Breadcrumbs";
-
-
-// TODO: Add dynamic error tooltips/labels beneath the field for wrong password, taken/wrong username
+import { useForm } from "react-hook-form";
+import { LoginFormValues } from "../types";
+import { useEffect } from "react";
 
 const LoginPage = () => {
     const { pathname } = useLocation();
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    useEffect(() => {
+        register("username", { required: true, maxLength: 10 })
+        register("password", { required: true, minLength: 5 })
+    }, [register]);
 
-    const handleLogin = (event: SyntheticEvent) => {
-        event.preventDefault()
-        console.log('logging in with', username, password)
-    }
+    // "handleSubmit" validates inputs automatically
+    const handleLogin = handleSubmit(data => {
+        console.log(data)
+    });
 
     return (
         <>
@@ -24,11 +26,25 @@ const LoginPage = () => {
                 <form onSubmit={handleLogin} className="p-6 shadow-xl rounded-lg basis-2/3">
                     <div className="mb-4 form-control w-full">
                         <label className="block text-sm font-medium mb-1">Username</label>
-                        <input className="input input-bordered w-full" />
+                        {/* register input into useForm hook by invoking the "register" function */}
+                        <input
+                            aria-invalid={errors.username ? "true" : "false"}
+                            className="input input-bordered w-full" />
+                        {errors.username
+                            ? (<span role="alert">This field is required and of maximum length 10 characters</span>)
+                            : null
+                        }
                     </div>
                     <div className="mb-4 form-control w-full">
                         <label className="block text-sm font-medium mb-1">Password</label>
-                        <input type="password" className="input input-bordered w-full" />
+                        <input
+                            type="password"
+                            aria-invalid={errors.password ? "true" : "false"}
+                            className="input input-bordered w-full" />
+                        {errors.password
+                            ? (<span role="alert">This field is required and of minimum length 5 characters</span>)
+                            : null
+                        }
                     </div>
                     <div className="mb-4">
                         <i>Don't have an account? </i>

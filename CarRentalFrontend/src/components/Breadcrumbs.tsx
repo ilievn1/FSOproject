@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 
 const Breadcrumbs = ({ route }: { route: string }) => {
     const formatedRoute = route.split('/').filter(Boolean).map(s => s.charAt(0).toUpperCase() + s.slice(1));
-    console.log(formatedRoute)
   return (
       <div className="text-sm breadcrumbs">
           <ul>
