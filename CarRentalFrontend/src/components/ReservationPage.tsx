@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import FeedbackModal from './FeedbackModal.tsx';
-
+import { Link } from 'react-router-dom';
+// TODO: as many collapse elements as active reservations User.reservations.map(...)
+// TODO: remove feedback btn when feedback for corresponding reservation ID has been given 
 const ReservationPage = () => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -11,17 +13,23 @@ const ReservationPage = () => {
     };
     return (
         <>
-            <div className="collapse collapse-arrow bg-base-200">
-                <input type="radio" />
+            <div className="text-sm breadcrumbs">
+                <ul>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/reservations">Reservations</Link></li>
+                </ul>
+            </div>
+            <div className="collapse bg-base-200">
+                <input type="checkbox" />
                 <div className="collapse-title text-xl font-medium">
-                    Click to open this one and close others
+                    Click me to show/hide content
                 </div>
                 <div className="collapse-content">
                     <p>hello</p>
+                    <button className='btn' onClick={() => openModal()}>Feedback</button>
                 </div>
             </div>
             <FeedbackModal isOpened={modalOpen} closeModal={closeModal} />
-            <button className='btn' onClick={() => openModal()}>open</button>
         </>
     )
 }
