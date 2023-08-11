@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import FeedbackModal from './FeedbackModal.tsx';
-import Breadcrumbs from './Breadcrumbs.tsx';
+import FeedbackModal from './FeedbackModal.js';
+import Breadcrumbs from './Breadcrumbs.js';
 import { useLocation } from 'react-router-dom';
 
 
 // TODO: as many collapse elements as active reservations User.reservations.map(...)
 // TODO: remove feedback btn when feedback for corresponding reservation ID has been given 
-const ReservationPage = () => {
+const ReservationsPage = () => {
     const { pathname } = useLocation();
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -17,7 +17,7 @@ const ReservationPage = () => {
     };
     return (
         <>
-            <Breadcrumbs currentRoute={pathname} />
+            <Breadcrumbs route={pathname} />
             <div className="collapse bg-base-200">
                 <input type="checkbox" />
                 <div className="collapse-title text-xl font-medium">
@@ -33,4 +33,4 @@ const ReservationPage = () => {
     )
 }
 
-export default ReservationPage
+export default ReservationsPage

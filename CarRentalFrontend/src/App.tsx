@@ -6,11 +6,12 @@ import {
 } from 'react-router-dom'
 import VehiclesPage from './components/VehiclesPage.tsx';
 import MainPage from './components/MainPage.tsx';
-import ReservationPage from './components/ReservationPage.tsx';
+import ReservationsPage from './components/ReservationsPage.tsx';
 import LoginPage from './components/LoginPage.tsx';
 import RegistrationPage from './components/RegistrationPage.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
 import ProfilePage from './components/ProfilePage.tsx';
+import RentPage from './components/RentPage.tsx';
 
 const App = () => {
   return (
@@ -24,7 +25,8 @@ const App = () => {
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/reservations" element={<ReservationPage />} />
+          <Route path="/reservations" element={<ReservationsPage />} />
+          <Route path="/rent" element={<RentPage />} />
         </Routes>
         <Footer />
       </Router>

@@ -6,7 +6,7 @@ const ProfilePage = () => {
 
     return (
         <>
-            <Breadcrumbs currentRoute={pathname} />
+            <Breadcrumbs route={pathname} />
             <div className="flex flex-col items-center">
                 <div className="avatar">
                     <div className="w-24 mask mask-squircle">

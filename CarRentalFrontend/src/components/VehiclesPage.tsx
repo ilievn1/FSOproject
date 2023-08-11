@@ -84,7 +84,7 @@ const VehiclesPage = () => {
 
     return (
         <>
-            <Breadcrumbs currentRoute={pathname} />
+            <Breadcrumbs route={pathname} />
             <Parallax />
             <Filter items={filteredCars} value={filterQuery} onChange={setFilterQuery} />
             <Catalogue displayedCars={displayedCars} />

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Car } from "../types"
 
 const CarCard = ({car}:{car:Car}) => {
@@ -17,7 +18,7 @@ const CarCard = ({car}:{car:Car}) => {
                     </li>
                 </ul>
                 <div className="card-actions justify-end">
-                    <button className="btn btn-primary">Rent</button>
+                    <button className="btn btn-primary"><Link to={`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`}>Rent</Link></button>
                 </div>
             </div>
         </div>

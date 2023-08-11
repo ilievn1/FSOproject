@@ -19,7 +19,7 @@ const LoginPage = () => {
 
     return (
         <>
-            <Breadcrumbs currentRoute={pathname} />
+            <Breadcrumbs route={pathname} />
             <div className="flex justify-center">
                 <form onSubmit={handleLogin} className="p-6 shadow-xl rounded-lg basis-2/3">
                     <div className="mb-4 form-control w-full">
