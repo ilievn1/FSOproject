@@ -22,7 +22,7 @@ const ReservationPage = () => {
             <div className="collapse bg-base-200">
                 <input type="checkbox" />
                 <div className="collapse-title text-xl font-medium">
-                    Click me to show/hide content
+                    reservation ID, Car, Reservation date
                 </div>
                 <div className="collapse-content">
                     <p>hello</p>

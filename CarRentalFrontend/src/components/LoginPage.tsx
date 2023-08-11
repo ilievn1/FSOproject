@@ -1,5 +1,6 @@
 import { SyntheticEvent, useState } from "react"
 import { Link } from "react-router-dom"
+// TODO: Add dynamic error tooltips/labels beneath the field for wrong password, taken/wrong username
 
 const LoginPage = () => {
 
