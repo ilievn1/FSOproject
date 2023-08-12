@@ -10,7 +10,6 @@ import { useLocation } from 'react-router-dom';
 
 import Breadcrumbs from "./Breadcrumbs";
 
-// TODO: possibly extract Pagination to separate custom hook
 
 // const VehiclesPage = () => {
 //     const [currentPage, setCurrentPage] = useState<number>(1);

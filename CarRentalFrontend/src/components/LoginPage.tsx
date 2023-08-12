@@ -23,7 +23,7 @@ const LoginPage = () => {
         <>
             <Breadcrumbs route={pathname} />
             <div className="flex justify-center">
-                <form onSubmit={handleSubmit(handleLogin)} className="p-6 shadow-xl rounded-lg basis-2/3">
+                <form onSubmit={handleSubmit(handleLogin)} className="p-6 shadow-xl rounded-lg basis-1/3">
                     <FormInput<LoginFormValues>
                         register={register}
                         inputLabel="Username"
