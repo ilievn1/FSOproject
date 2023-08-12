@@ -1,20 +1,22 @@
-import { FieldError, Path } from "react-hook-form";
+import { FieldError, FieldValues, Path, RegisterOptions, UseFormRegister } from "react-hook-form";
 
 
-type InputProps<T> = {
+type InputProps<T extends FieldValues> = {
+    register: UseFormRegister<T>;
+    validations?: RegisterOptions<T, Path<T>>
     inputLabel: Path<T>;
     inputType: "text" | "password";
     inputError: FieldError | undefined;
 
 };
 
-const FormInput = <T extends object>({ inputLabel, inputType, inputError }: InputProps<T>) => {
-    console.log('inputError?.message',inputError?.message)
+const FormInput = <T extends FieldValues>({ inputLabel, inputType, inputError, register, validations }: InputProps<T>) => {
     return (
         <div className="mb-4 form-control w-full">
             <label className="block text-sm font-medium mb-1">{inputLabel}</label>
             <input
                 type={inputType}
+                {...register( inputLabel, validations )}
                 aria-invalid={inputError ? "true" : "false"}
                 className="input input-bordered w-full" />
             {inputError

@@ -3,22 +3,17 @@ import { useLocation } from 'react-router-dom';
 import Breadcrumbs from "./Breadcrumbs";
 import { useForm } from "react-hook-form";
 import { LoginFormValues } from "../types";
-import { useEffect } from "react";
+import FormInput from "./FormInput";
 
 const LoginPage = () => {
     const { pathname } = useLocation();
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
 
-    useEffect(() => {
-        register("username", { required: true, maxLength: 10 })
-        register("password", { required: true, minLength: 5 })
-    }, [register]);
-
     
     // "handleSubmit" validates inputs automatically
     const handleLogin = async (data: LoginFormValues) => {
         console.log(data)
-        if (data.username === "bill") {
+        if (data.Username === "bill") {
             alert(JSON.stringify(data));
         } else {
             alert("There is an error");
@@ -29,28 +24,21 @@ const LoginPage = () => {
             <Breadcrumbs route={pathname} />
             <div className="flex justify-center">
                 <form onSubmit={handleSubmit(handleLogin)} className="p-6 shadow-xl rounded-lg basis-2/3">
-                    <div className="mb-4 form-control w-full">
-                        <label className="block text-sm font-medium mb-1">Username</label>
-                        {/* register input into useForm hook by invoking the "register" function */}
-                        <input
-                            aria-invalid={errors.username ? "true" : "false"}
-                            className="input input-bordered w-full" />
-                        {errors.username
-                            ? (<span role="alert">This field is required and of maximum length 10 characters</span>)
-                            : null
-                        }
-                    </div>
-                    <div className="mb-4 form-control w-full">
-                        <label className="block text-sm font-medium mb-1">Password</label>
-                        <input
-                            type="password"
-                            aria-invalid={errors.password ? "true" : "false"}
-                            className="input input-bordered w-full" />
-                        {errors.password
-                            ? (<span role="alert">This field is required and of minimum length 5 characters</span>)
-                            : null
-                        }
-                    </div>
+                    <FormInput<LoginFormValues>
+                        register={register}
+                        inputLabel="Username"
+                        inputType="text"
+                        inputError={errors.Username}
+                        validations={{ required: { value: true, message: "This field is required" }, maxLength: { value: 10, message: "This field is 10 characters at most" } }}
+
+                    />
+                    <FormInput<LoginFormValues>
+                        register={register}
+                        inputLabel="Password"
+                        inputType="password"
+                        inputError={errors.Password}
+                        validations={{ required: { value: true, message: "This field is required" }, minLength: { value: 5, message: "This field is 5 characters at least" } }}
+                    />
                     <div className="mb-4">
                         <i>Don't have an account? </i>
                         <Link to="/register">Register</Link>

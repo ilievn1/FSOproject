@@ -24,8 +24,8 @@ export interface Car {
 }
 
 export interface LoginFormValues {
-    username: string;
-    password: string;
+    "Username": string;
+    "Password": string;
 }
 export interface RegisterFormValues {
     "Name": string;
@@ -33,8 +33,8 @@ export interface RegisterFormValues {
     "Password": string;
 }
 export interface ContactFormValues {
-    name: string;
-    phone: string;
-    email: string;
-    inquery: string;
+    "Name": string;
+    "Email": string;
+    "Phone": string;
+    "Inquery": string;
 }
