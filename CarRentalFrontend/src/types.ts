@@ -23,18 +23,18 @@ export interface Car {
     rating: Rating;
 }
 
-export type LoginFormValues = {
+export interface LoginFormValues {
     username: string;
     password: string;
-};
-export type RegisterFormValues = {
-    name: string;
-    username: string;
-    password: string;
-};
-export type ContactFormValues = {
+}
+export interface RegisterFormValues {
+    "Name": string;
+    "Username": string;
+    "Password": string;
+}
+export interface ContactFormValues {
     name: string;
     phone: string;
     email: string;
     inquery: string;
-};
+}

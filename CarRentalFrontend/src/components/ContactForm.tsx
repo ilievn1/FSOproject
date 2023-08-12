@@ -12,13 +12,19 @@ const ContactForm = () => {
         register("inquery", { required: true, minLength: 10 })
     }, [register]);
 
-    const handleContact = handleSubmit(data => {
+    // "handleSubmit" validates inputs automatically
+    const handleContact = async (data: ContactFormValues) => {
         console.log(data)
-    });
+        if (data.name === "bill") {
+            alert(JSON.stringify(data));
+        } else {
+            alert("There is an error");
+        }
+    };
     
     return (
         <div className="flex justify-center">
-            <form onSubmit={handleContact} className="p-6 shadow-xl rounded-lg basis-2/3">
+            <form onSubmit={handleSubmit(handleContact)} className="p-6 shadow-xl rounded-lg basis-2/3">
                 <h1 className="text-2xl font-semibold mb-4">Contact Us!</h1>
                 <div className="mb-4 form-control w-full">
                     <label className="block text-sm font-medium mb-1">What is your name?</label>

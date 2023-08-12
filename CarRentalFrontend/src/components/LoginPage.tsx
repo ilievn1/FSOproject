@@ -14,16 +14,21 @@ const LoginPage = () => {
         register("password", { required: true, minLength: 5 })
     }, [register]);
 
+    
     // "handleSubmit" validates inputs automatically
-    const handleLogin = handleSubmit(data => {
+    const handleLogin = async (data: LoginFormValues) => {
         console.log(data)
-    });
-
+        if (data.username === "bill") {
+            alert(JSON.stringify(data));
+        } else {
+            alert("There is an error");
+        }
+    };
     return (
         <>
             <Breadcrumbs route={pathname} />
             <div className="flex justify-center">
-                <form onSubmit={handleLogin} className="p-6 shadow-xl rounded-lg basis-2/3">
+                <form onSubmit={handleSubmit(handleLogin)} className="p-6 shadow-xl rounded-lg basis-2/3">
                     <div className="mb-4 form-control w-full">
                         <label className="block text-sm font-medium mb-1">Username</label>
                         {/* register input into useForm hook by invoking the "register" function */}
