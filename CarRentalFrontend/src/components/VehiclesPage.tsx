@@ -9,6 +9,7 @@ import Parallax from "./Parallax";
 import { useLocation } from 'react-router-dom';
 
 import Breadcrumbs from "./Breadcrumbs";
+import CarCardLoading from "./CarCardLoading";
 
 
 // const VehiclesPage = () => {
@@ -68,11 +69,12 @@ const VehiclesPage = () => {
 
     const [filterQuery, setFilterQuery] = useState<string>('');
     const [filteredCars, setFilteredCars] = useState<Array<Car>>(data);
-
     const carsPerPage = 9;
+    const isLoading = true;
     const { currentPage, paginate, previousPage, nextPage, getCurrentPageCars } = usePagination(filteredCars, carsPerPage)
 
     useEffect(() => {
+        //
         setFilteredCars(data.filter(c => c.brand.toLowerCase().includes(filterQuery.toLowerCase())))
         // reset page numbers according to filtered results
         paginate(1)
@@ -86,7 +88,9 @@ const VehiclesPage = () => {
             <Breadcrumbs route={pathname} />
             <Parallax />
             <Filter items={filteredCars} value={filterQuery} onChange={setFilterQuery} />
-            <Catalogue displayedCars={displayedCars} />
+            {isLoading
+                ? (<CarCardLoading/>)
+                : (<Catalogue displayedCars={displayedCars} />)}
             <Pagination
                 totalCars={filteredCars.length}
                 carsPerPage={carsPerPage}
