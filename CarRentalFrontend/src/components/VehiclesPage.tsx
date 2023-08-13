@@ -74,11 +74,11 @@ const VehiclesPage = () => {
 
     useEffect(() => {
         setFilteredCars(data.filter(c => c.brand.toLowerCase().includes(filterQuery.toLowerCase())))
+        // reset page numbers according to filtered results
         paginate(1)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterQuery])
 
-    // refers to cars on current page    
     const displayedCars = getCurrentPageCars()
 
     return (

@@ -14,8 +14,11 @@
 | 10.8 | 2    | Look into some tutorials on grid/flexbox, get the parallax to look presentable |
 |      | 2    | Enable user to view reserved cars, no login required yet |
 | 11.8 | 6    | Responsive nav (smaller devices), add breadcrumbs(handle any route), user reg/login, routing for new pages|
-|      | 2    | Plow thru react-form-hook docs to adapt forms to use the library|
-|       | 5    | testaus |
+| 12.8 | 2    | Plow thru react-form-hook docs to adapt forms to use the library|
+|      | 3    | Unironically spend 3 hours just trying to properly type the FormInput component. React-Hook-Forms Docs did not help one bit... |
+|      | 1    | Password strength checker upon registration |
+| 13.8 | 3    | Parallax overhaul (the whole position idea changed) |
+|      | 1    | Come up with initial DB structure |
 | 4.3.  | 1    | koodin refaktorointia |
 | 5.3.  | 2    | arkkitehtuurikuvauksen tarkennus |
 |       | 1    | käyttöohje |
