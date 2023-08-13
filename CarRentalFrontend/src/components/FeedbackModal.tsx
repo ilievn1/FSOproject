@@ -8,6 +8,7 @@ interface Props {
 }
 
 const FeedbackModal = ({ isOpened, closeModal }: Props) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [rating, setRating] = useState(1);
     const commentRef = useRef<HTMLTextAreaElement>(null);
 

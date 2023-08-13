@@ -27,6 +27,7 @@ const ReservationsPage = () => {
                 <div className="collapse-content">
                     <p>hello</p>
                     <button className='btn' onClick={() => openModal()}>Feedback</button>
+                    <button className="btn btn-error">Delete</button>
                 </div>
             </div>
             <FeedbackModal isOpened={modalOpen} closeModal={closeModal} />
