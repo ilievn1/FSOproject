@@ -13,8 +13,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 4
-
+  rating: 4,
+  licenceNumber: 'ABC-123',
+  available: true
 }, {
   id: 2,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -28,7 +29,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 2
+  rating: 2,
+  licenceNumber: 'XYZ-456',
+  available: true
 
 }, {
   id: 3,
@@ -43,8 +46,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 4
-
+  rating: 4,
+  licenceNumber: 'YMZ-777',
+  available: true
 }, {
   id: 4,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -58,8 +62,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 2
-
+  rating: 2,
+  licenceNumber: 'CMW-347',
+  available: true
 }
 , {
   id: 5,
@@ -74,8 +79,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 4
-
+  rating: 4,
+  licenceNumber: 'PDW-808',
+  available: true,
 }, {
   id: 6,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -89,7 +95,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 4
+  rating: 4,
+  licenceNumber: 'SSH-147',
+  available: true,
 }, {
   id: 7,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -103,7 +111,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 1
+  rating: 1,
+  licenceNumber: 'HSH-707',
+  available: true,
 
 }, {
   id: 8,
@@ -118,7 +128,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 1
+  rating: 1,
+  licenceNumber: 'WWW-001',
+  available: true,
 
 }, {
   id: 9,
@@ -133,7 +145,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 1
+  rating: 1,
+  licenceNumber: 'ZAW-937',
+  available: true,
 
 },
 {
@@ -149,8 +163,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 1
-
+  rating: 1,
+  licenceNumber: 'WMD-101',
+  available: true,
 },
 {
   id: 11,
@@ -165,8 +180,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 1
-
+  rating: 1,
+  licenceNumber: 'LMY-798',
+  available: true,
 },
 {
   id: 12,
@@ -181,7 +197,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 4
+  rating: 4,
+  licenceNumber: 'APZ-381',
+  available: true,
 },
 {
   id: 13,
@@ -196,7 +214,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 5
+  rating: 5,
+  licenceNumber: 'BNI-562',
+  available: true,
 },
 {
   id: 14,
@@ -211,7 +231,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 2
+  rating: 2,
+  licenceNumber: 'ROZ-497',
+  available: true,
 },
 {
   id: 15,
@@ -226,7 +248,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 3
+  rating: 3,
+  licenceNumber: 'ZQA-312',
+  available: true,
 
 }, {
   id: 16,
@@ -241,7 +265,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 5
+  rating: 5,
+  licenceNumber: 'IPQ-737',
+  available: true,
 },
 {
   id: 17,
@@ -256,7 +282,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 1
+  rating: 1,
+  licenceNumber: 'UAM-559',
+  available: true,
 }, {
   id: 18,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -270,7 +298,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 2
+  rating: 2,
+  licenceNumber: 'HJK-091',
+  available: true,
 
 }, {
   id: 19,
@@ -285,8 +315,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 3
-
+  rating: 3,
+  licenceNumber: 'QWE-367',
+  available: true,
 }, {
   id: 20,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -300,8 +331,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 4
-
+  rating: 4,
+  licenceNumber: 'NVZ-208',
+  available: true,
 }, {
   id: 21,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -315,7 +347,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 5
+  rating: 5,
+  licenceNumber: 'LUQ-447',
+  available: true,
 
 }, {
   id: 22,
@@ -330,8 +364,9 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 2
-
+  rating: 2,
+  licenceNumber: 'NQZ-001',
+  available: true,
 }, {
   id: 23,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
@@ -345,5 +380,7 @@ export const data: Array<Car> = [{
   fuelEfficiencyHighway: 4,
   seats: 4,
   rentPrice: 50,
-  rating: 1
+  rating: 1,
+  licenceNumber: 'RZO-818',
+  available: true,
 },];

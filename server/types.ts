@@ -21,20 +21,6 @@ export interface Car {
     seats: Seats;
     rentPrice: number;
     rating: Rating;
-}
-
-export interface LoginFormValues {
-    'Username': string;
-    'Password': string;
-}
-export interface RegisterFormValues {
-    'Name': string;
-    'Username': string;
-    'Password': string;
-}
-export interface ContactFormValues {
-    'Name': string;
-    'Email': string;
-    'Phone': string;
-    'Inquery': string;
+    licenceNumber: string;
+    available: boolean;
 }

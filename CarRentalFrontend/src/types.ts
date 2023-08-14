@@ -21,6 +21,8 @@ export interface Car {
     seats: Seats;
     rentPrice: number;
     rating: Rating;
+    licenceNumber: string;
+    available: boolean;
 }
 
 export interface LoginFormValues {

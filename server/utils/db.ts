@@ -19,14 +19,30 @@ const runMigrations = async () => {
     files: migrations.map((mig) => mig.name),
   });
 };
+const runSeeding = async () => {
+  const seeder = new Umzug({
+    migrations: {
+      glob: 'seedings/*.ts',
+    },
+    storage: new SequelizeStorage({ sequelize, tableName: 'seedings' }),
+    context: sequelize.getQueryInterface(),
+    logger: console,
+  });
+
+  const seedings = await seeder.up();
+  console.log('Seeding up to date', {
+    files: seedings.map((seed) => seed.name),
+  });
+};
 
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
     await runMigrations();
+    await runSeeding();
     console.log('connected to the database');
   } catch (err) {
-    console.log('failed to connect to the database');
+    console.log('failed to connect to the database \n', err);
     return process.exit(1);
   }
 

@@ -15,7 +15,7 @@ Vehicle.init({
     allowNull: false,
   },
   licenceNumber: {
-    type: DataTypes.STRING(6),
+    type: DataTypes.STRING(7),
     unique: true,
     allowNull: false,
     validate: {
