@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
-const config = require('./config');
+const { DATABASE_URL } = require('./config');
 import { Umzug, SequelizeStorage } from 'umzug';
 
-const sequelize = new Sequelize(config.DATABASE_URL);
+const sequelize = new Sequelize(DATABASE_URL);
 
 const runMigrations = async () => {
   const migrator = new Umzug({

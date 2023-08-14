@@ -53,11 +53,17 @@ module.exports = {
       },
       fuel_efficiency_city: {
         type: DataTypes.DECIMAL(10, 1),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          min: 0
+        }
       },
       fuel_efficiency_highway: {
         type: DataTypes.DECIMAL(10, 1),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          min: 0
+        }
       },
       seats: {
         type: DataTypes.INTEGER,
@@ -85,78 +91,6 @@ module.exports = {
           min: 1,
           max: 5
         }
-      },
-    });
-    await queryInterface.createTable('customers', {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      username: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
-      },
-      hashedPassword: {
-        type: DataTypes.STRING,
-        allowNull: false
-      }
-    });
-    await queryInterface.createTable('reservations', {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-      customer_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'customers', key: 'id' },
-      },
-      vehicle_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'vehicles', key: 'id' },
-      },
-      start_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      end_at: {
-        type: DataTypes.DATE,
-      },
-    });
-    await queryInterface.createTable('inquiries', {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      phone: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
-      },
-      email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          isEmail: true
-        }
-      },
-      inquery: {
-        type: DataTypes.TEXT,
-        allowNull: false
       },
     });
   },

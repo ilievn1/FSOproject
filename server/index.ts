@@ -1,9 +1,9 @@
 const app = require('./app');
 const { PORT } = require('./utils/config');
-const db = require('./utils/db');
+const { connectToDatabase } = require('./utils/db');
 
 const start = async () => {
-  await db.connectToDatabase();
+  await connectToDatabase();
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
