@@ -384,3 +384,15 @@ export const data: Array<Car> = [{
   licenceNumber: 'RZO-818',
   available: true,
 },];
+// Exists solely to comply with sequelize api insert format
+export const seedVehicles = data.map(obj => {
+  const { carImage, fuelEfficiencyCity, fuelEfficiencyHighway, licenceNumber, rentPrice, ...rest } = obj;
+  return {
+    car_image: carImage,
+    fuel_efficiency_city: fuelEfficiencyCity,
+    fuel_efficiency_highway: fuelEfficiencyHighway,
+    licence_number: licenceNumber,
+    rent_price: rentPrice,
+    ...rest
+  };
+});
