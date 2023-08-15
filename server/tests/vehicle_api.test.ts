@@ -1,10 +1,20 @@
 const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
-const helper = require('./test_helper');
-const { sequelize } = require('../utils/db');
-const Vehicle = require('../models/vehicle');
-import { data as seedData } from '../mockData/cars';
+const sequelize = require('../utils/db').sequelize;
+const seedData = require('../mockData/cars').data;
+const { connectToDatabase } = require('../utils/db');
+
+beforeAll(async () => {
+  await connectToDatabase();
+});
+
+test('ping', async () => {
+  await api
+    .get('/')
+    .expect(200);
+});
+
 
 describe('when seeded vehicles are in DB', () => {
   test('vehicles are return type is json', async () => {
@@ -30,24 +40,34 @@ describe('viewing a specific vehicle based on valid query params', () => {
   });
   test('returns error if all vehicles are not available', async () => {
     const target = seedData[16]; // TODO: test seeding data will have bmw 3 2022 set to available: false and excluded from reservations by backend/pgAdmin
-    await api
-      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`)
-      .rejects()
+    await expect(await api
+      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
+      .rejects
       .toThrow('No vehicles available of said model');
+    expect(await api
+      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
+      .toEqual({ error: 'No vehicles available of said model' });
   });
   test('returns error if all vehicles are occupied/reserverd', async () => {
     const target = seedData[17]; // TODO: test seeding data will have 1/2 honda airware 2000 set to available: false excluded from reservations by backend/pgAdmin
-    await api
-      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`)
-      .rejects()
+    await expect(await api
+      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
+      .rejects
       .toThrow('No vehicles available of said model');
+    expect(await api
+      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
+      .toEqual({ error: 'No vehicles available of said model' });
   });
   test('returns error if some vehicles of said model are both unavailabe or already reserved', async () => {
     const target = seedData[20]; // TODO: test seeding data will have 2/2 honda airware 2000 set to available: true, but added in reservations by backend/pgAdmin
-    await api
-      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`)
-      .rejects()
+    await expect(await api
+      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
+      .rejects
       .toThrow('No vehicles available of said model');
+    expect(await api
+      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
+      .toEqual({ error: 'No vehicles available of said model' });
+
   });
 
 

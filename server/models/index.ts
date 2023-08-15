@@ -7,3 +7,5 @@ const Inquery = require('./inquery');
 module.exports = {
   Vehicle, Customer, Reservation, Inquery
 };
+
+export { };
