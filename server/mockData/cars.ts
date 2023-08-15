@@ -1,6 +1,6 @@
-import { Car } from '../types';
+import { Vehicle } from '../types';
 
-export const data: Array<Car> = [{
+export const data: Array<Vehicle> = [{
   id: 1,
   carImage: 'https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg',
   brand: 'Toyota',

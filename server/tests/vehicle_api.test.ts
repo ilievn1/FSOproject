@@ -1,8 +1,8 @@
 const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
-const sequelize = require('../utils/db').sequelize;
-const seedData = require('../mockData/cars').data;
+const { sequelize } = require('../utils/db');
+const { data: seedData } = require('../mockData/cars');
 const { connectToDatabase } = require('../utils/db');
 
 beforeAll(async () => {

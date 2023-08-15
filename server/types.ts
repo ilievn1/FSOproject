@@ -7,7 +7,7 @@ export type Seats = 2 | 3 | 4 | 5 | 6 | 8 | 9;
 export type Rating = 1 | 2 | 3 | 4 | 5;
 
 
-export interface Car {
+export interface Vehicle {
     id: number;
     carImage: string;
     brand: string;
