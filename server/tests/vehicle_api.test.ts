@@ -19,7 +19,6 @@ describe('when seeded vehicles are in DB', () => {
 
   test('all vehicles are returned', async () => {
     const response = await api.get('/api/vehicles');
-    console.log(response)
     expect(response.body).toHaveLength(seedData.length);
   });
 
