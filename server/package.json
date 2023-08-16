@@ -38,6 +38,7 @@
     "morgan": "^1.10.0",
     "pg": "^8.11.2",
     "sequelize": "^6.32.1",
+    "sequelize-typescript": "^2.1.5",
     "umzug": "^3.3.1"
   }
 }

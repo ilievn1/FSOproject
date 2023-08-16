@@ -2,7 +2,7 @@ export type Fuel = 'Diesel' | 'Petrol' | 'Hybrid';
 
 export type Transmittion = 'Automatic' | 'Manual';
 
-export type Seats = 2 | 3 | 4 | 5 | 6 | 8 | 9;
+export type Seats = 2 | 4 | 5 | 7 | 9;
 
 export type Rating = 1 | 2 | 3 | 4 | 5;
 

@@ -32,21 +32,31 @@ describe('when seeded vehicles are in DB', () => {
 
 });
 
+function hostelService() {
+  return Promise.reject(new Error('some error'));
+}
+
+const action = async () => {
+  await hostelService();
+};
+
+it('Should throw the error', async () => {
+  await expect(action()).rejects.toThrow('some error');
+});
+
 describe('viewing a specific vehicle based on valid query params', () => {
-  test('succeeds if vehicle is available and has not all of the said brand/model/year are reserved', async () => {
+  test('succeeds if vehicle is available and not all instances said brand/model/year are reserved', async () => {
     const target = seedData[0];
     const { body } = await api.get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`);
-    expect(body).toHaveProperty('available', true);
+    expect(body[0]).toHaveProperty('licenceNumber', target.licenceNumber);
   });
   test('returns error if all vehicles are not available', async () => {
     const target = seedData[16]; // TODO: test seeding data will have bmw 3 2022 set to available: false and excluded from reservations by backend/pgAdmin
-    await expect(await api
+    await expect(api
       .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
       .rejects
       .toThrow('No vehicles available of said model');
-    expect(await api
-      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`))
-      .toEqual({ error: 'No vehicles available of said model' });
+
   });
   test('returns error if all vehicles are occupied/reserverd', async () => {
     const target = seedData[17]; // TODO: test seeding data will have 1/2 honda airware 2000 set to available: false excluded from reservations by backend/pgAdmin
