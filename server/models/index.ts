@@ -7,7 +7,7 @@ Customer.hasMany(Reservation);
 Reservation.belongsTo(Customer);
 Vehicle.hasOne(Reservation, {
   foreignKey: {
-    allowNull: false
+    allowNull: false // Cannot have reservation w/o vehicle_id
   }
 });
 Reservation.belongsTo(Vehicle);
