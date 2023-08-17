@@ -24,3 +24,16 @@ export interface Vehicle {
     licenceNumber: string;
     available: boolean;
 }
+export interface Customer {
+    id: number;
+    name: string;
+    username: string;
+    hashedPassword: string;
+}
+export interface Reservation {
+    id: number;
+    customerId: number;
+    vehicleId: number;
+    startAt: string;
+    endAt: string;
+}

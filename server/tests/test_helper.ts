@@ -1,4 +1,4 @@
-const { Customer } = require('../models/');
+const { Customer, Reservation } = require('../models/');
 
 const customersInDB = async () => {
   const customers = await Customer.findAll();
@@ -12,17 +12,17 @@ const customerByUsername = async (username: string) => {
   });
   return JSON.stringify(matchedCustomer);
 };
-const customerByName = async (name: string) => {
-  const matchedCustomer = await Customer.findOne({
+const reservationsByUsername = async (username: string) => {
+  const customerReservations = await Reservation.findAll({
     where: {
-      name
+      username
     }
   });
-  return JSON.stringify(matchedCustomer);
+  return JSON.stringify(customerReservations);
 };
 
 module.exports = {
   customersInDB,
   customerByUsername,
-  customerByName
+  reservationsByUsername
 };

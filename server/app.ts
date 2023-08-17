@@ -16,6 +16,8 @@ morgan.token('body', (req: Request) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.get('/api/vehicles', async (req, res) => {
+  // TODO: Add query param extractor middleware (extraction, request proofing)
+  // TODO: Extract to router
   let where = {};
   let include: Array<object> = [];
   const requiredParamsPresent = 'brand' in req.query && 'model' in req.query && 'year' in req.query;
