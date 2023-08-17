@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true
       },
-      reservationId: {
+      reservation_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'reservations', key: 'id' },
