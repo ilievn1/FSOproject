@@ -1,4 +1,4 @@
-const { Customer, Reservation } = require('../models/');
+const { Customer, Reservation, Feedback } = require('../models/');
 
 const customersInDB = async () => {
   const customers = await Customer.findAll();
@@ -12,10 +12,33 @@ const customerByUsername = async (username: string) => {
   });
   return JSON.stringify(matchedCustomer);
 };
-const reservationsByUsername = async (username: string) => {
+const allReservationsByUsername = async (username: string) => {
   const customerReservations = await Reservation.findAll({
+    include: [{ model: Customer }],
     where: {
-      username
+      '$username$': username,
+    }
+  });
+  return JSON.stringify(customerReservations);
+};
+const activeReservationsByUsername = async (username: string) => {
+  const customerReservations = await Reservation.findAll({
+    include: [{ model: Customer }],
+    where: {
+      endAt: null,
+      '$username$': username
+    }
+  });
+  return JSON.stringify(customerReservations);
+};
+
+const nonRatedReservationsByUsername = async (username: string) => {
+  const customerReservations = await Reservation.findAll({
+    include: [{ model: Customer }, { model: Feedback }],
+    where: {
+      '$username$': username,
+      '$feedback$': null,
+
     }
   });
   return JSON.stringify(customerReservations);
@@ -24,5 +47,7 @@ const reservationsByUsername = async (username: string) => {
 module.exports = {
   customersInDB,
   customerByUsername,
-  reservationsByUsername
+  allReservationsByUsername,
+  activeReservationsByUsername,
+  nonRatedReservationsByUsername
 };

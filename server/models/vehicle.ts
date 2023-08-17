@@ -70,9 +70,9 @@ Vehicle.init({
   seats: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    validate: {
-      min: 2,
-      max: 9
+    isIn: {
+      args: [[2, 4, 5, 7, 9]],
+      msg: 'A vehicle can have 2, 4, 5, 7 or 9 seats'
     }
   },
   rentPrice: {
