@@ -12,8 +12,8 @@ import { Customer, Reservation } from '../types';
 
 beforeAll(async () => {
   await connectToDatabase();
-  await Reservation.destroy({ truncate: { cascade: true, restartIdentity: true } });
-  await Customer.destroy({ truncate: { cascade: true, restartIdentity: true } });
+  await Reservation.destroy({ truncate: true, cascade: true, restartIdentity: true });
+  await Customer.destroy({ truncate: true, cascade: true, restartIdentity: true });
 });
 
 describe('Starting with 0 customers in db', () => {
@@ -78,8 +78,6 @@ describe('Starting with 0 customers in db', () => {
 });
 describe('Starting with 2 customers in db', () => {
   beforeAll(async () => {
-    await Reservation.destroy({ truncate: { cascade: true, restartIdentity: true } });
-    await Customer.destroy({ truncate: { cascade: true, restartIdentity: true } });
     const hashedPassword = await bcrypt.hash('password', 10);
     const sampleCustomers = [
       { name: 'Nathan Sebhastian', username: 'NathSab1', hashedPassword },
@@ -87,7 +85,7 @@ describe('Starting with 2 customers in db', () => {
     ];
     await Customer.bulkCreate(sampleCustomers);
     const insertedSampleData = await helper.customersInDB();
-    console.log('insertedSampleData', insertedSampleData);
+
     insertedSampleData.forEach((c: Customer, idx: number) => {
       expect(c).toMatchObject(sampleCustomers[idx]);
     });
@@ -98,6 +96,7 @@ describe('Starting with 2 customers in db', () => {
     const reservationsBefore = await helper.allReservationsByUsername(customer.username);
 
     const requests = Array.from({ length: 5 }, async (_r, idx) => {
+      idx++;
       const newReservation = {
         vehicleId: idx,
         customerId: customer.id,
@@ -108,27 +107,30 @@ describe('Starting with 2 customers in db', () => {
         .send(newReservation);
     });
 
-    await Promise.all(requests);
-    // const responses = await Promise.all(requests);
+    const responsesObjs = await Promise.all(requests);
+    const responsesObjsBodies = responsesObjs.map(r => r.body);
 
     const reservationsAfter = await helper.allReservationsByUsername(customer.username);
     expect(reservationsAfter).toHaveLength(reservationsBefore.length + 5);
+    // Appropriate metadata
+    responsesObjs.forEach((resp) => {
+      expect(resp.status).toBe(201);
+      expect(resp.headers['content-type']).toMatch(/application\/json/);
+    });
+    // Whatever is sent is returned
+    responsesObjsBodies.forEach((_, idx) => {
+      idx++;
+      expect(responsesObjsBodies).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            vehicleId: idx,
+            customerId: customer.id,
+            startAt: new Date().toJSON().slice(0, 10)
+          }),
+        ])
+      );
+    });
 
-    // responses.forEach((resp, idx) => {
-    //   expect(resp.status).toBe(201);
-    //   expect(resp.headers['Content-Type']).toMatch(/application\/json/);
-    //   expect(responses).toEqual(
-    //     expect.arrayContaining([
-    //       expect.objectContaining({
-    //         vehicleId: idx,
-    //         customerId: customer.id,
-    //         startAt: new Date().toJSON().slice(0, 10)
-    //       }),
-    //     ])
-    //   );
-    //   expect(reservationsAfter).toContainEqual(resp);
-
-    // });
 
   });
 
@@ -140,21 +142,19 @@ describe('Starting with 2 customers in db', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-    const customerReservations = await helper.allReservationsByUsername(customer.username);
-    expect(returnedReservations.body).toHaveLength(customerReservations.length);
-
-    returnedReservations.body.forEach((r: Reservation, idx: number) => {
-      expect(returnedReservations.body).toEqual(
+    const customerReservationsInDB = await helper.allReservationsByUsername(customer.username);
+    console.log('#1\ncustomerReservationsInDB\n', customerReservationsInDB);
+    console.log('#2\nreturnedReservations.body\n', returnedReservations.body);
+    // DB saved content corresponds user submitted content
+    returnedReservations.body.forEach((retRes: Reservation) => {
+      expect(customerReservationsInDB).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({
-            vehicleId: idx,
-            customerId: customer.id,
-            startAt: new Date().toJSON().slice(0, 10)
-          }),
+          // Partial checking for ommiting id field and feedback field
+          expect.objectContaining(retRes),
         ])
       );
-      expect(customerReservations).toContainEqual(r);
     });
+
   });
 
   test('reservations retrieval for customer without reservations succeeds', async () => {
@@ -168,30 +168,37 @@ describe('Starting with 2 customers in db', () => {
     expect(returnedReservations.body).toHaveLength(0);
   });
 
-  test('customer can return vehicle', async () => {
+  test('customer can return vehicle / end reservation', async () => {
     const customer = await helper.customerByUsername('NathSab1');
-    //TODO: switch to activeReservations and rand reservations
-    const reservationsBefore = await helper.allReservationsByUsername(customer.username);
-    expect(reservationsBefore[0]).toHaveProperty('endAt', null);
+    const activeBefore = await helper.activeReservationsByUsername(customer.username);
+    const toBeEnded = activeBefore[0];
+    expect(toBeEnded).toHaveProperty('endAt', null);
 
     const returnedEndedRes = await api
-      .put(`/api/customers/${customer.id}/reservations`)
+      .put(`/api/customers/${customer.id}/reservations/${toBeEnded.id}`)
       .send({ endAt: new Date().toJSON().slice(0, 10) })
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
-    const reservationsAfter = await helper.allReservationsByUsername(customer.username);
-    expect(returnedEndedRes).toHaveProperty('endAt', new Date().toJSON().slice(0, 10));
-    expect(reservationsAfter[0]).toHaveProperty('endAt', new Date().toJSON().slice(0, 10));
+    const activeAfter = await helper.activeReservationsByUsername(customer.username);
+    expect(activeAfter).toHaveLength(activeBefore.length - 1 );
+    expect(returnedEndedRes.body).toHaveProperty('endAt', new Date().toJSON().slice(0, 10));
   });
 
   test('customer can receive active + non rated reservations', async () => {
     const customer = await helper.customerByUsername('NathSab1');
-    //TODO: switch to activeReservations and rand reservations
-    const reservations = await helper.allReservationsByUsername(customer.username);
-    const active = reservations.filter((r: Reservation) => !r.endAt);
-    const nonRated = reservations.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && !r.feedback );
-    const nonActiveRated = reservations.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && r.feedback);
+    const returnedReservations =
+      await api
+        .get(`/api/customers/${customer.id}/reservations`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+    console.log('#3\nreturnedReservations.body\n', returnedReservations.body);
+    const active = returnedReservations.body.filter((r: Reservation) => !r.endAt);
+    const nonRated = returnedReservations.body.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && !r.feedback );
+    
+    const reservationsInDB = await helper.allReservationsByUsername(customer.username);
+    console.log('#4\reservationsInDB\n', reservationsInDB);
+    const nonActiveRated = reservationsInDB.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && r.feedback);
 
     expect(active).toEqual(expect.arrayContaining(
       [expect.objectContaining({ endAt: null })]
@@ -200,7 +207,7 @@ describe('Starting with 2 customers in db', () => {
       [expect.objectContaining({ feedback: null })]
     ));
 
-    expect(active.length + nonRated.length).toHaveLength(reservations.length - nonActiveRated.length);
+    expect(active.length + nonRated.length).toBe(reservationsInDB.length - nonActiveRated.length);
 
   });
 });

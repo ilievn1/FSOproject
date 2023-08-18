@@ -21,11 +21,11 @@ Reservation.init({
     references: { model: 'vehicles', key: 'id' },
   },
   startAt: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: false
   },
   endAt: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
   },
 }, {
   sequelize,

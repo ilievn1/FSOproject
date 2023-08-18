@@ -1,12 +1,13 @@
 import express, { Request } from 'express';
 import morgan from 'morgan';
+import { Op } from 'sequelize';
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
 require('express-async-errors');
 const app = express();
 const middleware = require('./utils/middleware');
-const { Vehicle, Reservation, Customer } = require('./models');
+const { Vehicle, Reservation, Customer, Feedback } = require('./models');
 
 
 app.use(cors());
@@ -31,7 +32,7 @@ app.get('/api/vehicles', async (req, res) => {
       model: req.query.model,
       year: req.query.year,
       available: true,
-      '$reservation$': null,
+      '$reservation.endAt$': null,
 
     };
     include = [
@@ -48,7 +49,10 @@ app.get('/api/vehicles', async (req, res) => {
 });
 
 app.post('/api/customers', async (req, res) => {
-  console.log('req.Body', req.body);
+  // TODO: Add query param extractor middleware (extraction, request proofing)
+  // TODO: Extract to error handling to middleware - upon create fail, customer not created, rather exception handled directly to errorHandler
+  // TODO: Extract DB communication to service
+  // TODO: Extract to router
   if (req.body.password.length < 5) {
     return res.status(403).send({ error: 'Password is below 5 characters' });
   }
@@ -59,6 +63,49 @@ app.post('/api/customers', async (req, res) => {
   } catch (err) {
     return res.status(409).send({ error: `Username ${req.body.username} is taken` });
   }
+
+});
+// TODO: Add query param extractor middleware (extraction, request proofing)
+// TODO: Extract to error handling to middleware
+// TODO: Extract DB communication to service
+// TODO: Extract to router
+
+app.get('/api/customers/:id/reservations', async (req, res) => {
+  const customerReservations = await Reservation.findAll({
+    include: [{ model: Feedback }],
+    where: {
+      customerId: req.params.id,
+      [Op.or]: [
+        {
+          endAt: null
+        },
+        {
+          '$feedback$': null,
+        }
+      ]
+    },
+  });
+    // title LIKE 'Boat%' OR description LIKE '%boat%'
+  res.json(customerReservations);
+});
+
+app.post('/api/customers/:id/reservations', async (req, res) => {
+  const newReservation = await Reservation.create(req.body);
+  res.status(201).json(newReservation);
+
+});
+
+app.put('/api/customers/:cId/reservations/:rId', async (req, res) => {
+  // TODO: instead of send endAt with put body just associate 'end reservation / return vehicle' with reservationId and set date on the server (i.e. here)
+  const toBeEnded = await Reservation.findOne({
+    where: {
+      id: req.params.rId,
+      customerId: req.params.cId,
+    },
+  });
+  toBeEnded.endAt = req.body.endAt;
+  await toBeEnded.save();
+  res.json(toBeEnded);
 
 });
 

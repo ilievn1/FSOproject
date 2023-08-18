@@ -20,11 +20,11 @@ module.exports = {
         references: { model: 'vehicles', key: 'id' },
       },
       start_at: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false
       },
       end_at: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
       },
     });
   },

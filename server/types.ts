@@ -30,10 +30,17 @@ export interface Customer {
     username: string;
     hashedPassword: string;
 }
+export interface Feedback {
+    id: number;
+    reservationId: number;
+    rating: Rating;
+    comment?: string;
+}
 export interface Reservation {
     id: number;
     customerId: number;
     vehicleId: number;
     startAt: string;
     endAt: string;
+    feedback?: Feedback
 }

@@ -14,10 +14,13 @@ const customerByUsername = async (username: string) => {
 };
 const allReservationsByUsername = async (username: string) => {
   const customerReservations = await Reservation.findAll({
-    include: [{ model: Customer }],
+    include: [{
+      model: Customer,
+      attributes: []
+    }],
     where: {
       '$username$': username,
-    }
+    },
   });
   return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
 };
