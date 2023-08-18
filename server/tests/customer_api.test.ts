@@ -2,7 +2,6 @@ const { Customer, Reservation } = require('../models/');
 const app = require('../app');
 import supertest from 'supertest';
 import request from 'supertest';
-
 const api = supertest(app);
 const helper = require('./test_helper');
 const { sequelize } = require('../utils/db');
@@ -13,14 +12,11 @@ import { Customer, Reservation } from '../types';
 
 beforeAll(async () => {
   await connectToDatabase();
+  await Reservation.destroy({ truncate: { cascade: true, restartIdentity: true } });
+  await Customer.destroy({ truncate: { cascade: true, restartIdentity: true } });
 });
 
 describe('Starting with 0 customers in db', () => {
-  beforeAll(async () => {
-    await Reservation.destroy({ truncate: { cascade: true }, restartIdentity: true });
-    await Customer.destroy({ truncate: { cascade: true }, restartIdentity: true });
-  });
-
   test('registration succeeds with a free username', async () => {
     const newCustomer = {
       name: 'Brad Pitt',
@@ -40,7 +36,7 @@ describe('Starting with 0 customers in db', () => {
     expect(matchedCustomer).toHaveProperty('username', newCustomer.username);
   });
 
-  test('creation fails with 400 code and correct message if username already taken', async () => {
+  test('creation fails with 409 code and correct message if username already taken', async () => {
     const customersBeforeReg = await helper.customersInDB();
 
     const newCustomer = {
@@ -52,7 +48,7 @@ describe('Starting with 0 customers in db', () => {
     await api
       .post('/api/customers')
       .send(newCustomer)
-      .expect(400)
+      .expect(409)
       .expect({ error: `Username ${newCustomer.username} is taken` });
 
 
@@ -60,7 +56,7 @@ describe('Starting with 0 customers in db', () => {
     expect(customersAfterReg).toEqual(customersBeforeReg);
   });
 
-  test('creation fails with 400 code and correct message for password length is < 5', async () => {
+  test('creation fails with 403 code and correct message for password length is < 5', async () => {
     const customersBeforeReg = await helper.customersInDB();
 
     const newCustomer = {
@@ -72,7 +68,7 @@ describe('Starting with 0 customers in db', () => {
     await api
       .post('/api/customers')
       .send(newCustomer)
-      .expect(400)
+      .expect(403)
       .expect({ error: 'Password is below 5 characters' });
 
 
@@ -82,8 +78,8 @@ describe('Starting with 0 customers in db', () => {
 });
 describe('Starting with 2 customers in db', () => {
   beforeAll(async () => {
-    await Reservation.destroy({ truncate: { cascade: true } });
-    await Customer.destroy({ truncate: { cascade: true } });
+    await Reservation.destroy({ truncate: { cascade: true, restartIdentity: true } });
+    await Customer.destroy({ truncate: { cascade: true, restartIdentity: true } });
     const hashedPassword = await bcrypt.hash('password', 10);
     const sampleCustomers = [
       { name: 'Nathan Sebhastian', username: 'NathSab1', hashedPassword },
@@ -91,6 +87,7 @@ describe('Starting with 2 customers in db', () => {
     ];
     await Customer.bulkCreate(sampleCustomers);
     const insertedSampleData = await helper.customersInDB();
+    console.log('insertedSampleData', insertedSampleData);
     insertedSampleData.forEach((c: Customer, idx: number) => {
       expect(c).toMatchObject(sampleCustomers[idx]);
     });
@@ -107,7 +104,7 @@ describe('Starting with 2 customers in db', () => {
         startAt: new Date().toJSON().slice(0, 10)
       };
       return await request(app)
-        .post(`api/customers/${customer.id}/reservations`)
+        .post(`/api/customers/${customer.id}/reservations`)
         .send(newReservation);
     });
 
@@ -139,7 +136,7 @@ describe('Starting with 2 customers in db', () => {
     const customer = await helper.customerByUsername('NathSab1');
     const returnedReservations =
       await api
-        .get(`api/customers/${customer.id}/reservations`)
+        .get(`/api/customers/${customer.id}/reservations`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -164,7 +161,7 @@ describe('Starting with 2 customers in db', () => {
     const customer = await helper.customerByUsername('Eletic23');
     const returnedReservations =
       await api
-        .get(`api/customers/${customer.id}/reservations`)
+        .get(`/api/customers/${customer.id}/reservations`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -178,7 +175,7 @@ describe('Starting with 2 customers in db', () => {
     expect(reservationsBefore[0]).toHaveProperty('endAt', null);
 
     const returnedEndedRes = await api
-      .put(`api/customers/${customer.id}/reservations`)
+      .put(`/api/customers/${customer.id}/reservations`)
       .send({ endAt: new Date().toJSON().slice(0, 10) })
       .expect(200)
       .expect('Content-Type', /application\/json/);
@@ -226,13 +223,6 @@ describe('Starting with 2 customers in db', () => {
 //   ));
 // });
 
-
-test('queryTest', async () => {
-  await Reservation.destroy({ truncate: { cascade: true } });
-  await Customer.destroy({ truncate: { cascade: true } });
-
-  expect(1).toBe(1);
-});
 
 afterAll(async () => {
   await sequelize.close();

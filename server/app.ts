@@ -41,7 +41,6 @@ app.get('/api/vehicles', async (req, res) => {
     ];
   }
   const vehicles = await Vehicle.findAll({ include, where });
-  console.log('Vehicles with valid params after retrieval', JSON.stringify(vehicles));
   if (vehicles.length === 0) {
     res.status(404).send({ error: 'No vehicles available of said model' });
   }
@@ -49,16 +48,16 @@ app.get('/api/vehicles', async (req, res) => {
 });
 
 app.post('/api/customers', async (req, res) => {
+  console.log('req.Body', req.body);
   if (req.body.password.length < 5) {
-    res.status(400).send({ error: 'Password is below 5 characters' });
+    return res.status(403).send({ error: 'Password is below 5 characters' });
   }
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newCustomer = await Customer.create({ name: req.body.name, username: req.body.username, hashedPassword });
-    console.log('newCustomer\n', newCustomer);
-    res.status(201).json(newCustomer.toJSON());
+    return res.status(201).json(newCustomer.toJSON());
   } catch (err) {
-    res.status(400).send({ error: `Username ${req.body.username} is taken` });
+    return res.status(409).send({ error: `Username ${req.body.username} is taken` });
   }
 
 });
