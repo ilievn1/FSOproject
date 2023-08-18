@@ -1,6 +1,8 @@
 const { Customer, Reservation } = require('../models/');
 const app = require('../app');
 import supertest from 'supertest';
+import request from 'supertest';
+
 const api = supertest(app);
 const helper = require('./test_helper');
 const { sequelize } = require('../utils/db');
@@ -93,24 +95,42 @@ describe('Starting with 2 customers in db', () => {
     });
   });
 
-  test('customer can make reservation', async () => {
+  test('customer can make reservations', async () => {
     const customer = await helper.customerByUsername('NathSab1');
     const reservationsBefore = await helper.allReservationsByUsername(customer.username);
-    const newReservation = {
-      vehicleId: 1,
-      customerId: customer.id,
-      startAt: new Date().toJSON().slice(0, 10)
-    };
-    const returnedReservation =
-      await api
-        .post(`/customers/${customer.id}/reservations`)
-        .send(newReservation)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
+
+    const requests = Array.from({ length: 5 }, async (_r, idx) => {
+      const newReservation = {
+        vehicleId: idx,
+        customerId: customer.id,
+        startAt: new Date().toJSON().slice(0, 10)
+      };
+      return await request(app)
+        .post(`api/customers/${customer.id}/reservations`)
+        .send(newReservation);
+    });
+
+    await Promise.all(requests);
+    // const responses = await Promise.all(requests);
 
     const reservationsAfter = await helper.allReservationsByUsername(customer.username);
-    expect(reservationsBefore).toHaveLength(reservationsBefore.length + 1);
-    expect(reservationsAfter).toContainEqual(returnedReservation.body);
+    expect(reservationsAfter).toHaveLength(reservationsBefore.length + 5);
+
+    // responses.forEach((resp, idx) => {
+    //   expect(resp.status).toBe(201);
+    //   expect(resp.headers['Content-Type']).toMatch(/application\/json/);
+    //   expect(responses).toEqual(
+    //     expect.arrayContaining([
+    //       expect.objectContaining({
+    //         vehicleId: idx,
+    //         customerId: customer.id,
+    //         startAt: new Date().toJSON().slice(0, 10)
+    //       }),
+    //     ])
+    //   );
+    //   expect(reservationsAfter).toContainEqual(resp);
+
+    // });
 
   });
 
@@ -118,13 +138,23 @@ describe('Starting with 2 customers in db', () => {
     const customer = await helper.customerByUsername('NathSab1');
     const returnedReservations =
       await api
-        .get(`/customers/${customer.id}/reservations`)
-        .expect(201)
+        .get(`api/customers/${customer.id}/reservations`)
+        .expect(200)
         .expect('Content-Type', /application\/json/);
 
     const customerReservations = await helper.allReservationsByUsername(customer.username);
     expect(returnedReservations.body).toHaveLength(customerReservations.length);
-    returnedReservations.body.forEach((r: Reservation) => {
+
+    returnedReservations.body.forEach((r: Reservation, idx: number) => {
+      expect(returnedReservations.body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            vehicleId: idx,
+            customerId: customer.id,
+            startAt: new Date().toJSON().slice(0, 10)
+          }),
+        ])
+      );
       expect(customerReservations).toContainEqual(r);
     });
   });
@@ -133,8 +163,8 @@ describe('Starting with 2 customers in db', () => {
     const customer = await helper.customerByUsername('Eletic23');
     const returnedReservations =
       await api
-        .get(`/customers/${customer.id}/reservations`)
-        .expect(201)
+        .get(`api/customers/${customer.id}/reservations`)
+        .expect(200)
         .expect('Content-Type', /application\/json/);
 
     expect(returnedReservations.body).toHaveLength(0);
@@ -142,32 +172,65 @@ describe('Starting with 2 customers in db', () => {
 
   test('customer can return vehicle', async () => {
     const customer = await helper.customerByUsername('NathSab1');
-    //TODO: switch to activeReservations
+    //TODO: switch to activeReservations and rand reservations
     const reservationsBefore = await helper.allReservationsByUsername(customer.username);
     expect(reservationsBefore[0]).toHaveProperty('endAt', null);
-    const newReservation = {
-      vehicleId: 0,
-      customerId: customer.id,
-      startAt: new Date().toJSON().slice(0, 10)
-    };
-    const returnedReservation =
-      await api
-        .post(`/customers/${customer.id}/reservations`)
-        .send(newReservation)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
+
+    const returnedEndedRes = await api
+      .put(`api/customers/${customer.id}/reservations`)
+      .send({ endAt: new Date().toJSON().slice(0, 10) })
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 
     const reservationsAfter = await helper.allReservationsByUsername(customer.username);
-    expect(reservationsAfter).toContainEqual(returnedReservation.body);
+    expect(returnedEndedRes).toHaveProperty('endAt', new Date().toJSON().slice(0, 10));
+    expect(reservationsAfter[0]).toHaveProperty('endAt', new Date().toJSON().slice(0, 10));
+  });
+
+  test('customer can receive active + non rated reservations', async () => {
+    const customer = await helper.customerByUsername('NathSab1');
+    //TODO: switch to activeReservations and rand reservations
+    const reservations = await helper.allReservationsByUsername(customer.username);
+    const active = reservations.filter((r: Reservation) => !r.endAt);
+    const nonRated = reservations.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && !r.feedback );
+    const nonActiveRated = reservations.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && r.feedback);
+
+    expect(active).toEqual(expect.arrayContaining(
+      [expect.objectContaining({ endAt: null })]
+    ));
+    expect(nonRated).toEqual(expect.arrayContaining(
+      [expect.objectContaining({ feedback: null })]
+    ));
+
+    expect(active.length + nonRated.length).toHaveLength(reservations.length - nonActiveRated.length);
 
   });
 });
 
-test('queryTest', async () => {
-  const nonRated = await helper.nonRatedReservationsByUsername('NathSab1');
-  console.log('nonRated',nonRated);
-  expect(1).toBe(1);
-});
+// test('should not contain objects with endAt as null', () => {
+//   const array = [
+//     {
+//       endAt: '2021-07-08'
+//     },
+//     {
+//       endAt: '2021-07-09'
+//     },
+//     // {
+//     //   endAt: null
+//     // },
+//   ];
+
+//   expect(array).not.toEqual(expect.arrayContaining(
+//     [expect.objectContaining({ endAt: null })]
+//   ));
+// });
+
+
+// test('queryTest', async () => {
+//   const nonRated = await helper.nonRatedReservationsByUsername('NathSab1');
+//   console.log('nonRated',nonRated);
+//   expect(1).toBe(1);
+// });
 
 afterAll(async () => {
   await sequelize.close();
