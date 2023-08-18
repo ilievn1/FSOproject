@@ -2,7 +2,7 @@ const { Customer, Reservation, Feedback } = require('../models/');
 
 const customersInDB = async () => {
   const customers = await Customer.findAll();
-  return JSON.stringify(customers);
+  return customers.map((c: { toJSON: () => unknown; }) => c.toJSON());
 };
 const customerByUsername = async (username: string) => {
   const matchedCustomer = await Customer.findOne({
@@ -10,7 +10,7 @@ const customerByUsername = async (username: string) => {
       username
     }
   });
-  return JSON.stringify(matchedCustomer);
+  return matchedCustomer.toJSON();
 };
 const allReservationsByUsername = async (username: string) => {
   const customerReservations = await Reservation.findAll({
@@ -19,7 +19,7 @@ const allReservationsByUsername = async (username: string) => {
       '$username$': username,
     }
   });
-  return JSON.stringify(customerReservations);
+  return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
 };
 const activeReservationsByUsername = async (username: string) => {
   const customerReservations = await Reservation.findAll({
@@ -29,7 +29,7 @@ const activeReservationsByUsername = async (username: string) => {
       '$username$': username
     }
   });
-  return JSON.stringify(customerReservations);
+  return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
 };
 
 const nonRatedReservationsByUsername = async (username: string) => {
@@ -41,7 +41,7 @@ const nonRatedReservationsByUsername = async (username: string) => {
 
     }
   });
-  return JSON.stringify(customerReservations);
+  return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
 };
 
 module.exports = {

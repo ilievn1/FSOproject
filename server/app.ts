@@ -1,11 +1,12 @@
 import express, { Request } from 'express';
 import morgan from 'morgan';
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+
 require('express-async-errors');
 const app = express();
 const middleware = require('./utils/middleware');
-const { Vehicle } = require('./models');
-const { Reservation } = require('./models');
+const { Vehicle, Reservation, Customer } = require('./models');
 
 
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.get('/api/vehicles', async (req, res) => {
   // TODO: Add query param extractor middleware (extraction, request proofing)
+  // TODO: Extract DB communication to service
   // TODO: Extract to router
   let where = {};
   let include: Array<object> = [];
@@ -44,6 +46,21 @@ app.get('/api/vehicles', async (req, res) => {
     res.status(404).send({ error: 'No vehicles available of said model' });
   }
   res.json(vehicles);
+});
+
+app.post('/api/customers', async (req, res) => {
+  if (req.body.password.length < 5) {
+    res.status(400).send({ error: 'Password is below 5 characters' });
+  }
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const newCustomer = await Customer.create({ name: req.body.name, username: req.body.username, hashedPassword });
+    console.log('newCustomer\n', newCustomer);
+    res.status(201).json(newCustomer.toJSON());
+  } catch (err) {
+    res.status(400).send({ error: `Username ${req.body.username} is taken` });
+  }
+
 });
 
 app.use(middleware.unknownEndpoint);

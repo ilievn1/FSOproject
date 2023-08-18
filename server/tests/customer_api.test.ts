@@ -17,7 +17,8 @@ beforeAll(async () => {
 
 describe('Starting with 0 customers in db', () => {
   beforeAll(async () => {
-    await Customer.destroy({ truncate: { cascade: true } });
+    await Reservation.destroy({ truncate: { cascade: true }, restartIdentity: true });
+    await Customer.destroy({ truncate: { cascade: true }, restartIdentity: true });
   });
 
   test('registration succeeds with a free username', async () => {
@@ -65,7 +66,7 @@ describe('Starting with 0 customers in db', () => {
     const newCustomer = {
       name: 'Cillian Murphy',
       username: 'Cillian M1',
-      password: 'Oppenheimer',
+      password: 'Op',
     };
 
     await api
@@ -81,8 +82,8 @@ describe('Starting with 0 customers in db', () => {
 });
 describe('Starting with 2 customers in db', () => {
   beforeAll(async () => {
-    await Customer.destroy({ truncate: { cascade: true } });
     await Reservation.destroy({ truncate: { cascade: true } });
+    await Customer.destroy({ truncate: { cascade: true } });
     const hashedPassword = await bcrypt.hash('password', 10);
     const sampleCustomers = [
       { name: 'Nathan Sebhastian', username: 'NathSab1', hashedPassword },
@@ -226,11 +227,12 @@ describe('Starting with 2 customers in db', () => {
 // });
 
 
-// test('queryTest', async () => {
-//   const nonRated = await helper.nonRatedReservationsByUsername('NathSab1');
-//   console.log('nonRated',nonRated);
-//   expect(1).toBe(1);
-// });
+test('queryTest', async () => {
+  await Reservation.destroy({ truncate: { cascade: true } });
+  await Customer.destroy({ truncate: { cascade: true } });
+
+  expect(1).toBe(1);
+});
 
 afterAll(async () => {
   await sequelize.close();
