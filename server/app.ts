@@ -25,14 +25,31 @@ app.get('/api/vehicles', async (req, res) => {
   let include: Array<object> = [];
   const requiredParamsPresent = 'brand' in req.query && 'model' in req.query && 'year' in req.query;
 
-  if (requiredParamsPresent) {
+  const Vinetki = await Vehicle.findAll({
+    include: {
+      model: Reservation,
+      required: false, // This allows vehicles with no reservations to be included
+      where: {
+        endAt: null
+      },
+    },
+    where: {
+      brand: req.query.brand,
+      model: req.query.model,
+      year: req.query.year,
+      available: true,
+      '$reservation$': null,
 
+    }
+  });
+  console.log('Vinetki', JSON.parse(JSON.stringify(Vinetki)));
+
+  if (requiredParamsPresent) {
     where = {
       brand: req.query.brand,
       model: req.query.model,
       year: req.query.year,
       available: true,
-      '$reservation.endAt$': null,
 
     };
     include = [
@@ -43,9 +60,9 @@ app.get('/api/vehicles', async (req, res) => {
   }
   const vehicles = await Vehicle.findAll({ include, where });
   if (vehicles.length === 0) {
-    res.status(404).send({ error: 'No vehicles available of said model' });
+    return res.status(404).send({ error: 'No vehicles available of said model' });
   }
-  res.json(vehicles);
+  return res.json(vehicles);
 });
 
 app.post('/api/customers', async (req, res) => {
@@ -71,11 +88,6 @@ app.post('/api/customers', async (req, res) => {
 // TODO: Extract to router
 
 app.get('/api/customers/:id/reservations', async (req, res) => {
-  // TODO: Make 2 separate queries and merge results
-  // 1. for endAt:null -> no unnecessary null feedback property
-  // 2. for feedback:null -> exclude null feedback property
-  // 3. combine into 1 array and return
-  // ALTERNATIVE: do one composite query, just attributes: [], because only last test in customer_api needs a feedback field, (btw rewrite test)
   const customerReservations = await Reservation.findAll({
     include: [{ model: Feedback }],
     where: {

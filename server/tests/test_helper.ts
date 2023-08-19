@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
-
-const { Customer, Reservation, Feedback } = require('../models/');
+const bcrypt = require('bcrypt');
+const { Vehicle, Customer, Reservation, Feedback } = require('../models/');
 
 const customersInDB = async () => {
   const customers = await Customer.findAll();
@@ -84,11 +84,50 @@ const ratedReservationsByUsername = async (username: string) => {
   });
   return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
 };
+
+const createReservation = async (customerId: number, vehicleId: number) => {
+
+  const newReservation = await Reservation.create({
+    vehicleId: vehicleId,
+    customerId: customerId,
+    startAt: new Date().toJSON().slice(0, 10)
+  });
+
+  return newReservation.toJSON();
+};
+const endReservation = async (reservationId: number) => {
+  await Reservation.update({ endAt: new Date().toJSON().slice(0, 10) }, {
+    where: {
+      id: reservationId
+    }
+  });
+};
+const createCustomer = async (name: string, username: string) => {
+  const newCustomer = await Customer.create({
+    name: name,
+    username: username,
+    hashedPassword: await bcrypt.hash('password', 10)
+  });
+
+  return newCustomer.toJSON();
+};
+const toggleVehicleAvailability = async (vehicleId: number, available: boolean) => {
+  await Vehicle.update({ available: available }, {
+    where: {
+      id: vehicleId
+    }
+  });
+};
+
 module.exports = {
+  toggleVehicleAvailability,
   customersInDB,
   customerByUsername,
+  createCustomer,
+  createReservation,
+  endReservation,
   allReservationsByUsername,
   activeReservationsByUsername,
   nonRatedReservationsByUsername,
-  ratedReservationsByUsername
+  ratedReservationsByUsername,
 };

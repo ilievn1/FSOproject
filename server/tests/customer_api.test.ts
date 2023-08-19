@@ -112,11 +112,13 @@ describe('Starting with 2 customers in db', () => {
 
     const reservationsAfter = await helper.allReservationsByUsername(customer.username);
     expect(reservationsAfter).toHaveLength(reservationsBefore.length + 5);
+
     // Appropriate metadata
     responsesObjs.forEach((resp) => {
       expect(resp.status).toBe(201);
       expect(resp.headers['content-type']).toMatch(/application\/json/);
     });
+
     // Whatever is sent is returned
     responsesObjsBodies.forEach((_, idx) => {
       idx++;
@@ -236,8 +238,6 @@ describe('Starting with 2 customers in db', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-    console.log('#3\nreturnedReservations.body\n', returnedReservations.body);
-
     const active = returnedReservations.body.filter((r: Reservation) => !r.endAt);
     const nonRated = returnedReservations.body.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && !r.feedback);
 
@@ -249,9 +249,8 @@ describe('Starting with 2 customers in db', () => {
     ));
 
     const reservationsInDB = await helper.allReservationsByUsername(customer.username);
-    console.log('#4\nreservationsInDB\n', reservationsInDB);
+
     const rated = await helper.ratedReservationsByUsername(customer.username);
-    console.log('#5\nrated\n', rated);
 
     expect(active.length + nonRated.length).toBe(reservationsInDB.length - rated.length);
 
