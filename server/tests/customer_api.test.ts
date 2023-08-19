@@ -143,14 +143,16 @@ describe('Starting with 2 customers in db', () => {
         .expect('Content-Type', /application\/json/);
 
     const customerReservationsInDB = await helper.allReservationsByUsername(customer.username);
-    console.log('#1\ncustomerReservationsInDB\n', customerReservationsInDB);
-    console.log('#2\nreturnedReservations.body\n', returnedReservations.body);
+    //console.log('#1\ncustomerReservationsInDB\n', customerReservationsInDB);
+    //console.log('#2\nreturnedReservations.body\n', returnedReservations.body);
     // DB saved content corresponds user submitted content
     returnedReservations.body.forEach((retRes: Reservation) => {
+      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+      const { feedback, ...woFeedback } = retRes;
       expect(customerReservationsInDB).toEqual(
         expect.arrayContaining([
-          // Partial checking for ommiting id field and feedback field
-          expect.objectContaining(retRes),
+          // Partial checking for feedback field
+          expect.objectContaining(woFeedback),
         ])
       );
     });
@@ -168,37 +170,76 @@ describe('Starting with 2 customers in db', () => {
     expect(returnedReservations.body).toHaveLength(0);
   });
 
-  test('customer can return vehicle / end reservation', async () => {
+  test('customer can return vehicles / end reservations', async () => {
     const customer = await helper.customerByUsername('NathSab1');
     const activeBefore = await helper.activeReservationsByUsername(customer.username);
-    const toBeEnded = activeBefore[0];
-    expect(toBeEnded).toHaveProperty('endAt', null);
+    const toBeEnded = activeBefore.slice(0, -1);
 
-    const returnedEndedRes = await api
-      .put(`/api/customers/${customer.id}/reservations/${toBeEnded.id}`)
-      .send({ endAt: new Date().toJSON().slice(0, 10) })
-      .expect(200)
+    expect(toBeEnded).toEqual(expect.arrayContaining(
+      [expect.objectContaining({ endAt: null })]
+    ));
+
+    const requests = toBeEnded.map(async (r: Reservation) => {
+      return await request(app)
+        .put(`/api/customers/${customer.id}/reservations/${r.id}`);
+    });
+
+    const responsesObjs = await Promise.all(requests);
+    const responsesObjsBodies = responsesObjs.map(r => r.body);
+    // Appropriate metadata
+    responsesObjs.forEach((resp) => {
+      expect(resp.status).toBe(200);
+      expect(resp.headers['content-type']).toMatch(/application\/json/);
+    });
+
+    // Server responds with updated end date
+    responsesObjsBodies.forEach((r) => {
+      expect(responsesObjsBodies).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ...r,
+            endAt: new Date().toJSON().slice(0, 10)
+          }),
+        ])
+      );
+    });
+
+    // DB entries updated
+    const activeAfter = await helper.activeReservationsByUsername(customer.username);
+    expect(activeAfter).toHaveLength(activeBefore.length - toBeEnded.length);
+  });
+
+  test('customer can give feedback rating on returned vehicle / ended reservation', async () => {
+    const customer = await helper.customerByUsername('NathSab1');
+    const endedNonRatedRes = await helper.nonRatedReservationsByUsername(customer.username);
+    const toBeRated = endedNonRatedRes.slice(0, 2);
+
+    await api
+      .post(`/api/customers/${customer.id}/reservations/${toBeRated[0].id}/feedback`)
+      .send({ rating: 5, comment: 'Had great experience!' })
+      .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const activeAfter = await helper.activeReservationsByUsername(customer.username);
-    expect(activeAfter).toHaveLength(activeBefore.length - 1 );
-    expect(returnedEndedRes.body).toHaveProperty('endAt', new Date().toJSON().slice(0, 10));
+    await api
+      .post(`/api/customers/${customer.id}/reservations/${toBeRated[1].id}/feedback`)
+      .send({ rating: 4, comment: 'The ride was pleasant and customer support responsive' })
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
   });
 
   test('customer can receive active + non rated reservations', async () => {
     const customer = await helper.customerByUsername('NathSab1');
+
     const returnedReservations =
       await api
         .get(`/api/customers/${customer.id}/reservations`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
+
     console.log('#3\nreturnedReservations.body\n', returnedReservations.body);
+
     const active = returnedReservations.body.filter((r: Reservation) => !r.endAt);
-    const nonRated = returnedReservations.body.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && !r.feedback );
-    
-    const reservationsInDB = await helper.allReservationsByUsername(customer.username);
-    console.log('#4\reservationsInDB\n', reservationsInDB);
-    const nonActiveRated = reservationsInDB.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && r.feedback);
+    const nonRated = returnedReservations.body.filter((r: { endAt: string; feedback?: unknown }) => r.endAt && !r.feedback);
 
     expect(active).toEqual(expect.arrayContaining(
       [expect.objectContaining({ endAt: null })]
@@ -207,29 +248,15 @@ describe('Starting with 2 customers in db', () => {
       [expect.objectContaining({ feedback: null })]
     ));
 
-    expect(active.length + nonRated.length).toBe(reservationsInDB.length - nonActiveRated.length);
+    const reservationsInDB = await helper.allReservationsByUsername(customer.username);
+    console.log('#4\nreservationsInDB\n', reservationsInDB);
+    const rated = await helper.ratedReservationsByUsername(customer.username);
+    console.log('#5\nrated\n', rated);
+
+    expect(active.length + nonRated.length).toBe(reservationsInDB.length - rated.length);
 
   });
 });
-
-// test('should not contain objects with endAt as null', () => {
-//   const array = [
-//     {
-//       endAt: '2021-07-08'
-//     },
-//     {
-//       endAt: '2021-07-09'
-//     },
-//     // {
-//     //   endAt: null
-//     // },
-//   ];
-
-//   expect(array).not.toEqual(expect.arrayContaining(
-//     [expect.objectContaining({ endAt: null })]
-//   ));
-// });
-
 
 afterAll(async () => {
   await sequelize.close();

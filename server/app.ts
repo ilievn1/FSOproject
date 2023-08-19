@@ -71,6 +71,11 @@ app.post('/api/customers', async (req, res) => {
 // TODO: Extract to router
 
 app.get('/api/customers/:id/reservations', async (req, res) => {
+  // TODO: Make 2 separate queries and merge results
+  // 1. for endAt:null -> no unnecessary null feedback property
+  // 2. for feedback:null -> exclude null feedback property
+  // 3. combine into 1 array and return
+  // ALTERNATIVE: do one composite query, just attributes: [], because only last test in customer_api needs a feedback field, (btw rewrite test)
   const customerReservations = await Reservation.findAll({
     include: [{ model: Feedback }],
     where: {
@@ -85,28 +90,34 @@ app.get('/api/customers/:id/reservations', async (req, res) => {
       ]
     },
   });
-    // title LIKE 'Boat%' OR description LIKE '%boat%'
   res.json(customerReservations);
 });
 
 app.post('/api/customers/:id/reservations', async (req, res) => {
   const newReservation = await Reservation.create(req.body);
   res.status(201).json(newReservation);
-
 });
 
 app.put('/api/customers/:cId/reservations/:rId', async (req, res) => {
-  // TODO: instead of send endAt with put body just associate 'end reservation / return vehicle' with reservationId and set date on the server (i.e. here)
   const toBeEnded = await Reservation.findOne({
     where: {
       id: req.params.rId,
       customerId: req.params.cId,
     },
   });
-  toBeEnded.endAt = req.body.endAt;
+  toBeEnded.endAt = new Date().toJSON().slice(0, 10);
   await toBeEnded.save();
   res.json(toBeEnded);
+});
 
+app.post('/api/customers/:cId/reservations/:rId/feedback', async (req, res) => {
+  const newReservation = await Feedback.create(
+    {
+      reservationId: req.params.rId,
+      ...req.body
+    }
+  );
+  res.status(201).json(newReservation);
 });
 
 app.use(middleware.unknownEndpoint);

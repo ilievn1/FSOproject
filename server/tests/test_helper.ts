@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 const { Customer, Reservation, Feedback } = require('../models/');
 
 const customersInDB = async () => {
@@ -29,7 +31,7 @@ const activeReservationsByUsername = async (username: string) => {
     include: [{ model: Customer }],
     where: {
       endAt: null,
-      '$username$': username
+      '$customer.username$': username
     }
   });
   return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
@@ -37,20 +39,56 @@ const activeReservationsByUsername = async (username: string) => {
 
 const nonRatedReservationsByUsername = async (username: string) => {
   const customerReservations = await Reservation.findAll({
-    include: [{ model: Customer }, { model: Feedback }],
+    include: [
+      {
+        model: Customer,
+        where: {
+          username: username
+        },
+        attributes: []
+      },
+      {
+        model: Feedback
+      }
+    ],
     where: {
-      '$username$': username,
+      endAt: { [Op.not]: null },
       '$feedback$': null,
-
     }
   });
   return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
 };
 
+const ratedReservationsByUsername = async (username: string) => {
+  const customerReservations = await Reservation.findAll({
+    include: [
+      {
+        model: Customer,
+        where: {
+          username: username
+        },
+        attributes: []
+      },
+      {
+        model: Feedback,
+        where: {
+          reservationId: {
+            [Op.col]: 'reservation.id'
+          }
+        }
+      }
+    ],
+    where: {
+      endAt: { [Op.not]: null },
+    }
+  });
+  return customerReservations.map((u: { toJSON: () => unknown; }) => u.toJSON());
+};
 module.exports = {
   customersInDB,
   customerByUsername,
   allReservationsByUsername,
   activeReservationsByUsername,
-  nonRatedReservationsByUsername
+  nonRatedReservationsByUsername,
+  ratedReservationsByUsername
 };

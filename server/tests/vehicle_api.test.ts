@@ -31,7 +31,7 @@ describe('viewing a specific vehicle based on valid query params', () => {
     expect(body[0]).toHaveProperty('licenceNumber', target.licenceNumber);
   });
   test('returns error if all vehicles are not available', async () => {
-    const target = seedData[16]; // TODO: test seeding data will have bmw 3 2022 set to available: false and excluded from reservations by backend/pgAdmin
+    const target = seedData[16];
     await api
       .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`)
       .expect(404, { error: 'No vehicles available of said model' });
@@ -39,13 +39,13 @@ describe('viewing a specific vehicle based on valid query params', () => {
 
   });
   test('returns error if all vehicles are occupied/reserverd', async () => {
-    const target = seedData[17]; // TODO: test seeding data will have 1/2 honda airware 2000 set to available: false excluded from reservations by backend/pgAdmin
+    const target = seedData[17];
     await api
       .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`)
       .expect(404, { error: 'No vehicles available of said model' });
   });
   test('returns error if some vehicles of said model are both unavailabe or already reserved', async () => {
-    const target = seedData[20]; // TODO: test seeding data will have 2/2 honda airware 2000 set to available: true, but added in reservations by backend/pgAdmin
+    const target = seedData[20];
     await api
       .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`)
       .expect(404, { error: 'No vehicles available of said model' });
