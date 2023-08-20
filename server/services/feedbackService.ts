@@ -8,10 +8,7 @@ interface Props {
 
 const addFeedback = async (props: Props) => {
   const newFeedback = await Feedback.create(props);
-  if ('id' in newFeedback.toJSON()) {
-    return true;
-  }
-  return false;
+  return newFeedback;
 };
 
 export default {

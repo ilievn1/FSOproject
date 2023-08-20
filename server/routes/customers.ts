@@ -8,7 +8,6 @@ import feedbackService from '../services/feedbackService';
 
 const customersRouter = express.Router();
 
-const { Feedback } = require('../models');
 
 customersRouter.post('/', async (req, res, next) => {
   try {
@@ -45,18 +44,15 @@ customersRouter.put('/:cId/reservations/:rId', async (req, res) => {
   res.json(endedReservation);
 });
 
-customersRouter.post('/:cId/reservations/:rId/feedback', async (req, res) => {
+customersRouter.post('/:cId/reservations/:rId/feedback', async (req, res, next) => {
   try {
-    const { reservationId, rating, comment } = proofer.toNewFeedback(req.body);
-    const isCreated = await feedbackService.addFeedback({ reservationId, rating, comment });
-    if (isCreated) {
-      res.status(201).end();
-    } else {
-      res.status(400).end();
-    }
+    const feedbackBody = { reservationId: req.params.rId, ...req.body };
+    const { reservationId, rating, comment } = proofer.toNewFeedback(feedbackBody);
+    const newFeedback = await feedbackService.addFeedback({ reservationId, rating, comment });
+    res.status(201).json(newFeedback);
 
   } catch (err: unknown) {
-    res.status(400).end;
+    next(err);
   }
 });
 
