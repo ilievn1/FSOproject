@@ -4,15 +4,21 @@ import proofer from '../utils/requestProofer';
 
 const vehiclesRouter = express.Router();
 
-vehiclesRouter.get('/', async (req, res) => {
+vehiclesRouter.get('/', async (req, res, next) => {
+  try {
+    const searchParams = proofer.toSearchParams(req.query);
+    const toBeRented = await vehicleService.getRentableVehicle(searchParams);
 
-  const searchParams = proofer.toSearchParams(req.query);
-  const toBeRented = await vehicleService.getRentableVehicle(searchParams);
-
-  if (toBeRented) {
-    res.json(toBeRented);
-  } else {
-    res.status(404).send({ error: 'No vehicles available of said model' });
+    if (toBeRented) {
+      res.json(toBeRented);
+    } else {
+      res.status(404).send({ error: 'No vehicles available of said model' });
+    }
+  } catch (err: unknown) {
+    next(err);
+    // if (error instanceof Error) {
+    //   res.status(400).send({ error: error.message });
+    // }
   }
 });
 

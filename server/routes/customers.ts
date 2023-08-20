@@ -1,74 +1,63 @@
 import express from 'express';
-import { Op } from 'sequelize';
-const bcrypt = require('bcrypt');
+import customerService from '../services/customerService';
+import reservationService from '../services/reservationService';
+import bcrypt from 'bcrypt';
+import 'express-async-errors';
+import proofer from '../utils/requestProofer';
+import feedbackService from '../services/feedbackService';
 
 const customersRouter = express.Router();
 
-const { Reservation, Customer, Feedback } = require('../models');
+const { Feedback } = require('../models');
 
-customersRouter.post('/', async (req, res) => {
-  // TODO: Add query param extractor middleware (extraction, request proofing)
-  // TODO: Extract to error handling to middleware - upon create fail, customer not created, rather exception handled directly to errorHandler
-  // TODO: Extract DB communication to service
-  if (req.body.password.length < 5) {
-    return res.status(403).send({ error: 'Password is below 5 characters' });
-  }
+customersRouter.post('/', async (req, res, next) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const newCustomer = await Customer.create({ name: req.body.name, username: req.body.username, hashedPassword });
-    return res.status(201).json(newCustomer.toJSON());
-  } catch (err) {
-    return res.status(409).send({ error: `Username ${req.body.username} is taken` });
+    const { name, username, password } = proofer.toNewCustomer(req.body);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newCustomer = await customerService.addCustomer({ name, username, hashedPassword });
+    res.status(201).json(newCustomer);
+
+  } catch (err: unknown) {
+    next(err);
   }
 
 });
-// TODO: Add query param extractor middleware (extraction, request proofing)
-// TODO: Extract to error handling to middleware
-// TODO: Extract DB communication to service
 
 customersRouter.get('/:id/reservations', async (req, res) => {
-  const customerReservations = await Reservation.findAll({
-    include: [{ model: Feedback }],
-    where: {
-      customerId: req.params.id,
-      [Op.or]: [
-        {
-          endAt: null
-        },
-        {
-          '$feedback$': null,
-        }
-      ]
-    },
-  });
+  const customerReservations = await reservationService.getCustomerReservations(req.params.id);
   res.json(customerReservations);
 });
 
-customersRouter.post('/:id/reservations', async (req, res) => {
-  const newReservation = await Reservation.create(req.body);
-  res.status(201).json(newReservation);
+customersRouter.post('/:id/reservations', async (req, res, next) => {
+  try {
+    const { vehicleId, customerId, startAt } = proofer.toNewReservation(req.body);
+    const newReservation = await reservationService.addCustomerReservation({ vehicleId, customerId, startAt });
+    res.status(201).json(newReservation);
+
+  } catch (err: unknown) {
+    next(err);
+  }
+
 });
 
 customersRouter.put('/:cId/reservations/:rId', async (req, res) => {
-  const toBeEnded = await Reservation.findOne({
-    where: {
-      id: req.params.rId,
-      customerId: req.params.cId,
-    },
-  });
-  toBeEnded.endAt = new Date().toJSON().slice(0, 10);
-  await toBeEnded.save();
-  res.json(toBeEnded);
+  const endedReservation = await reservationService.endCustomerReservation(req.params.rId, req.params.cId);
+  res.json(endedReservation);
 });
 
 customersRouter.post('/:cId/reservations/:rId/feedback', async (req, res) => {
-  const newReservation = await Feedback.create(
-    {
-      reservationId: req.params.rId,
-      ...req.body
+  try {
+    const { reservationId, rating, comment } = proofer.toNewFeedback(req.body);
+    const isCreated = await feedbackService.addFeedback({ reservationId, rating, comment });
+    if (isCreated) {
+      res.status(201).end();
+    } else {
+      res.status(400).end();
     }
-  );
-  res.status(201).json(newReservation);
+
+  } catch (err: unknown) {
+    res.status(400).end;
+  }
 });
 
 export default customersRouter;
