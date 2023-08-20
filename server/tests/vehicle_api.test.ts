@@ -72,11 +72,9 @@ describe('viewing a specific vehicle based on invalid query params', () => {
   test('non-existent model returns 404', async () => {
     await api.get('/api/vehicles?brand=Honda&model=Foo&year=1987').expect(404);
   });
-  test('year before 1900 returns 404', async () => {
-    await api.get('/api/vehicles?brand=Toyota&model=Camry&year=694').expect(404);
-  });
-  test('non-existent brand returns 404', async () => {
-    await api.get('/api/vehicles?brand=Foo&model=Bar&year=694').expect(404);
+  test('missing params returns 400', async () => {
+    await api.get('/api/vehicles?brand=Foo').expect(400, { error: 'Incorrect data: req.query expected fields are brand, model and year' });
+
   });
 });
 

@@ -44,3 +44,7 @@ export interface Reservation {
     endAt: string;
     feedback?: Feedback
 }
+
+export type NewCustomer = Omit<Customer, 'id' | 'hashedPassword'> & { password: Customer['hashedPassword'] }
+export type NewReservation = Omit<Reservation, 'id' | 'endAt' | 'feedback'>;
+export type NewFeedback = Omit<Feedback, 'id'>;

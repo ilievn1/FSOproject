@@ -17,6 +17,34 @@ beforeAll(async () => {
 });
 
 describe('Starting with 0 customers in db', () => {
+  test('registration fails with 422 due to missing params', async () => {
+    const missingName = {
+      username: 'Brad P1',
+      password: 'password',
+    };
+    const missingUsername = {
+      name: 'Brad Pitt',
+      password: 'password',
+    };
+    const missingPW = {
+      name: 'Brad Pitt',
+      username: 'Brad P1',
+    };
+    const invalidParams = [missingName, missingUsername, missingPW];
+
+    const requests = invalidParams.map(async p => {
+      return await request(app)
+        .post('/api/customers')
+        .send(p);
+    });
+
+    const responsesObjs = await Promise.all(requests);
+
+    responsesObjs.forEach((resp) => {
+      expect(resp.status).toBe(422);
+    });
+  });
+
   test('registration succeeds with a free username', async () => {
     const newCustomer = {
       name: 'Brad Pitt',
