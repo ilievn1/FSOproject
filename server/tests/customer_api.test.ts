@@ -78,6 +78,8 @@ describe('Starting with 0 customers in db', () => {
 });
 describe('Starting with 2 customers in db', () => {
   beforeAll(async () => {
+    await Reservation.destroy({ truncate: true, cascade: true, restartIdentity: true });
+    await Customer.destroy({ truncate: true, cascade: true, restartIdentity: true });
     const hashedPassword = await bcrypt.hash('password', 10);
     const sampleCustomers = [
       { name: 'Nathan Sebhastian', username: 'NathSab1', hashedPassword },
