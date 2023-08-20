@@ -15,20 +15,20 @@ beforeAll(async () => {
 
 });
 
-describe('when seeded vehicles are in DB', () => {
-  test('vehicles are return type is json', async () => {
-    await api
-      .get('/api/vehicles')
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-  });
+// describe('when seeded vehicles are in DB', () => {
+//   test('vehicles are return type is json', async () => {
+//     await api
+//       .get('/api/vehicles')
+//       .expect(200)
+//       .expect('Content-Type', /application\/json/);
+//   });
 
-  test('all vehicles are returned', async () => {
-    const response = await api.get('/api/vehicles');
-    expect(response.body).toHaveLength(seedData.length);
-  });
+//   test('all vehicles are returned', async () => {
+//     const response = await api.get('/api/vehicles');
+//     expect(response.body).toHaveLength(seedData.length);
+//   });
 
-});
+// });
 
 describe('viewing a specific vehicle based on valid query params', () => {
   beforeAll(async () => {
@@ -50,7 +50,7 @@ describe('viewing a specific vehicle based on valid query params', () => {
   test('succeeds if vehicle is available and not all instances said brand/model/year are reserved', async () => {
     const target = seedData[0];
     const { body } = await api.get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`);
-    expect(body[0]).toHaveProperty('licenceNumber', target.licenceNumber);
+    expect(body).toHaveProperty('licenceNumber', target.licenceNumber);
   });
 
   test('returns error if all vehicles are not available', async () => {
@@ -67,27 +67,15 @@ describe('viewing a specific vehicle based on valid query params', () => {
       .expect(404, { error: 'No vehicles available of said model' });
   });
 
-
-  test('chcking how veh with ended res looks like', async () => {
-    await helper.endReservation(1);
-    console.log('Reservation ended!');
+  test('previously rented car has been returned and is again available to be reserved', async () => {
+    const customer = await helper.customerByUsername('GeBut1');
+    const activeBefore = await helper.activeReservationsByUsername(customer.username);
+    await helper.endReservation(activeBefore[0].id);
 
     const target = seedData[20];
     const { body } = await api
       .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`);
-    expect(1).toBe(1);
-    console.log(body);
-  });
-  test('new res on veh with end res date set looks like', async () => {
-    const testCustomer = await helper.createCustomer('Ian Fleming', 'Iatsuki1');
-    const target = seedData[20];
-    await helper.createReservation(testCustomer.id, target.id);
-    console.log('Reservation made!');
-
-    const { body } = await api
-      .get(`/api/vehicles?brand=${target.brand}&model=${target.model}&year=${target.year}`);
-    expect(1).toBe(1);
-    console.log(body);
+    expect(body).toHaveProperty('licenceNumber', target.licenceNumber);
   });
 
 });

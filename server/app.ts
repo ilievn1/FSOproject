@@ -25,44 +25,34 @@ app.get('/api/vehicles', async (req, res) => {
   let include: Array<object> = [];
   const requiredParamsPresent = 'brand' in req.query && 'model' in req.query && 'year' in req.query;
 
-  const Vinetki = await Vehicle.findAll({
-    include: {
-      model: Reservation,
-      required: false, // This allows vehicles with no reservations to be included
-      where: {
-        endAt: null
-      },
-    },
-    where: {
-      brand: req.query.brand,
-      model: req.query.model,
-      year: req.query.year,
-      available: true,
-      '$reservation$': null,
-
-    }
-  });
-  console.log('Vinetki', JSON.parse(JSON.stringify(Vinetki)));
-
+  /* If vehicle has active reservation it will be included in the 'reservation' column
+    Since only vehicles with 'reservation': null are returned as rentable,
+    vehicles with active reservation will be ignored, as they are in use by other customers
+  */
   if (requiredParamsPresent) {
+    include = [
+      {
+        model: Reservation,
+        required: false, // This allows vehicles with no reservations to be included
+        where: {
+          endAt: null
+        },
+      },
+    ];
     where = {
       brand: req.query.brand,
       model: req.query.model,
       year: req.query.year,
       available: true,
-
+      '$reservation$': null,
     };
-    include = [
-      {
-        model: Reservation,
-      },
-    ];
   }
-  const vehicles = await Vehicle.findAll({ include, where });
-  if (vehicles.length === 0) {
+  const toBeRented = await Vehicle.findOne({ include, where });
+  console.log('vehicle to be rented', JSON.parse(JSON.stringify(toBeRented)));
+  if (!toBeRented) {
     return res.status(404).send({ error: 'No vehicles available of said model' });
   }
-  return res.json(vehicles);
+  return res.json(toBeRented);
 });
 
 app.post('/api/customers', async (req, res) => {
