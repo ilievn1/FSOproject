@@ -15,21 +15,6 @@ beforeAll(async () => {
 
 });
 
-// describe('when seeded vehicles are in DB', () => {
-//   test('vehicles are return type is json', async () => {
-//     await api
-//       .get('/api/vehicles')
-//       .expect(200)
-//       .expect('Content-Type', /application\/json/);
-//   });
-
-//   test('all vehicles are returned', async () => {
-//     const response = await api.get('/api/vehicles');
-//     expect(response.body).toHaveLength(seedData.length);
-//   });
-
-// });
-
 describe('viewing a specific vehicle based on valid query params', () => {
   beforeAll(async () => {
     // 1/1 BMW M3
@@ -81,8 +66,17 @@ describe('viewing a specific vehicle based on valid query params', () => {
 });
 
 describe('viewing a specific vehicle based on invalid query params', () => {
-  test('returns 404', async () => {
-    await api.get('/api/vehicles?brand=Foo&model=Bar&year=1987').expect(404);
+  test('non-existent brand returns 404', async () => {
+    await api.get('/api/vehicles?brand=Foo&model=NSX&year=1987').expect(404);
+  });
+  test('non-existent model returns 404', async () => {
+    await api.get('/api/vehicles?brand=Honda&model=Foo&year=1987').expect(404);
+  });
+  test('year before 1900 returns 404', async () => {
+    await api.get('/api/vehicles?brand=Toyota&model=Camry&year=694').expect(404);
+  });
+  test('non-existent brand returns 404', async () => {
+    await api.get('/api/vehicles?brand=Foo&model=Bar&year=694').expect(404);
   });
 });
 
