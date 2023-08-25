@@ -5,6 +5,11 @@ interface SeachParamsProps {
     year: number;
 }
 
+const getAllVehicles = async () => {
+  const vehicles = await Vehicle.findAll({ where: { available:true } });
+
+  return vehicles;
+};
 const getRentableVehicle = async (params: SeachParamsProps) => {
   const { brand, model, year } = params;
   /* If vehicle has active reservation it will be included in the 'reservation' column
@@ -34,4 +39,5 @@ const getRentableVehicle = async (params: SeachParamsProps) => {
 
 export default {
   getRentableVehicle,
+  getAllVehicles
 };

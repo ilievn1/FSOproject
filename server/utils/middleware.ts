@@ -1,5 +1,36 @@
 import { RequestHandler, ErrorRequestHandler } from 'express';
 
+const checkAuth: RequestHandler = (request, response, next) => {
+  if (request.isAuthenticated()) {
+    return next();
+  } else {
+    response.redirect('http://localhost:5173');
+  }
+};
+
+const checkGuest: RequestHandler = (request, response, next) => {
+  if (request.isAuthenticated()) {
+    response.redirect('http://localhost:5173');
+  } else {
+    return next();
+  }
+};
+
+const headerLogger: RequestHandler = (request, _response, next) => {
+  console.log('Object.keys(request)\n',Object.keys(request));
+  console.log('======================================');
+  console.log('request.session\n',request.session);
+  console.log('======================================');
+  console.log('request.sessionID\n', request.sessionID);
+  console.log('======================================');
+  console.log('request.sessionStore\n', request.sessionStore);
+  console.log('======================================');
+  console.log('request.isAuthenticated()\n',request.isAuthenticated());
+  console.log('======================================');
+
+  next();
+};
+
 const unknownEndpoint: RequestHandler = (_request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
@@ -30,5 +61,8 @@ const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
 
 module.exports = {
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  checkAuth,
+  checkGuest,
+  headerLogger
 };
