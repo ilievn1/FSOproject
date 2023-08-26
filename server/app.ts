@@ -43,8 +43,6 @@ app.use(passport.session());
 app.use(middleware.headerLogger);
 app.get('/allSess', (_req, resp) => {
   sessionStore.all((_err: unknown, sessions: session.SessionData[] | { [sid: string]: session.SessionData; } | null | undefined) => resp.json(sessions));
-  resp.redirect('/allSess');
-
 });
 app.get('/clearSess', (_req, resp) => {
   sessionStore.clear((err: unknown) => console.error(err));
@@ -52,13 +50,11 @@ app.get('/clearSess', (_req, resp) => {
 });
 app.use('/api/inquiries', inquiriesRouter);
 app.use('/api/auth', authRouter);
-app.use(middleware.checkAuth);
+app.use('/api/vehicles', vehiclesRouter);
 
 if (process.env.NODE_ENV !== 'test') {
   app.use(middleware.checkAuth);
 }
-
-app.use('/api/vehicles', vehiclesRouter);
 app.use('/api/customers', customersRouter);
 
 

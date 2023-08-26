@@ -37,7 +37,17 @@ const getRentableVehicle = async (params: SeachParamsProps) => {
   return toBeRented;
 };
 
+const getTopThreeByRating = async () => {
+  const topRated = await Vehicle.findAll({
+    where: { available: true },
+    order: [['rating', 'DESC']],
+    limit: 3
+  });
+  return topRated;
+};
+
 export default {
   getRentableVehicle,
+  getTopThreeByRating,
   getAllVehicles
 };

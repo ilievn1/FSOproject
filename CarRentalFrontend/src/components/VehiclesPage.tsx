@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import Catalogue from "./Catalogue"
 import Filter from "./Filter"
-import { data } from "../mockData/cars";
 import Pagination from "./Pagination";
 import { Car } from "../types";
 import usePagination from "../hooks/usePagination";
 import Parallax from "./Parallax";
 import { useLocation } from 'react-router-dom';
-
 import Breadcrumbs from "./Breadcrumbs";
 import CarCardLoading from "./CarCardLoading";
-
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 // const VehiclesPage = () => {
 //     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -66,21 +65,32 @@ import CarCardLoading from "./CarCardLoading";
 const VehiclesPage = () => {
 
     const { pathname } = useLocation();
+    const carsQuery = useQuery({
+        queryKey: ['cars'],
+        queryFn: () => axios.get('http://localhost:3001/api/vehicles').then(res => res.data),
+        refetchOnWindowFocus: false,
+
+    })
+    //console.log(JSON.parse(JSON.stringify(carsQuery)))
 
     const [filterQuery, setFilterQuery] = useState<string>('');
-    const [filteredCars, setFilteredCars] = useState<Array<Car>>(data);
+    const [filteredCars, setFilteredCars] = useState<Array<Car>>([]);
     const carsPerPage = 9;
-    const isLoading = true;
-    const { currentPage, paginate, previousPage, nextPage, getCurrentPageCars } = usePagination(filteredCars, carsPerPage)
+
+    const { currentPage, paginate, previousPage, nextPage, getCurrentPageCars } = usePagination(filteredCars, carsPerPage);
 
     useEffect(() => {
-        //
-        setFilteredCars(data.filter(c => c.brand.toLowerCase().includes(filterQuery.toLowerCase())))
+        const cars = carsQuery.isSuccess
+            ? carsQuery.data.filter((c:Car) => c.brand.toLowerCase().includes(filterQuery.toLowerCase()))
+            : []
+        setFilteredCars(cars)
+
         // reset page numbers according to filtered results
         paginate(1)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filterQuery])
-
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [carsQuery.data, filterQuery])
+    
     const displayedCars = getCurrentPageCars()
 
     return (
@@ -88,7 +98,7 @@ const VehiclesPage = () => {
             <Breadcrumbs route={pathname} />
             <Parallax />
             <Filter items={filteredCars} value={filterQuery} onChange={setFilterQuery} />
-            {isLoading
+            {carsQuery.isLoading
                 ? (<CarCardLoading/>)
                 : (<Catalogue displayedCars={displayedCars} />)}
             <Pagination

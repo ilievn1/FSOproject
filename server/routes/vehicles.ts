@@ -11,6 +11,12 @@ vehiclesRouter.get('/', async (req, res, next) => {
     return;
   }
 
+  if (Object.keys(req.query).length === 1 && 'top' in req.query) {
+    const topRated = await vehicleService.getTopThreeByRating();
+    res.json(topRated);
+    return;
+  }
+
   try {
     const searchParams = proofer.toSearchParams(req.query);
     const toBeRented = await vehicleService.getRentableVehicle(searchParams);
