@@ -1,17 +1,16 @@
-import Google from 'passport-google-oauth20';
-import dotenv from 'dotenv';
-import { resolve } from 'path';
 import { PassportStatic } from 'passport';
+import Google from 'passport-google-oauth20';
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL } = require('./config');
 const { Customer } = require('../models');
 
-dotenv.config({ path: resolve(__dirname, '../.env') });
+
 const GoogleStrategy = Google.Strategy;
 
 export default function configurePassport(passport : PassportStatic) {
   passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID!,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    callbackURL: '/api/auth/google/callback'
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: GOOGLE_CALLBACK_URL
   },
   async (_accessToken, _refreshToken, profile, done) => {
     console.log('===== GOOGLE PROFILE =======\n');
@@ -44,24 +43,14 @@ export default function configurePassport(passport : PassportStatic) {
   }
 
   ));
-  // TODO: as serielized info is in cookie, reduce overhead by storing min needed info to identify user coresponding to ongoing session
 
+  /* passport takes care of setting session data and decrypting it on incoming auth'ed req */
   passport.serializeUser((user, done) => {
     console.log('================serializeUser================\n\n', user);
-    process.nextTick(() => done(null, { foo: 'bar', ranNmbr: 123 }));
+    process.nextTick(() => done(null, user));
   });
-  passport.deserializeUser((obj: Express.User, done) => {
-    console.log('================deserializeUser================\n\n', obj);
-    process.nextTick(() => done(null, obj));
+  passport.deserializeUser((user: Express.User, done) => {
+    console.log('================deserializeUser================\n\n', user);
+    process.nextTick(() => done(null, user));
   });
-  // //TODO: Promise to async/await and customer
-  // passport.deserializeUser((id, done) => {
-  //   User.findById(id).then((user) => {
-  //     done(null, user);
-  //   });
-  // });
-
-// passport.deserializeUser(async (id, done) => {
-//         done(null, await User.findById(id))
-//     })
 }

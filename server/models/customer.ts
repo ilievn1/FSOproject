@@ -10,6 +10,11 @@ Customer.init({
     primaryKey: true,
     autoIncrement: true
   },
+  googleId: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -19,9 +24,21 @@ Customer.init({
     unique: true,
     allowNull: false
   },
-  hashedPassword: {
+  email: {
     type: DataTypes.STRING,
-    allowNull: false
+    unique: true,
+    allowNull: false,
+    validate: {
+      isEmail: true
+    }
+  },
+  picture: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isUrl: true
+    }
+
   }
 }, {
   sequelize,
