@@ -20,5 +20,6 @@ case 'production':{
 module.exports = {
   DATABASE_URL,
   PORT: process.env.PORT || 3001,
-  SECRET: process.env.SECRET
+  SECRET: process.env.SECRET,
+  REDIS_URL: process.env.REDIS_URL
 };

@@ -12,7 +12,7 @@ authRouter.get('/google/callback',
     console.log(' ================ Object.keys(req):\n', Object.keys(req));
     console.log(' ================ Contents of req.user:\n', req.user);
     console.log(' ================ inside /api/auth/google/callback redirect\n');
-    //TODO: redirect to frontend, send all necessary user info as JSON
+    //TODO: Do I need to redirect to frontend or send all necessary user info as JSON?
     res.redirect('https://logto.io/');  });
 
 authRouter.get('/logout', (req, res, next) => {
