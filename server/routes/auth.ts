@@ -9,9 +9,11 @@ authRouter.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/api/auth/google' }),     // Failed authentication, force reattempt login.
 
   (req, res) => {
-    console.log(' ================ Object.keys(req):\n', Object.keys(req));
-    console.log(' ================ Contents of req.user:\n', req.user);
-    console.log(' ================ inside /api/auth/google/callback redirect\n');
+    console.log('======= Successfully auth\'d /api/auth/google/callback redirect =======\n');
+
+    console.log('Object.keys(req):\n', Object.keys(req));
+    console.log('Contents of req.user:\n', req.user);
+
     //TODO: Do I need to redirect to frontend or send all necessary user info as JSON?
     res.redirect('https://logto.io/');  });
 

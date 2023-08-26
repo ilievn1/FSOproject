@@ -1,26 +1,11 @@
 import express from 'express';
-import customerService from '../services/customerService';
 import reservationService from '../services/reservationService';
-import bcrypt from 'bcrypt';
 import 'express-async-errors';
 import proofer from '../utils/requestProofer';
 import feedbackService from '../services/feedbackService';
 
 const customersRouter = express.Router();
 
-
-customersRouter.post('/', async (req, res, next) => {
-  try {
-    const { name, username, password } = proofer.toNewCustomer(req.body);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newCustomer = await customerService.addCustomer({ name, username, hashedPassword });
-    res.status(201).json(newCustomer);
-
-  } catch (err: unknown) {
-    next(err);
-  }
-
-});
 
 customersRouter.get('/:id/reservations', async (req, res) => {
   const customerReservations = await reservationService.getCustomerReservations(req.params.id);

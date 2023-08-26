@@ -28,11 +28,10 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 }
 
-// TODO: update customer model
-// TODO: remove signups (post req) from /api/customer and unnecessary req. proofing
 // TODO: correct all redirects - tanStack to frontend first
 // TODO: clear all printing middlewares + console.log statements from google strat, /api/auth handlers
-// TODO: fix api tests to test vehicle.all retrieval
+
+// TODO: fix api tests to test vehicle.all retrieval and remove tests that involve user creation
 
 /*session mw takes care of setting generating sessID, setting sID in the cookie header and propagating sess into the store,
 additionally it appends some methods and vars to req headers that ease the verification process */

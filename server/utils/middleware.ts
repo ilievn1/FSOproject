@@ -17,6 +17,7 @@ const checkGuest: RequestHandler = (request, response, next) => {
 };
 
 const headerLogger: RequestHandler = (request, _response, next) => {
+  console.log('======= headerLogger START =======\n');
   console.log('Object.keys(request)\n',Object.keys(request));
   console.log('======================================');
   console.log('request.session\n',request.session);
@@ -27,7 +28,7 @@ const headerLogger: RequestHandler = (request, _response, next) => {
   console.log('======================================');
   console.log('request.isAuthenticated()\n',request.isAuthenticated());
   console.log('======================================');
-
+  console.log('======= headerLogger END =======\n');
   next();
 };
 

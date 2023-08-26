@@ -16,29 +16,21 @@ export default function configurePassport(passport : PassportStatic) {
     console.log('===== GOOGLE PROFILE =======\n');
     console.log(profile);
     console.log('======== END ===========\n');
-    // const newCustomer = {
-    //   googleId: profile.id,
-    //   username: profile.displayName,
-    //   name: profile._json.name,
-    //   email: profile._json.email,
-    //   picture: profile._json.picture,
-    // };
-    // const result = await Customer.findOrCreate({
-    //   where: { googleId: profile.id },
-    //   defaults: newCustomer
-    // });
-    // done(null, result[0]);
+
+    const newCustomer = {
+      googleId: profile.id,
+      username: profile.displayName,
+      name: profile._json.name,
+      email: profile._json.email,
+      picture: profile._json.picture,
+    };
+
     const result = await Customer.findOrCreate({
-      where: {
-        username: 'testiuseri1'
-      },
-      defaults: {
-        username: 'testiuseri1',
-        name: 'testi',
-        hashedPassword: '$2b$10$4HHl4dLFffpBT/6zpasUWuCEGWrwQYurIMuKdXiKs94szPpTz2fmS'
-      }
+      where: { googleId: profile.id },
+      defaults: newCustomer
     });
-    console.log('result', result[0].toJSON());
+
+    console.log('Customer.findOrCreate() result:\n', result[0].toJSON());
     done(null, result[0].toJSON());
   }
 
@@ -46,11 +38,11 @@ export default function configurePassport(passport : PassportStatic) {
 
   /* passport takes care of setting session data and decrypting it on incoming auth'ed req */
   passport.serializeUser((user, done) => {
-    console.log('================serializeUser================\n\n', user);
+    console.log('================serializeUser================\n', user);
     process.nextTick(() => done(null, user));
   });
   passport.deserializeUser((user: Express.User, done) => {
-    console.log('================deserializeUser================\n\n', user);
+    console.log('================deserializeUser================\n', user);
     process.nextTick(() => done(null, user));
   });
 }
