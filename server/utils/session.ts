@@ -1,7 +1,8 @@
 import sessionStore from './sessionStore';
+const { SECRET } = require('./config');
 
 const config = {
-  secret: process.env.SECRET!,
+  secret: SECRET,
   resave: false,
   saveUninitialized: false,
   store: sessionStore,

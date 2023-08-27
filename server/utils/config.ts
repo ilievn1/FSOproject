@@ -21,6 +21,7 @@ module.exports = {
   DATABASE_URL,
   PORT: process.env.PORT || 3001,
   SECRET: process.env.SECRET,
+  NODE_ENV: process.env.NODE_ENV,
   REDIS_URL: process.env.REDIS_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,

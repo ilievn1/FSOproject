@@ -1,8 +1,10 @@
+
 import { Link } from "react-router-dom"
 
 const Navbar = () => {
 
-    // Component library keeps menu focused all the time, even if clicked, handleMenuClick
+    // UI Component library keeps menu focused all the time, even if clicked
+    // handleMenuClick closes upon clicked menu item
     const handleMenuClick = () => {
         const elem = document.activeElement;
         if (elem && elem instanceof HTMLElement) {
@@ -28,8 +30,7 @@ const Navbar = () => {
                     <div className="flex-none hidden xs:flex">
                         <ul className="menu menu-horizontal">
                             <li><Link to="/vehicles">Vehicles</Link></li>
-                            <li><Link to="/register">Register</Link></li>
-                            <li><Link to="/login">Login</Link></li>
+                            <li><a href="http://localhost:3001/api/auth/google">Login</a></li>
                         </ul>
                         <div className="dropdown dropdown-end">
                             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -40,7 +41,7 @@ const Navbar = () => {
                             <ul tabIndex={0} onClick={handleMenuClick} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box">
                                 <li><Link to="/profile">Profile</Link></li>
                                 <li><Link to="/reservations">Reservations</Link></li>
-                                <li>Logout</li>
+                                <li><a href="http://localhost:3001/api/auth/google/logout">Logout</a></li>
                             </ul>
                         </div>
                     </div>
@@ -51,13 +52,11 @@ const Navbar = () => {
                 <ul className="menu p-4 w-3/4 h-full bg-base-200">
                     {/* Overlay nav for screen size < xs (475px) */}
                     <li><Link to="/vehicles">Vehicles</Link></li>
-                    <li><Link to="/register">Register</Link></li>
-                    <li><Link to="/login">Login</Link></li>
+                    <li><a href="http://localhost:3001/api/auth/google">Login</a></li>
                     <li><Link to="/profile">Profile</Link></li>
                     <li><Link to="/reservations">Reservations</Link></li>
-                    <li>Logout</li>
+                    <li><a href="http://localhost:3001/api/auth/google/logout">Logout</a></li>
                 </ul>
-
             </div>
         </div>
     )

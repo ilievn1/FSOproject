@@ -1,6 +1,7 @@
 import express, { Request } from 'express';
 import morgan from 'morgan';
-import cors from 'cors';
+// import cors from 'cors';
+const cors = require('cors');
 import vehiclesRouter from './routes/vehicles';
 import customersRouter from './routes/customers';
 import inquiriesRouter from './routes/inquiries';
@@ -10,20 +11,19 @@ import passport from 'passport';
 import expressSessConfig from './utils/session';
 import configurePassport from './utils/passport';
 import sessionStore from './utils/sessionStore';
-
-configurePassport(passport);
-require('dotenv').config();
-
+const { NODE_ENV } = require('./utils/config');
 require('express-async-errors');
+configurePassport(passport);
+
 const app = express();
 const middleware = require('./utils/middleware');
 
+app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
 
-app.use(cors());
 app.use(express.static('build'));
 app.use(express.json());
 
-if (process.env.NODE_ENV !== 'production') {
+if (NODE_ENV !== 'production') {
   morgan.token('body', (req: Request) => JSON.stringify(req.body));
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 }
@@ -49,10 +49,10 @@ app.get('/clearSess', (_req, resp) => {
   resp.redirect('/allSess');
 });
 app.use('/api/inquiries', inquiriesRouter);
-app.use('/api/auth', authRouter);
 app.use('/api/vehicles', vehiclesRouter);
+app.use('/api/auth', authRouter);
 
-if (process.env.NODE_ENV !== 'test') {
+if (NODE_ENV !== 'test') {
   app.use(middleware.checkAuth);
 }
 app.use('/api/customers', customersRouter);

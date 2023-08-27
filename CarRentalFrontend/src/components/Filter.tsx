@@ -17,6 +17,15 @@ const Filter = (props: Props) => {
     const brands = items.map(c => c.brand)
     const distinctBrands = [... new Set(brands)];
 
+    // UI Component library keeps menu focused all the time, even if clicked
+    // handleMenuClick closes upon clicked menu item
+    const handleMenuClick = () => {
+        const elem = document.activeElement;
+        if (elem && elem instanceof HTMLElement) {
+            elem.blur();
+        }
+    };
+
     return (
         <div
             className={classNames({
@@ -36,6 +45,7 @@ const Filter = (props: Props) => {
             <div className="dropdown-content bg-base-200 top-14 max-h-96 overflow-auto flex-col rounded-md z-10">
                 <ul
                     className="menu menu-compact "
+                    onClick={handleMenuClick}
                     // width of menu to match width of parent
                     style={{ width: filterRef.current?.clientWidth }}
                 >

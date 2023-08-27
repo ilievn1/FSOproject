@@ -7,6 +7,8 @@ import feedbackService from '../services/feedbackService';
 const customersRouter = express.Router();
 
 
+customersRouter.get('/current', (req, res) => res.json(req.user));
+
 customersRouter.get('/:id/reservations', async (req, res) => {
   const customerReservations = await reservationService.getCustomerReservations(req.params.id);
   res.json(customerReservations);

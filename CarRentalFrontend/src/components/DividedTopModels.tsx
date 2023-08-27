@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 const DividedTopModels = () => {
     const carsQuery = useQuery({
-        queryKey: ['cars'],
+        queryKey: ['topThreeVehicles'],
         queryFn: () => axios.get('http://localhost:3001/api/vehicles?top=3').then(res => res.data),
         refetchOnWindowFocus: false,
     })

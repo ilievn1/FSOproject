@@ -4,7 +4,7 @@ const Parallax = () => {
             className="flex items-end w-full h-screen mb-12 bg-fixed bg-center bg-cover relative overflow-x-clip
             bg-[url(https://thumbs.dreamstime.com/b/young-woman-car-rental-front-garage-cars-background-129337774.jpg)]"
         >
-            <img className="border-dashed border-2 border-red-700 absolute max-w-full -bottom-8 md:max-w-xl md:-start-16 lg:max-w-[70%]" src="https://activecarrental.co.za/wp-content/uploads/2022/05/header-polo-grande.png" />
+            <img className="absolute max-w-full -bottom-8 md:max-w-xl md:-start-16 lg:max-w-[70%]" src="https://activecarrental.co.za/wp-content/uploads/2022/05/header-polo-grande.png" />
             <div className="mockup-phone hidden absolute w-full mb-4 max-w-xs end-4 md:inline-block ">
                 <div className="block camera"></div>
                 <div className="block display">

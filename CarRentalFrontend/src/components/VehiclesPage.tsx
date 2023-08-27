@@ -72,7 +72,6 @@ const VehiclesPage = () => {
 
     })
     //console.log(JSON.parse(JSON.stringify(carsQuery)))
-
     const [filterQuery, setFilterQuery] = useState<string>('');
     const [filteredCars, setFilteredCars] = useState<Array<Car>>([]);
     const carsPerPage = 9;

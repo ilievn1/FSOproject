@@ -12,8 +12,20 @@ import RegistrationPage from './components/RegistrationPage.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
 import ProfilePage from './components/ProfilePage.tsx';
 import RentPage from './components/RentPage.tsx';
+import { useQuery } from "@tanstack/react-query";
+import axios from 'axios';
 
 const App = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const isAuthenticated = searchParams.get("authenticated");
+  const result = useQuery({
+    staleTime: Infinity,
+    enabled: !!isAuthenticated,
+    queryKey: ['customer'],
+    queryFn: () => axios.get('http://localhost:3001/api/customers/current', {withCredentials: true}).then(res => res.data)
+  })
+  console.log(JSON.parse(JSON.stringify(result)))
+  
   return (
     <>
       <Router>

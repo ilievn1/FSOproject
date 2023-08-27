@@ -10,7 +10,7 @@ const Catalogue = ({ displayedCars }: Props) => {
 
     return (
         <>
-            <div key={999} className="grid grid-cols-1 p-4 md:grid-cols-11 md:place-items-center md:gap-y-8">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-11 md:place-items-center md:gap-y-8">
                 {displayedCars.map((item, index) => (
                     <Fragment key={item.id}>
                         <div className='col-span-3'>

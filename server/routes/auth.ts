@@ -14,14 +14,14 @@ authRouter.get('/google/callback',
     console.log('Object.keys(req):\n', Object.keys(req));
     console.log('Contents of req.user:\n', req.user);
 
-    //TODO: Do I need to redirect to frontend or send all necessary user info as JSON?
-    res.redirect('https://logto.io/');  });
+    res.redirect('http://localhost:5173?authenticated=true');
+
+  });
 
 authRouter.get('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) { return next(err); }
-    //TODO: redirect to frontend
-    res.redirect('https://www.logout.com/');
+    res.redirect('http://localhost:5173');
   });
 });
 
