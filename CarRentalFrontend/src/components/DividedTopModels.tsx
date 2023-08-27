@@ -2,6 +2,7 @@ import CarCard from "./CarCard"
 import CarCardLoading from "./CarCardLoading";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+
 const DividedTopModels = () => {
     const carsQuery = useQuery({
         queryKey: ['topThreeVehicles'],

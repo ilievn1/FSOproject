@@ -1,11 +1,11 @@
 import { Op } from 'sequelize';
 
-const { Reservation, Feedback } = require('../models');
+const { Reservation, Feedback, Vehicle } = require('../models');
 
 const getCustomerReservations = async (id: string | number) => {
   const reservations =
         await Reservation.findAll({
-          include: [{ model: Feedback }],
+          include: [{ model: Feedback }, { model: Vehicle }],
           where: {
             customerId: id,
             [Op.or]: [

@@ -7,7 +7,7 @@ export type Seats = 1 | 2 | 3 | 4 | 5 | 6 | 8 | 9;
 export type Rating = 1 | 2 | 3 | 4 | 5;
 
 
-export interface Car {
+export interface Vehicle {
     id: number;
     carImage: string;
     brand: string;
@@ -40,6 +40,20 @@ export interface ContactFormValues {
     "Phone": string;
     "Inquery": string;
 }
+
+export interface Feedback {
+    reservationId: number;
+    rating: Rating;
+    comment?: string;
+}
+
+export interface Reservation {
+    vehicle: Vehicle;
+    startAt: string;
+    endAt?: string;
+    feedback?: Feedback
+}
+
 export interface Customer {
     id: number;
     googleId: string;
