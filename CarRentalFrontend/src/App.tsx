@@ -21,11 +21,8 @@ const App = () => {
     const resp = await axios.get('http://localhost:3001/api/customers/current', { withCredentials: true })
     return resp.data
   }
-  const searchParams = new URLSearchParams(window.location.search);
-  const isAuthenticated = searchParams.get("authenticated");
   const result = useQuery({
     staleTime: Infinity,
-    enabled: !!isAuthenticated,
     queryKey: ['customer'],
     queryFn: getCustomer
   })

@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom"
-import { Car } from "../types"
+import { Vehicle } from "../types"
 import axios from "axios"
 
-const CarCard = ({ car }: { car: Car }) => {
+const CarCard = ({ car }: { car: Vehicle }) => {
     const navigate = useNavigate()
 
     const handleRent = async () => {
         
-        const getVehicle = async (): Promise<Car | undefined > => {
+        const getVehicle = async (): Promise<Vehicle | undefined > => {
             const resp = await axios.get(`http://localhost:3001/api/vehicles?brand=${car.brand}&model=${car.model}&year=${car.year}`, { withCredentials: true });
             if (resp.status===404) {
                 return undefined

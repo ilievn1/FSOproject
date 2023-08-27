@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
-import { Car } from '../types';
+import { Vehicle } from '../types';
 import CarCard from './CarCard';
 
 type Props = {
-    displayedCars: Array<Car>;
+    displayedCars: Array<Vehicle>;
 };
 
 const Catalogue = ({ displayedCars }: Props) => {

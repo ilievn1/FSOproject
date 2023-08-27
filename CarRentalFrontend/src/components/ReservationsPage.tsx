@@ -16,8 +16,6 @@ const ReservationsPage = () => {
 
     const customer: Customer | undefined = queryClient.getQueryData(['customer'])
 
-    console.log(customer)
-
     const getReservations = useCallback(async (): Promise<Reservation[]> => {
         const resp = await axios.get(`http://localhost:3001/api/customers/${customer?.id}/reservations`, { withCredentials: true })
         return resp.data
@@ -29,6 +27,7 @@ const ReservationsPage = () => {
     // }
     
     const reservations = useQuery({
+        enabled: !!customer,
         queryKey: ['reservations'],
         queryFn: getReservations
     })

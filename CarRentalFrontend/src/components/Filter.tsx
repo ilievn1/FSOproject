@@ -2,10 +2,10 @@
 
 import { useRef, useState } from "react";
 import classNames from "classnames";
-import { Car } from "../types";
+import { Vehicle } from "../types";
 
 type Props = {
-    items: Array<Car>;
+    items: Array<Vehicle>;
     value: string;
     onChange(val: string): void;
 };
