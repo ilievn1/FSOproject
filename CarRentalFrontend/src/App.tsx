@@ -14,18 +14,23 @@ import ProfilePage from './components/ProfilePage.tsx';
 import RentPage from './components/RentPage.tsx';
 import { useQuery } from "@tanstack/react-query";
 import axios from 'axios';
+import { Customer } from './types.ts';
 
 const App = () => {
+  const getCustomer = async (): Promise<Customer> => {
+    const resp = await axios.get('http://localhost:3001/api/customers/current', { withCredentials: true })
+    return resp.data
+  }
   const searchParams = new URLSearchParams(window.location.search);
   const isAuthenticated = searchParams.get("authenticated");
   const result = useQuery({
     staleTime: Infinity,
     enabled: !!isAuthenticated,
     queryKey: ['customer'],
-    queryFn: () => axios.get('http://localhost:3001/api/customers/current', {withCredentials: true}).then(res => res.data)
+    queryFn: getCustomer
   })
   console.log(JSON.parse(JSON.stringify(result)))
-  
+
   return (
     <>
       <Router>

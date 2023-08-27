@@ -40,3 +40,11 @@ export interface ContactFormValues {
     "Phone": string;
     "Inquery": string;
 }
+export interface Customer {
+    id: number;
+    googleId: string;
+    name: string;
+    username: string;
+    email: string;
+    picture: string;
+}
