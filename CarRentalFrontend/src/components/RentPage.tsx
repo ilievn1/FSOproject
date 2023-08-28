@@ -1,8 +1,8 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Breadcrumbs from "./Breadcrumbs";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { Customer, Reservation } from '../types';
+import {  Reservation, Vehicle } from '../types';
 import { SyntheticEvent } from 'react';
 
 //1. User clicks on CarCard "Reserve" button (Card button is not associated with car ID, but with car brand + model + year, because we can have multiple cars of same model)
@@ -12,18 +12,32 @@ import { SyntheticEvent } from 'react';
 const RentPage = () => {
     
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const { pathname } = useLocation();
 
-    const { pathname, state } = useLocation();
-    
     const queryClient = useQueryClient();
 
-    const customer: Customer | undefined = queryClient.getQueryData(['customer'])
-    console.log(customer);
-    const postReservation = async ({ customerId, vehicleId}:{customerId: number, vehicleId: number}): Promise<Reservation> => {
-        const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
-        const resp = await axios.post(postUrl, {vehicleId},{ withCredentials: true })
+    const getVehicle = async (): Promise<Vehicle | undefined> => {
+        const brand = searchParams.has('brand') ? searchParams.get('brand') : null
+        const model = searchParams.has('model') ? searchParams.get('model') : null
+        const year = searchParams.has('year') ? searchParams.get('year') : null
+        const resp = await axios.get(`http://localhost:3001/api/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
+        if (resp.status === 404) {
+            return undefined
+        }
         return resp.data
     }
+    const rentVehicleQuery = useQuery({
+        queryKey: ['rentVehicle'],
+        queryFn: getVehicle,
+    })
+    // const customer: Customer | undefined = queryClient.getQueryData(['customer'])
+    // console.log(customer);
+    // const postReservation = async ({ customerId, vehicleId}:{customerId: number, vehicleId: number}): Promise<Reservation> => {
+    //     const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
+    //     const resp = await axios.post(postUrl, {vehicleId},{ withCredentials: true })
+    //     return resp.data
+    // }
     // const postReservation = useCallback(async (): Promise<Reservation> => {
     //     const postUrl = `http://localhost:3001/api/customers/${customer?.id}/reservations`
     //     const resp = await axios.post(postUrl, { vehicleId: state.vehicle.id }, { withCredentials: true })
@@ -31,20 +45,41 @@ const RentPage = () => {
     // // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [customer]);
 
+    // const mutation = useMutation({
+    //     mutationFn: postReservation,
+    //     onSuccess: () => {
+    //         queryClient.invalidateQueries(['reservations']);
+    //     },
+    // });
+    
+    const postReservation = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
+        const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
+        const resp = await axios.post(postUrl, {vehicleId},{ withCredentials: true })
+        return resp.data
+    }
     const mutation = useMutation({
         mutationFn: postReservation,
         onSuccess: () => {
+            // TODO: Invalidate or refetch???
             queryClient.invalidateQueries(['reservations']);
         },
     });
 
     const handleSubmit = async (event: SyntheticEvent) => {
         event.preventDefault()
-        console.log(customer);
 
-        await mutation.mutateAsync({ customerId: customer?.id as number, vehicleId:state.vehicle.id});
+        await mutation.mutateAsync({ customerId: queryClient.getQueryData(['customer'])!, vehicleId: queryClient.getQueryData(['rentVehicle'])! });
         
         navigate('/reservations')
+    }
+    
+    if (rentVehicleQuery.isLoading) {
+        return (<p>Fetching vehicle...</p>)
+    }
+
+    if (rentVehicleQuery.isError) {
+        window.alert("Do you really want to leave?")
+        navigate('/vehicles')
     }
     return (
         <>
