@@ -22,7 +22,6 @@ const App = () => {
     return resp.data
   }
   const result = useQuery({
-    staleTime: Infinity,
     queryKey: ['customer'],
     queryFn: getCustomer
   })

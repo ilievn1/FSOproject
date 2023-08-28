@@ -4,7 +4,7 @@ const checkAuth: RequestHandler = (request, response, next) => {
   if (request.isAuthenticated()) {
     return next();
   } else {
-    response.redirect('http://localhost:5173');
+    response.status(401).end();
   }
 };
 

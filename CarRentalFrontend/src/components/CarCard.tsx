@@ -15,9 +15,9 @@ const CarCard = ({ car }: { car: Vehicle }) => {
             return resp.data
         }
 
-        const isAvailable = await getVehicle();
-        if (isAvailable) {
-            navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`)
+        const vehicle = await getVehicle();
+        if (vehicle) {
+            navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`, { state: vehicle })
         } else {
             alert("All cars of this model are already rented");
         }

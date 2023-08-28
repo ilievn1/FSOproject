@@ -1,4 +1,4 @@
-import { NewCustomer, NewFeedback, NewReservation, Rating } from '../types';
+import { NewCustomer, NewFeedback, Rating } from '../types';
 
 
 const isString = (text: unknown): text is string => {
@@ -29,12 +29,12 @@ const parseRating = (rating: unknown): Rating => {
 
 };
 
-const parseDate = (date: unknown): string => {
-  if (!isString(date) || !Date.parse(date)) {
-    throw new Error(`Incorrect date: ${date}`);
-  }
-  return date;
-};
+// const parseDate = (date: unknown): string => {
+//   if (!isString(date) || !Date.parse(date)) {
+//     throw new Error(`Incorrect date: ${date}`);
+//   }
+//   return date;
+// };
 
 const parseString = (text: unknown): string => {
   if (!isString(text)) {
@@ -106,22 +106,19 @@ const toNewCustomer = (object: unknown): NewCustomer => {
   }
 };
 
-const toNewReservation = (object: unknown): NewReservation => {
+const toNewReservation = (object: unknown) => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data - Expected req.body object');
   }
-  const requiredParamsPresent = 'vehicleId' in object && 'customerId' in object && 'startAt' in object;
-  if (requiredParamsPresent) {
-    const params: NewReservation = {
+  if ('vehicleId' in object) {
+    const params = {
       vehicleId: parseId(object.vehicleId),
-      customerId: parseId(object.customerId),
-      startAt: parseDate(object.startAt),
     };
 
     return params;
 
   } else {
-    throw new Error('Incorrect data: req.body expected fields are vehicleId, customerId and startAt');
+    throw new Error('Incorrect data: req.body expected field is vehicleId');
   }
 };
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Catalogue from "./Catalogue"
 import Filter from "./Filter"
 import Pagination from "./Pagination";
-import { Car } from "../types";
+import { Vehicle } from "../types";
 import usePagination from "../hooks/usePagination";
 import Parallax from "./Parallax";
 import { useLocation } from 'react-router-dom';
@@ -68,19 +68,17 @@ const VehiclesPage = () => {
     const carsQuery = useQuery({
         queryKey: ['cars'],
         queryFn: () => axios.get('http://localhost:3001/api/vehicles').then(res => res.data),
-        refetchOnWindowFocus: false,
-
     })
-    //console.log(JSON.parse(JSON.stringify(carsQuery)))
+
     const [filterQuery, setFilterQuery] = useState<string>('');
-    const [filteredCars, setFilteredCars] = useState<Array<Car>>([]);
+    const [filteredCars, setFilteredCars] = useState<Array<Vehicle>>([]);
     const carsPerPage = 9;
 
     const { currentPage, paginate, previousPage, nextPage, getCurrentPageCars } = usePagination(filteredCars, carsPerPage);
 
     useEffect(() => {
         const cars = carsQuery.isSuccess
-            ? carsQuery.data.filter((c:Car) => c.brand.toLowerCase().includes(filterQuery.toLowerCase()))
+            ? carsQuery.data.filter((c: Vehicle) => c.brand.toLowerCase().includes(filterQuery.toLowerCase()))
             : []
         setFilteredCars(cars)
 
