@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FeedbackFormValues } from "../types";
+import { Feedback, FeedbackFormValues } from "../types";
 
 const MAX_RATING = 5;
 
@@ -19,7 +19,7 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
     const [rating, setRating] = useState(1);
     const queryClient = useQueryClient();
 
-    const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: FeedbackFormValues }): Promise<Reservation> => {
+    const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: FeedbackFormValues }): Promise<Feedback> => {
         const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations/${reservationId}`
         const resp = await axios.post(postUrl, feedbackBody, { withCredentials: true })
         return resp.data

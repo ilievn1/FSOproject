@@ -2,7 +2,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Breadcrumbs from "./Breadcrumbs";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import {  Reservation, Vehicle } from '../types';
+import {  Customer, Reservation, Vehicle } from '../types';
 import { SyntheticEvent } from 'react';
 
 //1. User clicks on CarCard "Reserve" button (Card button is not associated with car ID, but with car brand + model + year, because we can have multiple cars of same model)
@@ -31,14 +31,6 @@ const RentPage = () => {
         queryKey: ['rentVehicle'],
         queryFn: getVehicle,
     })
-    // const customer: Customer | undefined = queryClient.getQueryData(['customer'])
-    // console.log(customer);
-    // const postReservation = async ({ customerId, vehicleId}:{customerId: number, vehicleId: number}): Promise<Reservation> => {
-    //     const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
-    //     const resp = await axios.post(postUrl, {vehicleId},{ withCredentials: true })
-    //     return resp.data
-    // }
-
     
     const postReservation = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
         const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
@@ -52,23 +44,27 @@ const RentPage = () => {
             queryClient.invalidateQueries(['reservations']);
         },
     });
-
-    const handleSubmit = async (event: SyntheticEvent) => {
-        event.preventDefault()
-
-        await mutation.mutateAsync({ customerId: queryClient.getQueryData(['customer'])!, vehicleId: queryClient.getQueryData(['rentVehicle'])! });
-        
-        navigate('/reservations')
-    }
     
     if (rentVehicleQuery.isLoading) {
         return (<p>Fetching vehicle...</p>)
     }
 
     if (rentVehicleQuery.isError) {
-        window.alert("Do you really want to leave?")
+        window.alert("All vehicles of selected model are reserved.\nPlease choose another vehicle.")
         navigate('/vehicles')
     }
+
+    const handleSubmit = async (event: SyntheticEvent) => {
+        event.preventDefault()
+
+        const { id:cid }: Customer = queryClient.getQueryData(['customer'])!
+
+        const vid = rentVehicleQuery.data?.id
+
+        await mutation.mutateAsync({ customerId: cid, vehicleId: vid! });
+        navigate('/reservations')
+    }
+
     return (
         <>
             <Breadcrumbs route={pathname} />

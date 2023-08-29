@@ -59,7 +59,7 @@ const ReservationRow = ({ reservation }: { reservation: Reservation }) => {
 
       {reservation.feedback ? null : (<button className='btn' onClick={() => openModal()}>Feedback</button>)}
 
-      <FeedbackModal isOpened={modalOpen} closeModal={closeModal} />
+      <FeedbackModal reservationId={reservation.id} customerId={queryClient.getQueryData(['customer'])!} isOpened={modalOpen} closeModal={closeModal} />
     </div>
   )
 }

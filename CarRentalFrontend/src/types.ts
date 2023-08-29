@@ -46,7 +46,6 @@ export interface FeedbackFormValues {
 }
 
 export interface Feedback {
-    reservationId: number;
     rating: Rating;
     comment?: string;
 }

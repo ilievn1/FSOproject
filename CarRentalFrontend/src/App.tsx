@@ -15,18 +15,32 @@ import RentPage from './components/RentPage.tsx';
 import { useQuery } from "@tanstack/react-query";
 import axios from 'axios';
 import { Customer } from './types.ts';
+import { useEffect } from 'react';
 
 const App = () => {
+
   const getCustomer = async (): Promise<Customer> => {
     const resp = await axios.get('http://localhost:3001/api/customers/current', { withCredentials: true })
     return resp.data
   }
-  const result = useQuery({
-    queryKey: ['customer'],
-    queryFn: getCustomer
-  })
-  console.log(JSON.parse(JSON.stringify(result)))
 
+  const result = useQuery(
+    ['customer'],
+    getCustomer,
+    {
+      initialData: localStorage.getItem('customerDetails') ? JSON.parse(localStorage.getItem('customerDetails')!) : undefined
+}
+  )
+  // console.log(JSON.parse(JSON.stringify(result)))
+  // console.log(result.data)
+  useEffect(() => {
+    if (result.data) {
+      localStorage.setItem('customerDetails', JSON.stringify(result.data));
+    }
+  }, [result.data]);
+
+
+  
   return (
     <>
       <Router>
