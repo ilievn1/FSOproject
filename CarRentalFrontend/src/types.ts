@@ -40,6 +40,10 @@ export interface ContactFormValues {
     "Phone": string;
     "Inquery": string;
 }
+export interface FeedbackFormValues {
+    "Rating": number;
+    "Comment"?: string;
+}
 
 export interface Feedback {
     reservationId: number;
@@ -48,6 +52,7 @@ export interface Feedback {
 }
 
 export interface Reservation {
+    id: number;
     vehicle: Vehicle;
     startAt: string;
     endAt?: string;

@@ -38,19 +38,7 @@ const RentPage = () => {
     //     const resp = await axios.post(postUrl, {vehicleId},{ withCredentials: true })
     //     return resp.data
     // }
-    // const postReservation = useCallback(async (): Promise<Reservation> => {
-    //     const postUrl = `http://localhost:3001/api/customers/${customer?.id}/reservations`
-    //     const resp = await axios.post(postUrl, { vehicleId: state.vehicle.id }, { withCredentials: true })
-    //     return resp.data
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [customer]);
 
-    // const mutation = useMutation({
-    //     mutationFn: postReservation,
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries(['reservations']);
-    //     },
-    // });
     
     const postReservation = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
         const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
