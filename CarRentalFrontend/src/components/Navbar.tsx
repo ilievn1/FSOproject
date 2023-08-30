@@ -13,6 +13,9 @@ const Navbar = () => {
             elem.blur();
         }
     };
+    const clearCustomerLocalStorage = () => {
+        localStorage.removeItem('customerDetails')
+    }
     const customer: Customer | undefined = queryClient.getQueryData(['customer'])
     return (
         <div className="drawer">
@@ -45,7 +48,7 @@ const Navbar = () => {
                                         <ul tabIndex={0} onClick={handleMenuClick} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box">
                                             <li><Link to="/profile">Profile</Link></li>
                                             <li><Link to="/reservations">Reservations</Link></li>
-                                            <li><a href="http://localhost:3001/api/auth/google/logout">Logout</a></li>
+                                            <li><a href="http://localhost:3001/api/auth/google/logout" onClick={clearCustomerLocalStorage}>Logout</a></li>
                                         </ul>
                                     </div>
                                 )
@@ -64,7 +67,7 @@ const Navbar = () => {
                         :
                         <>
                             <li><Link to="/profile">Profile</Link></li><li><Link to="/reservations">Reservations</Link></li>
-                            <li><a href="http://localhost:3001/api/auth/google/logout">Logout</a></li>
+                            <li><a href="http://localhost:3001/api/auth/google/logout" onClick={clearCustomerLocalStorage}>Logout</a></li>
                         </>
                     }
                 </ul>
