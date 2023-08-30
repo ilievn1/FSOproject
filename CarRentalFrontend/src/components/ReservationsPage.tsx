@@ -2,7 +2,7 @@ import ReservationRow from './ReservationRow.js';
 import Breadcrumbs from './Breadcrumbs.js';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Reservation } from '../types.js';
+import { Customer, Reservation } from '../types.js';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import shortid from 'shortid';
@@ -14,16 +14,13 @@ const ReservationsPage = () => {
     const queryClient = useQueryClient();
     const { pathname } = useLocation();
 
-    // const getReservations = async (): Promise<Reservation> => {
-    //     const resp = await axios.get(`http://localhost:3001/api/customers/${customer?.id}/reservations`, { withCredentials: true })
-    //     return resp.data
-    // }
-
     const getReservations = async (customerId: number): Promise<Reservation[]> => {
         const resp = await axios.get(`http://localhost:3001/api/customers/${customerId}/reservations`, { withCredentials: true })
         return resp.data
     }
-    const reservationsQuery = useQuery(['reservations'], () => getReservations(queryClient.getQueryData(['customer'])!))
+    const customer: Customer = queryClient.getQueryData(['customer'])!
+    
+    const reservationsQuery = useQuery(['reservations'], () => getReservations(customer.id))
 
 
     return (

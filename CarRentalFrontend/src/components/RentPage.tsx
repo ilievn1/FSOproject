@@ -34,7 +34,7 @@ const RentPage = () => {
     
     const postReservation = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
         const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
-        const resp = await axios.post(postUrl, {vehicleId},{ withCredentials: true })
+        const resp = await axios.post(postUrl, { vehicleId: vehicleId },{ withCredentials: true })
         return resp.data
     }
     const mutation = useMutation({
@@ -57,11 +57,11 @@ const RentPage = () => {
     const handleSubmit = async (event: SyntheticEvent) => {
         event.preventDefault()
 
-        const { id:cid }: Customer = queryClient.getQueryData(['customer'])!
+        const customer : Customer = queryClient.getQueryData(['customer'])!
 
         const vid = rentVehicleQuery.data?.id
 
-        await mutation.mutateAsync({ customerId: cid, vehicleId: vid! });
+        await mutation.mutateAsync({ customerId: customer.id, vehicleId: vid! });
         navigate('/reservations')
     }
 

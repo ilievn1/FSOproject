@@ -39,7 +39,7 @@ const App = () => {
     }
   }, [result.data]);
 
-
+// TODO: Force user to login to access specifc routes /rent, /reservation
   
   return (
     <>

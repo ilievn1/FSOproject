@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Feedback, FeedbackFormValues } from "../types";
+import FormInput from "./FormInput";
 
 const MAX_RATING = 5;
 
@@ -19,8 +20,8 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
     const [rating, setRating] = useState(1);
     const queryClient = useQueryClient();
 
-    const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: FeedbackFormValues }): Promise<Feedback> => {
-        const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations/${reservationId}`
+    const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: {rating: number, comment?:string} }): Promise<Feedback> => {
+        const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations/${reservationId}/feedback`
         const resp = await axios.post(postUrl, feedbackBody, { withCredentials: true })
         return resp.data
     }
@@ -32,13 +33,10 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
             queryClient.invalidateQueries(['reservations']);
         },
     });
-
-    
     
     // "handleSubmit" validates inputs automatically
-    const handleFeedback = async (data: FeedbackFormValues) => {
-        console.log(data);
-        await feedbackMutation.mutateAsync({ customerId: customerId, reservationId: reservationId, feedbackBody: data });
+    const handleFeedback = async (validatedData: FeedbackFormValues) => {
+        await feedbackMutation.mutateAsync({ customerId: customerId, reservationId: reservationId, feedbackBody: { rating: rating, comment: validatedData.Comment  } });
         closeModal();
     }
 
@@ -62,13 +60,14 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
                         </li>
                     </div>
                     <div className="mb-4 form-control w-full">
-                        <label className="label label-text">Additional comment</label>
-                        {/* <textarea ref={commentRef} className="textarea textarea-bordered h-24"></textarea> */}
-                        <textarea className="textarea textarea-bordered h-24" {...register("Comment", {maxLength: 255, pattern: /[A-Za-z0-9 _.,!"'/$]*/i})} />
-                        {errors.Comment
-                            ? (<span role="alert">{errors.Comment.message}</span>)
-                            : null
-                        }
+                        <FormInput<FeedbackFormValues>
+                        register={register}
+                            inputLabel="Comment"
+                            inputType="text"
+                            inputError={errors.Comment}
+                            validations={{ maxLength: { value: 255, message: "This field is 255 characters at most" }, pattern: { value: /[A-Za-z0-9 _.,!"'/$]*/i , message: 'Only alphanumerics and punctuation signs allowed' } }}
+
+                        />
                     </div>
                     <button type="submit" className="btn btn-success w-full">Submit</button>
                 </form>

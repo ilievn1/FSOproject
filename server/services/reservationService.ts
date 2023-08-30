@@ -1,23 +1,21 @@
 import { Op } from 'sequelize';
-
 const { Reservation, Feedback, Vehicle } = require('../models');
 
 const getCustomerReservations = async (id: string | number) => {
-  const reservations =
-        await Reservation.findAll({
-          include: [{ model: Feedback }, { model: Vehicle }],
-          where: {
-            customerId: id,
-            [Op.or]: [
-              {
-                endAt: null
-              },
-              {
-                '$feedback$': null,
-              }
-            ]
-          },
-        });
+  const reservations = await Reservation.findAll({
+    include: [{ model: Feedback }, { model: Vehicle }],
+    where: {
+      customerId: id,
+      [Op.or]: [
+        {
+          endAt: null
+        },
+        {
+          '$feedback$': null,
+        }
+      ]
+    },
+  });
 
   return reservations;
 };
@@ -35,7 +33,7 @@ const addCustomerReservation = async (props: Props) => {
   return newReservation;
 };
 
-const endCustomerReservation = async (rId: string, cId: string) => {
+const endCustomerReservation = async (rId: string, cId: string, endDate: string) => {
 
   const toBeEnded = await Reservation.findOne({
     where: {
@@ -43,7 +41,7 @@ const endCustomerReservation = async (rId: string, cId: string) => {
       customerId: cId,
     },
   });
-  toBeEnded.endAt = new Date().toJSON().slice(0, 10);
+  toBeEnded.endAt = endDate;
   await toBeEnded.save();
 
   return toBeEnded;

@@ -1,26 +1,29 @@
 import { useNavigate } from "react-router-dom"
 import { Vehicle } from "../types"
+import axios from "axios"
+import { useQueryClient } from "@tanstack/react-query"
 
 const CarCard = ({ car }: { car: Vehicle }) => {
     const navigate = useNavigate()
+    const queryClient = useQueryClient();
 
-    // const handleRent = async () => {
-        
-    //     const getVehicle = async (): Promise<Vehicle | undefined > => {
-    //         const resp = await axios.get(`http://localhost:3001/api/vehicles?brand=${car.brand}&model=${car.model}&year=${car.year}`, { withCredentials: true });
-    //         if (resp.status===404) {
-    //             return undefined
-    //         }
-    //         return resp.data
-    //     }
+    const getVehicle = async (brand:string,model:string,year:number|string): Promise<Vehicle | undefined> => {
+        const resp = await axios.get(`http://localhost:3001/api/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
+        if (resp.status === 404) {
+            return undefined
+        }
+        return resp.data
+    }
 
-    //     const vehicle = await getVehicle();
-    //     if (vehicle) {
-    //         navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`, { state: vehicle })
-    //     } else {
-    //         alert("All cars of this model are already rented");
-    //     }
-    // }
+    const handleRent = async () => {
+        try {
+            await queryClient.fetchQuery({ queryKey: ['rentVehicle'], queryFn: ()=>getVehicle(car.brand,car.model, car.year) })
+            navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`)
+        } catch (error) {
+            window.alert("All vehicles of selected model are reserved.\nPlease choose another vehicle.")
+        }
+
+    }
     return (
         <div className="card xs:card-side md:card card-compact lg:card-normal bg-base-100 shadow-xl">
             <figure className="xs:max-md:w-1/2"><img src="https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg" alt="Shoes" /></figure>
@@ -37,7 +40,7 @@ const CarCard = ({ car }: { car: Vehicle }) => {
                     </li>
                 </ul>
                 <div className="card-actions justify-end">
-                    <button onClick={()=> navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`)} className="btn btn-primary">Rent</button>
+                    <button onClick={handleRent} className="btn btn-primary">Rent</button>
                 </div>
             </div>
         </div>

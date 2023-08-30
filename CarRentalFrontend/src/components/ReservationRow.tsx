@@ -1,6 +1,6 @@
 import { useState } from "react";
 import FeedbackModal from "./FeedbackModal";
-import { Reservation } from "../types";
+import { Customer, Reservation } from "../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from 'axios';
 
@@ -28,10 +28,11 @@ const ReservationRow = ({ reservation }: { reservation: Reservation }) => {
   //     queryClient.invalidateQueries(['reservations']);
   //   },
   // });
+  const customer: Customer = queryClient.getQueryData(['customer'])!
 
   const endReservation = async ({ customerId, reservationId }: { customerId: number, reservationId: number }): Promise<Reservation> => {
     const putUrl = `http://localhost:3001/api/customers/${customerId}/reservations/${reservationId}`
-    const resp = await axios.put(putUrl, { withCredentials: true })
+    const resp = await axios.patch(putUrl, { endAt: new Date().toJSON().slice(0, 10) }, { withCredentials: true });
     return resp.data
   }
 
@@ -44,7 +45,7 @@ const ReservationRow = ({ reservation }: { reservation: Reservation }) => {
   });
 
   const handleEnd = async () => {
-    await endMutation.mutateAsync({ customerId: queryClient.getQueryData(['customer'])!, reservationId: reservation.id });
+    await endMutation.mutateAsync({ customerId: customer.id, reservationId: reservation.id });
   }
 
   return (
@@ -52,14 +53,10 @@ const ReservationRow = ({ reservation }: { reservation: Reservation }) => {
       <p> {reservation.vehicle.brand} {reservation.vehicle.model} {reservation.vehicle.year} / {reservation.startAt} - {reservation.endAt}</p>
 
       {reservation.endAt ? null : (<button className="btn btn-error" onClick={handleEnd}>End</button>)}
-      
-      {
-        /* TODO: handle feedback via .post and invalidation*/
-      }
 
       {reservation.feedback ? null : (<button className='btn' onClick={() => openModal()}>Feedback</button>)}
 
-      <FeedbackModal reservationId={reservation.id} customerId={queryClient.getQueryData(['customer'])!} isOpened={modalOpen} closeModal={closeModal} />
+      <FeedbackModal reservationId={reservation.id} customerId={customer.id} isOpened={modalOpen} closeModal={closeModal} />
     </div>
   )
 }

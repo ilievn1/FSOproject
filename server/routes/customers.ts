@@ -28,8 +28,8 @@ customersRouter.post('/:id/reservations', async (req, res, next) => {
 
 });
 
-customersRouter.put('/:cId/reservations/:rId', async (req, res) => {
-  const endedReservation = await reservationService.endCustomerReservation(req.params.rId, req.params.cId);
+customersRouter.patch('/:cId/reservations/:rId', async (req, res) => {
+  const endedReservation = await reservationService.endCustomerReservation(req.params.rId, req.params.cId, req.body.endAt);
   res.json(endedReservation);
 });
 
