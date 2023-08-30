@@ -6,10 +6,6 @@ import { Customer, Reservation } from '../types.js';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import shortid from 'shortid';
-
-
-// TODO: remove feedback btn when feedback for corresponding reservation ID has been given 
-// TODO: remove individual reservation when feedback is given or end button is clicked
 const ReservationsPage = () => {
     const queryClient = useQueryClient();
     const { pathname } = useLocation();

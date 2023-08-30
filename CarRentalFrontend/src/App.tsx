@@ -2,12 +2,11 @@ import Footer from './components/Footer.tsx';
 import Navbar from './components/Navbar.tsx';
 import {
   BrowserRouter as Router,
-  Routes, Route
+  Routes, Route, Navigate
 } from 'react-router-dom'
 import VehiclesPage from './components/VehiclesPage.tsx';
 import MainPage from './components/MainPage.tsx';
 import ReservationsPage from './components/ReservationsPage.tsx';
-import LoginPage from './components/LoginPage.tsx';
 import RegistrationPage from './components/RegistrationPage.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
 import ProfilePage from './components/ProfilePage.tsx';
@@ -24,23 +23,19 @@ const App = () => {
     return resp.data
   }
 
-  const result = useQuery(
+  const customerQuery = useQuery(
     ['customer'],
     getCustomer,
     {
       initialData: localStorage.getItem('customerDetails') ? JSON.parse(localStorage.getItem('customerDetails')!) : undefined
 }
   )
-  // console.log(JSON.parse(JSON.stringify(result)))
-  // console.log(result.data)
-  useEffect(() => {
-    if (result.data) {
-      localStorage.setItem('customerDetails', JSON.stringify(result.data));
-    }
-  }, [result.data]);
 
-// TODO: Force user to login to access specifc routes /rent, /reservation
-  
+  useEffect(() => {
+    if (customerQuery.data) {
+      localStorage.setItem('customerDetails', JSON.stringify(customerQuery.data));
+    }
+  }, [customerQuery.data]);
   return (
     <>
       <Router>
@@ -50,10 +45,11 @@ const App = () => {
           <Route path="/" element={<MainPage />} />
           <Route path="/vehicles" element={<VehiclesPage />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/reservations" element={<ReservationsPage />} />
-          <Route path="/rent" element={<RentPage />} />
+          <Route path='/login' Component={() => { window.location.href = 'http://localhost:3001/api/auth/google'; return null; }} />
+          <Route path="/profile" element={customerQuery.data ? <ProfilePage /> : <Navigate replace to="/login" />} />
+          <Route path="/reservations" element={customerQuery.data ? <ReservationsPage /> : <Navigate replace to="/login" />} />
+          <Route path="/rent" element={customerQuery.data ? <RentPage /> : <Navigate replace to="/login" />} />
+          <Route path='*' element={<Navigate to='/' />} />
         </Routes>
         <Footer />
       </Router>
