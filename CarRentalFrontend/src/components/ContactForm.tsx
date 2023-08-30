@@ -1,21 +1,20 @@
 import { useForm } from "react-hook-form";
-import { ContactFormValues, Inquery } from "../types";
+import { Inquiry } from "../types";
 import FormInput from "./FormInput";
 import axios from "axios";
 
 
 const ContactForm = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<ContactFormValues>();
+    const { register, handleSubmit, formState: { errors } } = useForm<Inquiry>();
     
-    const sendInquiry = async (contactBody: Inquery): Promise<Inquery> => {
+    const sendInquiry = async (contactBody: Inquiry): Promise<Inquiry> => {
         const resp = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/inquiries`,contactBody);
         return resp.data
     }
     // "handleSubmit" validates inputs automatically
-    const handleContact = async (data: ContactFormValues) => {
+    const handleContact = async (data: Inquiry) => {
         console.log(data)
-        const contactBody = { name: data.Name, phone: data.Phone, email: data.Email, inquery:data.Inquery}
-        await sendInquiry(contactBody)
+        await sendInquiry(data)
     };
 
     return (
@@ -23,19 +22,19 @@ const ContactForm = () => {
             <form onSubmit={handleSubmit(handleContact)} className="p-6 shadow-xl rounded-lg basis-2/3">
                 <h1 className="text-2xl font-semibold mb-4">Contact Us!</h1>
 
-                <FormInput<ContactFormValues>
+                <FormInput<Inquiry>
                     register={register}
                     inputLabel="Name"
                     inputType="text"
-                    inputError={errors.Name}
-                    validations={{ required: { value: true, message: "This field is required" }, maxLength: { value: 10, message: "This field is 10 characters at most" } }}
+                    inputError={errors.name}
+                    validations={{ required: { value: true, message: "This field is required" }, maxLength: { value: 30, message: "This field is 30 characters at most" } }}
 
                 />
-                <FormInput<ContactFormValues>
+                <FormInput<Inquiry>
                     register={register}
                     inputLabel="Phone"
                     inputType="text"
-                    inputError={errors.Phone}
+                    inputError={errors.phone}
                     validations={
                         {
                             required: { value: true, message: "This field is required" },
@@ -44,11 +43,11 @@ const ContactForm = () => {
                         }}
 
                 />
-                <FormInput<ContactFormValues>
+                <FormInput<Inquiry>
                     register={register}
                     inputLabel="Email"
                     inputType="text"
-                    inputError={errors.Email}
+                    inputError={errors.email}
                     validations={
                         {
                             required: { value: true, message: "This field is required" },
@@ -56,11 +55,11 @@ const ContactForm = () => {
                         }}
 
                 />
-                <FormInput<ContactFormValues>
+                <FormInput<Inquiry>
                     register={register}
-                    inputLabel="Inquery"
+                    inputLabel="Inquiry"
                     inputType="text"
-                    inputError={errors.Inquery}
+                    inputError={errors.inquiry}
                     validations={
                         {
                             required: { value: true, message: "This field is required" },

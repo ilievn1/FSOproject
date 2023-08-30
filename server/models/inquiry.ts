@@ -2,9 +2,9 @@ const { Model, DataTypes } = require('sequelize');
 
 const { sequelize } = require('../utils/db');
 
-class Inquery extends Model { }
+class Inquiry extends Model { }
 
-Inquery.init({
+Inquiry.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -27,7 +27,7 @@ Inquery.init({
       isEmail: true
     }
   },
-  inquery: {
+  inquiry: {
     type: DataTypes.TEXT,
     allowNull: false
   },
@@ -36,8 +36,8 @@ Inquery.init({
   sequelize,
   underscored: true,
   timestamps: false,
-  modelName: 'inquery'
+  modelName: 'inquiry'
 });
 
-module.exports = Inquery;
+module.exports = Inquiry;
 export { };

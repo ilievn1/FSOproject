@@ -33,12 +33,12 @@ export interface Customer {
     picture: string;
 }
 
-export interface Inquery {
+export interface Inquiry {
     id: number;
     name: string;
     phone: string;
     email: string;
-    inquery: string;
+    inquiry: string;
 }
 export interface Feedback {
     id: number;
@@ -55,6 +55,5 @@ export interface Reservation {
     feedback?: Feedback
 }
 
-export type NewCustomer = Omit<Customer, 'id' | 'hashedPassword'> & { password: Customer['hashedPassword'] }
 export type NewReservation = Omit<Reservation, 'id' | 'endAt' | 'feedback'>;
 export type NewFeedback = Omit<Feedback, 'id'>;

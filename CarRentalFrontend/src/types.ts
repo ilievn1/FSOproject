@@ -25,24 +25,11 @@ export interface Vehicle {
     available: boolean;
 }
 
-export interface LoginFormValues {
-    "Username": string;
-    "Password": string;
-}
-export interface RegisterFormValues {
-    "Name": string;
-    "Username": string;
-    "Password": string;
-}
-export interface ContactFormValues {
-    "Name": string;
-    "Email": string;
-    "Phone": string;
-    "Inquery": string;
-}
-export interface FeedbackFormValues {
-    "Rating": number;
-    "Comment"?: string;
+export interface Inquiry {
+    name: string;
+    email: string;
+    phone: string;
+    inquiry: string;
 }
 
 export interface Feedback {
@@ -65,11 +52,4 @@ export interface Customer {
     username: string;
     email: string;
     picture: string;
-}
-
-export interface Inquery {
-    name: string;
-    phone: string;
-    email: string;
-    inquery: string;
 }

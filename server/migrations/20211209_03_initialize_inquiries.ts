@@ -26,7 +26,7 @@ module.exports = {
           isEmail: true
         }
       },
-      inquery: {
+      inquiry: {
         type: DataTypes.TEXT,
         allowNull: false
       },

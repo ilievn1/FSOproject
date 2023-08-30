@@ -4,19 +4,20 @@ import { FieldError, FieldValues, Path, RegisterOptions, UseFormRegister } from 
 type InputProps<T extends FieldValues> = {
     register: UseFormRegister<T>;
     validations?: RegisterOptions<T, Path<T>>
-    inputLabel: Path<T>;
+    inputLabel: Capitalize<Path<T>>;
     inputType: "text" | "password";
     inputError: FieldError | undefined;
 
 };
 
 const FormInput = <T extends FieldValues>({ inputLabel, inputType, inputError, register, validations }: InputProps<T>) => {
+    const inputName = inputLabel.toLowerCase() as Path<T>;
     return (
         <div className="mb-4 form-control w-full">
             <label className="block text-sm font-medium mb-1">{inputLabel}</label>
             <input
                 type={inputType}
-                {...register( inputLabel, validations )}
+                {...register(inputName, validations )}
                 aria-invalid={inputError ? "true" : "false"}
                 className="input input-bordered w-full" />
             {inputError

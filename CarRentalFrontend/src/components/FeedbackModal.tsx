@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Feedback, FeedbackFormValues } from "../types";
+import { Feedback } from "../types";
 import FormInput from "./FormInput";
 
 const MAX_RATING = 5;
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Props) => {
-    const { register, handleSubmit, formState: { errors } } = useForm<FeedbackFormValues>();
+    const { register, handleSubmit, formState: { errors } } = useForm<Feedback>();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [rating, setRating] = useState(1);
     const queryClient = useQueryClient();
@@ -35,8 +35,8 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
     });
     
     // "handleSubmit" validates inputs automatically
-    const handleFeedback = async (validatedData: FeedbackFormValues) => {
-        await feedbackMutation.mutateAsync({ customerId: customerId, reservationId: reservationId, feedbackBody: { rating: rating, comment: validatedData.Comment  } });
+    const handleFeedback = async (validatedData: Feedback) => {
+        await feedbackMutation.mutateAsync({ customerId: customerId, reservationId: reservationId, feedbackBody: { rating: rating, comment: validatedData.comment  } });
         closeModal();
     }
 
@@ -60,11 +60,11 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
                         </li>
                     </div>
                     <div className="mb-4 form-control w-full">
-                        <FormInput<FeedbackFormValues>
+                        <FormInput<Feedback>
                         register={register}
                             inputLabel="Comment"
                             inputType="text"
-                            inputError={errors.Comment}
+                            inputError={errors.comment}
                             validations={{ maxLength: { value: 255, message: "This field is 255 characters at most" }, pattern: { value: /[A-Za-z0-9 _.,!"'/$]*/i , message: 'Only alphanumerics and punctuation signs allowed' } }}
 
                         />
