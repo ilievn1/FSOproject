@@ -36,10 +36,10 @@ const App = () => {
     }
   }, [customerQuery.data]);
 
-  // TODO: Inquiries - backend comm, input form val
   // TODO: Change color theme to white-ish
   
   // TODO: Extract comm service function to their own file
+
   // TODO: Pick-up/Drop-off locations -> types, fields in tables, append details to comm services, event handlers
   
 
