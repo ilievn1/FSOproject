@@ -41,8 +41,9 @@ const App = () => {
   // TODO: Clear console.logs
   // TODO: Fix logout functionality (right link, redirect clear locStor)
   // TODO: Inquiries - backend comm, input form val
+
   // HOSTING
-// TODO: localhost addresses to env var
+  // TODO: localhost addresses to env var
   return (
     <>
       <Router>
