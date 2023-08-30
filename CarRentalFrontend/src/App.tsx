@@ -9,7 +9,6 @@ import MainPage from './components/MainPage.tsx';
 import ReservationsPage from './components/ReservationsPage.tsx';
 import RegistrationPage from './components/RegistrationPage.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
-import ProfilePage from './components/ProfilePage.tsx';
 import RentPage from './components/RentPage.tsx';
 import { useQuery } from "@tanstack/react-query";
 import axios from 'axios';
@@ -36,6 +35,14 @@ const App = () => {
       localStorage.setItem('customerDetails', JSON.stringify(customerQuery.data));
     }
   }, [customerQuery.data]);
+  // TODO: Extract comm service function to their own file
+  // TODO: Change color theme to white-ish
+  // TODO: Clear unused pages, login, register, admin (including navbar items associated with them)
+  // TODO: Clear console.logs
+  // TODO: Fix logout functionality (right link, redirect clear locStor)
+  // TODO: Inquiries - backend comm, input form val
+  // HOSTING
+// TODO: localhost addresses to env var
   return (
     <>
       <Router>
@@ -46,7 +53,6 @@ const App = () => {
           <Route path="/vehicles" element={<VehiclesPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route path='/login' Component={() => { window.location.href = 'http://localhost:3001/api/auth/google'; return null; }} />
-          <Route path="/profile" element={customerQuery.data ? <ProfilePage /> : <Navigate replace to="/login" />} />
           <Route path="/reservations" element={customerQuery.data ? <ReservationsPage /> : <Navigate replace to="/login" />} />
           <Route path="/rent" element={customerQuery.data ? <RentPage /> : <Navigate replace to="/login" />} />
           <Route path='*' element={<Navigate to='/' />} />

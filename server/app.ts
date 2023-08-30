@@ -31,8 +31,11 @@ if (NODE_ENV !== 'production') {
 // TODO: correct all redirects - tanStack to frontend first
 // TODO: protect routes so that if logged user id != customer id param in url it is forbidden
 // TODO: clear all printing middlewares + console.log statements from google strat, /api/auth handlers
-
+// TODO: Inquiries - validations, optional proofing
 // TODO: fix api tests to test vehicle.all retrieval and remove tests that involve user creation
+
+// HOSTING
+// TODO: localhost addresses to env var
 
 /*session mw takes care of setting generating sessID, setting sID in the cookie header and propagating sess into the store,
 additionally it appends some methods and vars to req headers that ease the verification process */
