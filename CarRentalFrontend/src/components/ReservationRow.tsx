@@ -2,7 +2,7 @@ import { useState } from "react";
 import FeedbackModal from "./FeedbackModal";
 import { Customer, Reservation } from "../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from 'axios';
+import reservationService from '../services/reservation'
 
 
 const ReservationRow = ({ index,reservation }: { index:number, reservation: Reservation }) => {
@@ -16,28 +16,10 @@ const ReservationRow = ({ index,reservation }: { index:number, reservation: Rese
 
   const queryClient = useQueryClient();
 
-  // const giveReservationFeedback = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
-  //   const postUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations`
-  //   const resp = await axios.post(postUrl, { vehicleId }, { withCredentials: true })
-  //   return resp.data
-  // }
-  // const feedbackMutation = useMutation({
-  //   mutationFn: giveReservationFeedback,
-  //   onSuccess: () => {
-  //     // TODO: Invalidate or refetch???
-  //     queryClient.invalidateQueries(['reservations']);
-  //   },
-  // });
   const customer: Customer = queryClient.getQueryData(['customer'])!
 
-  const endReservation = async ({ customerId, reservationId }: { customerId: number, reservationId: number }): Promise<Reservation> => {
-    const patchUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations/${reservationId}`
-    const resp = await axios.patch(patchUrl, { endAt: new Date().toJSON().slice(0, 10) }, { withCredentials: true });
-    return resp.data
-  }
-
   const endMutation = useMutation({
-    mutationFn: endReservation,
+    mutationFn: reservationService.endCustomerReservation,
     onSuccess: () => {
       // TODO: Invalidate or refetch???
       queryClient.invalidateQueries(['reservations']);

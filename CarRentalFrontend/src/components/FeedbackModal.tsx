@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Feedback, Rating } from "../types";
 import FormInput from "./FormInput";
+import reservationService from '../services/reservation'
 
 const MAX_RATING = 5;
 
@@ -15,26 +15,13 @@ interface Props {
 }
 
 const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Props) => {
-    const { register, handleSubmit, reset, formState, formState: { errors } } = useForm<Feedback>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<Feedback>();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [rating, setRating] = useState<Rating>(1);
     const queryClient = useQueryClient();
 
-    useEffect(() => {
-        if (formState.isSubmitSuccessful) {
-            reset();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formState]);
-    
-    const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: Feedback }): Promise<Feedback> => {
-        const postUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations/${reservationId}/feedback`
-        const resp = await axios.post(postUrl, feedbackBody, { withCredentials: true })
-        return resp.data
-    }
-
     const feedbackMutation = useMutation({
-        mutationFn: giveReservationFeedback,
+        mutationFn: reservationService.giveReservationFeedback,
         onSuccess: () => {
             // TODO: Invalidate or refetch???
             queryClient.invalidateQueries(['reservations']);
@@ -43,6 +30,7 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
     
     // "handleSubmit" validates inputs automatically
     const handleFeedback = async (validatedData: Feedback) => {
+        reset();
         await feedbackMutation.mutateAsync({ customerId: customerId, reservationId: reservationId, feedbackBody: { rating: rating, comment: validatedData.comment  } });
         closeModal();
     }

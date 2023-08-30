@@ -1,23 +1,15 @@
 import { useNavigate } from "react-router-dom"
 import { Vehicle } from "../types"
-import axios from "axios"
 import { useQueryClient } from "@tanstack/react-query"
+import vehicleService from '../services/vehicle'
 
 const CarCard = ({ car }: { car: Vehicle }) => {
     const navigate = useNavigate()
     const queryClient = useQueryClient();
 
-    const getVehicle = async (brand:string,model:string,year:number|string): Promise<Vehicle | undefined> => {
-        const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
-        if (resp.status === 404) {
-            return undefined
-        }
-        return resp.data
-    }
-
     const handleRent = async () => {
         try {
-            await queryClient.fetchQuery({ queryKey: ['rentVehicle'], queryFn: ()=>getVehicle(car.brand,car.model, car.year) })
+            await queryClient.fetchQuery({ queryKey: ['rentVehicle'], queryFn: () => vehicleService.getRentVehicle(car.brand, car.model, car.year) })
             navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`)
         } catch (error) {
             window.alert("All vehicles of selected model are reserved.\nPlease choose another vehicle.")
@@ -25,7 +17,7 @@ const CarCard = ({ car }: { car: Vehicle }) => {
 
     }
     return (
-        <div className="card xs:card-side md:card card-compact lg:card-normal bg-base-100 shadow-xl">
+        <div className="card xs:card-side md:card card-compact lg:card-normal shadow-xl">
             <figure className="xs:max-md:w-1/2"><img src="https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg" alt="Shoes" /></figure>
             <div className="card-body sm:max-md:w-1/2">
                 <h2 className="card-title">{`${car.brand} ${car.model} ${car.year} (${car.fuel})`}</h2>

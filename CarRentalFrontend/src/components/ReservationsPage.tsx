@@ -1,21 +1,17 @@
 import ReservationRow from './ReservationRow.js';
 import Breadcrumbs from './Breadcrumbs.js';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { Customer, Reservation } from '../types.js';
+import { Customer } from '../types.js';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import reservationService from '../services/reservation'
 
 const ReservationsPage = () => {
     const queryClient = useQueryClient();
     const { pathname } = useLocation();
 
-    const getReservations = async (customerId: number): Promise<Reservation[]> => {
-        const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations`, { withCredentials: true })
-        return resp.data
-    }
     const customer: Customer = queryClient.getQueryData(['customer'])!
 
-    const reservationsQuery = useQuery(['reservations'], () => getReservations(customer.id))
+    const reservationsQuery = useQuery(['reservations'], ()=>reservationService.getCustomerReservations(customer.id))
 
 
     return (
@@ -38,11 +34,11 @@ const ReservationsPage = () => {
                             <th></th>
                         </tr>
                     </thead>
-                    
+
                     <tbody>
                         {reservationsQuery.isLoading
                             ? (<p>Loading...</p>)
-                            : (reservationsQuery.data?.map((r,idx) => <ReservationRow key={r.id} index={idx} reservation={r} />))
+                            : (reservationsQuery.data?.map((r, idx) => <ReservationRow key={r.id} index={idx} reservation={r} />))
 
                         }
                     </tbody>

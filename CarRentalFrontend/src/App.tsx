@@ -8,26 +8,18 @@ import VehiclesPage from './components/VehiclesPage.tsx';
 import MainPage from './components/MainPage.tsx';
 import ReservationsPage from './components/ReservationsPage.tsx';
 import RegistrationPage from './components/RegistrationPage.tsx';
-import AdminDashboard from './components/AdminDashboard.tsx';
 import RentPage from './components/RentPage.tsx';
 import { useQuery } from "@tanstack/react-query";
-import axios from 'axios';
-import { Customer } from './types.ts';
+import customerService from './services/customer.ts'
+
 import { useEffect } from 'react';
 
 const App = () => {
 
-  const getCustomer = async (): Promise<Customer> => {
-    const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customers/current`, { withCredentials: true })
-    return resp.data
-  }
-
-  const customerQuery = useQuery(
-    ['customer'],
-    getCustomer,
+  const customerQuery = useQuery(['customer'], customerService.getCustomer,
     {
       initialData: localStorage.getItem('customerDetails') ? JSON.parse(localStorage.getItem('customerDetails')!) : undefined
-}
+    }
   )
 
   useEffect(() => {
@@ -36,12 +28,8 @@ const App = () => {
     }
   }, [customerQuery.data]);
 
-  // TODO: Change color theme to white-ish
-  
-  // TODO: Extract comm service function to their own file
-
   // TODO: Pick-up/Drop-off locations -> types, fields in tables, append details to comm services, event handlers
-  
+
 
   // Clean-up
   // TODO: Clear unused pages, login, register, admin (including navbar items associated with them)
@@ -51,7 +39,6 @@ const App = () => {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/adminpanel" element={<AdminDashboard />} />
           <Route path="/" element={<MainPage />} />
           <Route path="/vehicles" element={<VehiclesPage />} />
           <Route path="/register" element={<RegistrationPage />} />

@@ -9,66 +9,12 @@ import { useLocation } from 'react-router-dom';
 import Breadcrumbs from "./Breadcrumbs";
 import CarCardLoading from "./CarCardLoading";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import vehicleService from '../services/vehicle'
 
-// const VehiclesPage = () => {
-//     const [currentPage, setCurrentPage] = useState<number>(1);
-//     const [filterQuery, setFilterQuery] = useState<string>('');
-//     const [filteredCars, setFilteredCars] = useState<Array<Car>>(data);
-
-//     const carsPerPage = 9;
-//     useEffect(() => {
-//         setFilteredCars(data.filter(c => c.brand.toLowerCase().includes(filterQuery.toLowerCase())))
-//         setCurrentPage(1)
-//     }, [filterQuery])
-
-
-//     const indexOfLastItem = currentPage * carsPerPage;
-//     const indexOfFirstItem = indexOfLastItem - carsPerPage;
-
-//     // refers to cars on current page    
-//     const displayedCars = filteredCars.slice(indexOfFirstItem, indexOfLastItem);
-//     const lastPage = Math.ceil(filteredCars.length / carsPerPage);
-
-
-//     // Event handlers
-//     const paginate = (pageNumber: number) => {
-//         setCurrentPage(pageNumber);
-//     };
-
-//     const previousPage = () => {
-//         if (currentPage !== 1) {
-//             setCurrentPage(currentPage - 1);
-//         }
-//     };
-
-//     const nextPage = () => {
-//         if (currentPage !== lastPage) {
-//             setCurrentPage(currentPage + 1);
-//         }
-//     };
-//     return (
-//         <div>
-//             <Filter items={filteredCars} value={filterQuery} onChange={setFilterQuery} />
-//             <Catalogue displayedCars={displayedCars} />
-//             <Pagination
-//                 totalCars={filteredCars.length}
-//                 carsPerPage={carsPerPage}
-//                 currentPage={currentPage}
-//                 changePage={paginate}
-//                 previousPage={previousPage}
-//                 nextPage={nextPage}
-//             />
-//         </div>
-//     )
-// }
 const VehiclesPage = () => {
 
     const { pathname } = useLocation();
-    const carsQuery = useQuery({
-        queryKey: ['cars'],
-        queryFn: () => axios.get('http://localhost:3001/api/vehicles').then(res => res.data),
-    })
+    const carsQuery = useQuery(['cars'], vehicleService.getAll)
 
     const [filterQuery, setFilterQuery] = useState<string>('');
     const [filteredCars, setFilteredCars] = useState<Array<Vehicle>>([]);

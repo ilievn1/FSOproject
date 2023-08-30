@@ -1,14 +1,11 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Breadcrumbs from "./Breadcrumbs";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import {  Customer, Reservation, Vehicle } from '../types';
-import { SyntheticEvent } from 'react';
+import {  Customer } from '../types';
+import { SyntheticEvent, useMemo } from 'react';
+import vehicleService from '../services/vehicle'
+import reservationService from '../services/reservation'
 
-//1. User clicks on CarCard "Reserve" button (Card button is not associated with car ID, but with car brand + model + year, because we can have multiple cars of same model)
-//2. Frontend hits backend with car brand + model + year /cars/name+model+year api point (probably query params, rather than path) 
-//3. Backend hits database with details and based on availability responds with car entry with car Id, car name, etc... or error: none available
-//4. Frontend has pop-up "All cars of this model are already rented" or takes him to RentPage.
 const RentPage = () => {
     
     const navigate = useNavigate();
@@ -17,28 +14,19 @@ const RentPage = () => {
 
     const queryClient = useQueryClient();
 
-    const getVehicle = async (): Promise<Vehicle | undefined> => {
-        const brand = searchParams.has('brand') ? searchParams.get('brand') : null
-        const model = searchParams.has('model') ? searchParams.get('model') : null
-        const year = searchParams.has('year') ? searchParams.get('year') : null
-        const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
-        if (resp.status === 404) {
-            return undefined
-        }
-        return resp.data
-    }
-    const rentVehicleQuery = useQuery({
-        queryKey: ['rentVehicle'],
-        queryFn: getVehicle,
-    })
+    const [brand, model, year] = useMemo(() => {
+        const brandValue = searchParams.get('brand')
+        const modelValue = searchParams.get('model')
+        const yearValue = searchParams.get('year')
+
+        return [brandValue, modelValue, yearValue];
+    }, [searchParams]);
+
+    // In reality params can be null. Parameter integrity checking delegated to server
+    const rentVehicleQuery = useQuery({ queryKey: ['rentVehicle'], queryFn: () => vehicleService.getRentVehicle(brand!, model!, year!) })
     
-    const postReservation = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
-        const postUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations`
-        const resp = await axios.post(postUrl, { vehicleId: vehicleId },{ withCredentials: true })
-        return resp.data
-    }
     const mutation = useMutation({
-        mutationFn: postReservation,
+        mutationFn: reservationService.postCustomerReservation,
         onSuccess: () => {
             // TODO: Invalidate or refetch???
             queryClient.invalidateQueries(['reservations']);
