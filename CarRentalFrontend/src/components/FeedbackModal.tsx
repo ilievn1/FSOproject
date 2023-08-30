@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Feedback } from "../types";
+import { Feedback, Rating } from "../types";
 import FormInput from "./FormInput";
 
 const MAX_RATING = 5;
@@ -15,12 +15,19 @@ interface Props {
 }
 
 const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Props) => {
-    const { register, handleSubmit, formState: { errors } } = useForm<Feedback>();
+    const { register, handleSubmit, reset, formState, formState: { errors } } = useForm<Feedback>();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [rating, setRating] = useState(1);
+    const [rating, setRating] = useState<Rating>(1);
     const queryClient = useQueryClient();
 
-    const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: {rating: number, comment?:string} }): Promise<Feedback> => {
+    useEffect(() => {
+        if (formState.isSubmitSuccessful) {
+            reset();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formState]);
+    
+    const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: Feedback }): Promise<Feedback> => {
         const postUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations/${reservationId}/feedback`
         const resp = await axios.post(postUrl, feedbackBody, { withCredentials: true })
         return resp.data
@@ -52,7 +59,7 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
                             {Array.from({ length: MAX_RATING }, (_, index) => {
                                 index += 1;
                                 return (
-                                    <input key={index} type="radio" name="rating-1" className="mask mask-star-2 bg-yellow-400" onChange={() => setRating(index)} />
+                                    <input key={index} type="radio" name="rating-1" className="mask mask-star-2 bg-yellow-400" onChange={() => setRating(index as Rating)} />
                                 )
                             })
 

@@ -1,4 +1,4 @@
-import { NewCustomer, NewFeedback, Rating } from '../types';
+import { NewFeedback, Rating } from '../types';
 
 
 const isString = (text: unknown): text is string => {
@@ -51,17 +51,17 @@ const parseYear = (year: unknown): number => {
 
 };
 
-const parsePassword = (password: unknown): string => {
-  if (!isString(password)) {
-    throw new Error('Password must be a string');
-  }
+// const parsePassword = (password: unknown): string => {
+//   if (!isString(password)) {
+//     throw new Error('Password must be a string');
+//   }
 
-  if (password.length < 5) {
-    throw new Error('Password is below 5 characters');
-  }
+//   if (password.length < 5) {
+//     throw new Error('Password is below 5 characters');
+//   }
 
-  return password;
-};
+//   return password;
+// };
 
 interface SearchParams {
     brand: string;
@@ -87,24 +87,24 @@ const toSearchParams = (object: unknown): SearchParams => {
   }
 };
 
-const toNewCustomer = (object: unknown): NewCustomer => {
-  if (!object || typeof object !== 'object') {
-    throw new Error('Incorrect or missing data - Expected req.body object');
-  }
-  const requiredParamsPresent = 'name' in object && 'username' in object && 'password' in object;
-  if (requiredParamsPresent) {
-    const params: NewCustomer = {
-      name: parseString(object.name),
-      username: parseString(object.username),
-      password: parsePassword(object.password),
-    };
+// const toNewCustomer = (object: unknown): NewCustomer => {
+//   if (!object || typeof object !== 'object') {
+//     throw new Error('Incorrect or missing data - Expected req.body object');
+//   }
+//   const requiredParamsPresent = 'name' in object && 'username' in object && 'password' in object;
+//   if (requiredParamsPresent) {
+//     const params: NewCustomer = {
+//       name: parseString(object.name),
+//       username: parseString(object.username),
+//       password: parsePassword(object.password),
+//     };
 
-    return params;
+//     return params;
 
-  } else {
-    throw new Error('Incorrect data: req.body expected fields are name, username and password');
-  }
-};
+//   } else {
+//     throw new Error('Incorrect data: req.body expected fields are name, username and password');
+//   }
+// };
 
 const toNewReservation = (object: unknown) => {
   if (!object || typeof object !== 'object') {
@@ -141,4 +141,4 @@ const toNewFeedback = (object: unknown): NewFeedback => {
   }
 };
 
-export default { toSearchParams, toNewCustomer, toNewReservation, toNewFeedback };
+export default { toSearchParams, toNewReservation, toNewFeedback };

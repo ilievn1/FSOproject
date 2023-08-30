@@ -38,10 +38,7 @@ const App = () => {
 
   // TODO: Inquiries - backend comm, input form val
   // TODO: Change color theme to white-ish
-  // TODO: Make all forminput fields have register name different from the label, 
-  //       fix types, 
-  //       decapitalize inside FormInput component,
-  //      fix all event handlers using those so that data var can be spread w/o having to do email: data.Email
+  
   // TODO: Extract comm service function to their own file
   // TODO: Pick-up/Drop-off locations -> types, fields in tables, append details to comm services, event handlers
   

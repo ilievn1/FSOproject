@@ -2,10 +2,11 @@ import { useForm } from "react-hook-form";
 import { Inquiry } from "../types";
 import FormInput from "./FormInput";
 import axios from "axios";
+import { useEffect } from "react";
 
 
 const ContactForm = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<Inquiry>();
+    const { register, handleSubmit, reset, formState, formState: { errors } } = useForm<Inquiry>();
     
     const sendInquiry = async (contactBody: Inquiry): Promise<Inquiry> => {
         const resp = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/inquiries`,contactBody);
@@ -16,6 +17,13 @@ const ContactForm = () => {
         console.log(data)
         await sendInquiry(data)
     };
+
+    useEffect(() => {
+        if (formState.isSubmitSuccessful) {
+            reset();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formState]);
 
     return (
         <div className="flex justify-center">
