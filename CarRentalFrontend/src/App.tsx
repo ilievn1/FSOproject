@@ -18,7 +18,7 @@ import { useEffect } from 'react';
 const App = () => {
 
   const getCustomer = async (): Promise<Customer> => {
-    const resp = await axios.get('http://localhost:3001/api/customers/current', { withCredentials: true })
+    const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customers/current`, { withCredentials: true })
     return resp.data
   }
 
@@ -35,15 +35,20 @@ const App = () => {
       localStorage.setItem('customerDetails', JSON.stringify(customerQuery.data));
     }
   }, [customerQuery.data]);
-  // TODO: Extract comm service function to their own file
+
+  // TODO: Inquiries - backend comm, input form val
   // TODO: Change color theme to white-ish
+  // TODO: Make all forminput fields have register name different from the label, 
+  //       fix types, 
+  //       decapitalize inside FormInput component,
+  //      fix all event handlers using those so that data var can be spread w/o having to do email: data.Email
+  // TODO: Extract comm service function to their own file
+  // TODO: Pick-up/Drop-off locations -> types, fields in tables, append details to comm services, event handlers
+  
+
+  // Clean-up
   // TODO: Clear unused pages, login, register, admin (including navbar items associated with them)
   // TODO: Clear console.logs
-  // TODO: Fix logout functionality (right link, redirect clear locStor)
-  // TODO: Inquiries - backend comm, input form val
-
-  // HOSTING
-  // TODO: localhost addresses to env var
   return (
     <>
       <Router>
@@ -53,7 +58,7 @@ const App = () => {
           <Route path="/" element={<MainPage />} />
           <Route path="/vehicles" element={<VehiclesPage />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route path='/login' Component={() => { window.location.href = 'http://localhost:3001/api/auth/google'; return null; }} />
+          <Route path='/login' Component={() => { window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google`; return null; }} />
           <Route path="/reservations" element={customerQuery.data ? <ReservationsPage /> : <Navigate replace to="/login" />} />
           <Route path="/rent" element={customerQuery.data ? <RentPage /> : <Navigate replace to="/login" />} />
           <Route path='*' element={<Navigate to='/' />} />

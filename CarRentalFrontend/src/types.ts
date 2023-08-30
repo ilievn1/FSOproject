@@ -66,3 +66,10 @@ export interface Customer {
     email: string;
     picture: string;
 }
+
+export interface Inquery {
+    name: string;
+    phone: string;
+    email: string;
+    inquery: string;
+}

@@ -29,6 +29,7 @@ if (NODE_ENV !== 'production') {
 }
 
 // TODO: correct all redirects - tanStack to frontend first
+// TODO: Pick-up/Drop-off locations -> types, fields in tables, returned registrations from db include: clause - not necessarily filter condition
 // TODO: protect routes so that if logged user id != customer id param in url it is forbidden
 // TODO: clear all printing middlewares + console.log statements from google strat, /api/auth handlers
 // TODO: Inquiries - validations, optional proofing

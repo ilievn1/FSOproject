@@ -21,7 +21,7 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
     const queryClient = useQueryClient();
 
     const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody }: { customerId: number, reservationId: number, feedbackBody: {rating: number, comment?:string} }): Promise<Feedback> => {
-        const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations/${reservationId}/feedback`
+        const postUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations/${reservationId}/feedback`
         const resp = await axios.post(postUrl, feedbackBody, { withCredentials: true })
         return resp.data
     }

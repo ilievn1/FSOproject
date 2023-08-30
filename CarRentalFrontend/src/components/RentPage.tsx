@@ -21,7 +21,7 @@ const RentPage = () => {
         const brand = searchParams.has('brand') ? searchParams.get('brand') : null
         const model = searchParams.has('model') ? searchParams.get('model') : null
         const year = searchParams.has('year') ? searchParams.get('year') : null
-        const resp = await axios.get(`http://localhost:3001/api/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
+        const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
         if (resp.status === 404) {
             return undefined
         }
@@ -33,7 +33,7 @@ const RentPage = () => {
     })
     
     const postReservation = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
-        const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
+        const postUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations`
         const resp = await axios.post(postUrl, { vehicleId: vehicleId },{ withCredentials: true })
         return resp.data
     }

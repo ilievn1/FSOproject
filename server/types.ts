@@ -26,9 +26,19 @@ export interface Vehicle {
 }
 export interface Customer {
     id: number;
+    googleId: string;
     name: string;
     username: string;
-    hashedPassword: string;
+    email: string;
+    picture: string;
+}
+
+export interface Inquery {
+    id: number;
+    name: string;
+    phone: string;
+    email: string;
+    inquery: string;
 }
 export interface Feedback {
     id: number;

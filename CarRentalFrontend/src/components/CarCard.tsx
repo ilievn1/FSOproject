@@ -8,7 +8,7 @@ const CarCard = ({ car }: { car: Vehicle }) => {
     const queryClient = useQueryClient();
 
     const getVehicle = async (brand:string,model:string,year:number|string): Promise<Vehicle | undefined> => {
-        const resp = await axios.get(`http://localhost:3001/api/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
+        const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/vehicles?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
         if (resp.status === 404) {
             return undefined
         }

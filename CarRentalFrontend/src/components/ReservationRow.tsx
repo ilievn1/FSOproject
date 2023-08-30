@@ -17,7 +17,7 @@ const ReservationRow = ({ index,reservation }: { index:number, reservation: Rese
   const queryClient = useQueryClient();
 
   // const giveReservationFeedback = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
-  //   const postUrl = `http://localhost:3001/api/customers/${customerId}/reservations`
+  //   const postUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations`
   //   const resp = await axios.post(postUrl, { vehicleId }, { withCredentials: true })
   //   return resp.data
   // }
@@ -31,8 +31,8 @@ const ReservationRow = ({ index,reservation }: { index:number, reservation: Rese
   const customer: Customer = queryClient.getQueryData(['customer'])!
 
   const endReservation = async ({ customerId, reservationId }: { customerId: number, reservationId: number }): Promise<Reservation> => {
-    const putUrl = `http://localhost:3001/api/customers/${customerId}/reservations/${reservationId}`
-    const resp = await axios.patch(putUrl, { endAt: new Date().toJSON().slice(0, 10) }, { withCredentials: true });
+    const patchUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations/${reservationId}`
+    const resp = await axios.patch(patchUrl, { endAt: new Date().toJSON().slice(0, 10) }, { withCredentials: true });
     return resp.data
   }
 

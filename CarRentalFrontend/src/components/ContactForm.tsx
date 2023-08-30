@@ -1,19 +1,21 @@
 import { useForm } from "react-hook-form";
-import { ContactFormValues } from "../types";
+import { ContactFormValues, Inquery } from "../types";
 import FormInput from "./FormInput";
+import axios from "axios";
 
 
 const ContactForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<ContactFormValues>();
-
+    
+    const sendInquiry = async (contactBody: Inquery): Promise<Inquery> => {
+        const resp = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/inquiries`,contactBody);
+        return resp.data
+    }
     // "handleSubmit" validates inputs automatically
     const handleContact = async (data: ContactFormValues) => {
         console.log(data)
-        if (data.Name === "bill") {
-            alert(JSON.stringify(data));
-        } else {
-            alert("There is an error");
-        }
+        const contactBody = { name: data.Name, phone: data.Phone, email: data.Email, inquery:data.Inquery}
+        await sendInquiry(contactBody)
     };
 
     return (

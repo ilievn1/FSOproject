@@ -10,7 +10,7 @@ const ReservationsPage = () => {
     const { pathname } = useLocation();
 
     const getReservations = async (customerId: number): Promise<Reservation[]> => {
-        const resp = await axios.get(`http://localhost:3001/api/customers/${customerId}/reservations`, { withCredentials: true })
+        const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations`, { withCredentials: true })
         return resp.data
     }
     const customer: Customer = queryClient.getQueryData(['customer'])!
