@@ -1,7 +1,7 @@
 
 import express from 'express';
 import passport from 'passport';
-const { CLIENT_URL } = require('./config');
+const { CLIENT_URL } = require('../utils/config');
 const authRouter = express.Router();
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

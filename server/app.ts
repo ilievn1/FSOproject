@@ -14,7 +14,7 @@ import sessionStore from './utils/sessionStore';
 const { NODE_ENV } = require('./utils/config');
 require('express-async-errors');
 configurePassport(passport);
-const { CLIENT_URL } = require('./config');
+const { CLIENT_URL } = require('./utils/config');
 
 const app = express();
 const middleware = require('./utils/middleware');
@@ -31,11 +31,14 @@ if (NODE_ENV !== 'production') {
 
 // TODO: Inquiries - validations, optional proofing
 
+// TODO: Dates for pick-up drop-off
+
 // TODO: correct all redirects - tanStack to frontend first
 // TODO: Pick-up/Drop-off locations -> types, fields in tables, returned registrations from db include: clause - not necessarily filter condition
 // TODO: fix api tests to test vehicle.all retrieval and remove tests that involve user creation
 
 // TODO: clear all printing middlewares + console.log statements from google strat, /api/auth handlers
+// TODO: clear customer creation services + routes
 
 /*session mw takes care of setting generating sessID, setting sID in the cookie header and propagating sess into the store,
 additionally it appends some methods and vars to req headers that ease the verification process */

@@ -12,7 +12,9 @@ const checkAuth: RequestHandler = (request, response, next) => {
 const checkOwner: RequestHandler = (request, response, next) => {
   const urlAsArray = request.url.split('/').filter(Boolean); // i.e [customers , 67 , reservations...]
   const loggedCustomer = request.user as Customer;
-  if (urlAsArray.length > 1 && !isNaN(Number(urlAsArray[1])) && Number(urlAsArray[1]) === loggedCustomer.id) {
+  if (urlAsArray.length <= 1 ) {
+    return next();
+  } else if (urlAsArray.length > 1 && !isNaN(Number(urlAsArray[1])) && Number(urlAsArray[1]) === loggedCustomer.id) {
     return next();
   } else {
     response.status(401).end();

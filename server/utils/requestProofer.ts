@@ -1,4 +1,4 @@
-import { NewFeedback, Rating } from '../types';
+import { NewFeedback, NewInquiry, Rating } from '../types';
 
 
 const isString = (text: unknown): text is string => {
@@ -28,6 +28,13 @@ const parseRating = (rating: unknown): Rating => {
   return rating;
 
 };
+const parseInquiry = (inquiry: unknown): string => {
+  if (!isString(inquiry) || inquiry.length > 255) {
+    throw new Error('Incorrect inquiry format - text max length is 255 characters');
+  }
+  return inquiry;
+
+};
 
 // const parseDate = (date: unknown): string => {
 //   if (!isString(date) || !Date.parse(date)) {
@@ -43,6 +50,7 @@ const parseString = (text: unknown): string => {
   return text;
 
 };
+
 const parseYear = (year: unknown): number => {
   if (isNaN(Number(year))) {
     throw new Error('Incorrect year format');
@@ -51,17 +59,33 @@ const parseYear = (year: unknown): number => {
 
 };
 
-// const parsePassword = (password: unknown): string => {
-//   if (!isString(password)) {
-//     throw new Error('Password must be a string');
-//   }
+const parsePhoneNumber = (phoneNumber: unknown): string => {
+  if (!isString(phoneNumber)) {
+    throw new Error('Phone number must be a string');
+  }
 
-//   if (password.length < 5) {
-//     throw new Error('Password is below 5 characters');
-//   }
+  if (phoneNumber.length > 13) {
+    throw new Error('Phone number is too long');
+  }
 
-//   return password;
-// };
+  if (!/^\+?[0-9]+$/.test(phoneNumber)) {
+    throw new Error('Invalid phone number format');
+  }
+
+  return phoneNumber;
+};
+
+const parseEmail = (email: unknown): string => {
+  if (!isString(email)) {
+    throw new Error('Email must be a string');
+  }
+
+  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/.test(email)) {
+    throw new Error('Invalid email format');
+  }
+
+  return email;
+};
 
 interface SearchParams {
     brand: string;
@@ -86,25 +110,6 @@ const toSearchParams = (object: unknown): SearchParams => {
     throw new Error('Incorrect data: req.query expected fields are brand, model and year');
   }
 };
-
-// const toNewCustomer = (object: unknown): NewCustomer => {
-//   if (!object || typeof object !== 'object') {
-//     throw new Error('Incorrect or missing data - Expected req.body object');
-//   }
-//   const requiredParamsPresent = 'name' in object && 'username' in object && 'password' in object;
-//   if (requiredParamsPresent) {
-//     const params: NewCustomer = {
-//       name: parseString(object.name),
-//       username: parseString(object.username),
-//       password: parsePassword(object.password),
-//     };
-
-//     return params;
-
-//   } else {
-//     throw new Error('Incorrect data: req.body expected fields are name, username and password');
-//   }
-// };
 
 const toNewReservation = (object: unknown) => {
   if (!object || typeof object !== 'object') {
@@ -141,4 +146,24 @@ const toNewFeedback = (object: unknown): NewFeedback => {
   }
 };
 
-export default { toSearchParams, toNewReservation, toNewFeedback };
+const toNewInquiry = (object: unknown): NewInquiry => {
+  if (!object || typeof object !== 'object') {
+    throw new Error('Incorrect or missing data - Expected req.body object');
+  }
+  const requiredParamsPresent = 'name' in object && 'phone' in object && 'email' in object && 'inquiry' in object;
+  if (requiredParamsPresent) {
+    const params: NewInquiry = {
+      name: parseString(object.name),
+      phone: parsePhoneNumber(object.phone),
+      email: parseEmail(object.email),
+      inquiry: parseInquiry(object.inquiry),
+    };
+
+    return params;
+
+  } else {
+    throw new Error('Incorrect data: req.body expected fields are name,phone,email and inquiry');
+  }
+};
+
+export default { toSearchParams, toNewReservation, toNewFeedback, toNewInquiry };

@@ -55,4 +55,5 @@ export interface Reservation {
 }
 
 export type NewReservation = Omit<Reservation, 'id' | 'endAt' | 'feedback'>;
+export type NewInquiry = Omit<Inquiry, 'id'>;
 export type NewFeedback = Omit<Feedback, 'id'>;

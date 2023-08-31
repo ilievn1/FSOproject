@@ -21,8 +21,6 @@ Reservation.hasOne(Feedback, {
 });
 Feedback.belongsTo(Reservation);
 
-module.exports = {
+export {
   Vehicle, Customer, Reservation, Inquiry, Feedback
 };
-
-export { };
