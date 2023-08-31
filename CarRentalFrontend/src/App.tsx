@@ -28,6 +28,10 @@ const App = () => {
     }
   }, [customerQuery.data]);
 
+// TODO: Test extracted services
+  
+// TODO: Dates for pick-up drop-off calendar selector -> relay info to services
+
   // TODO: Pick-up/Drop-off locations -> types, fields in tables, append details to comm services, event handlers
 
 

@@ -53,6 +53,15 @@ export interface Reservation {
     endAt: string;
     feedback?: Feedback
 }
+export interface Reservation {
+    id: number;
+    name: string;
+    address: string;
+    city: string;
+    postalCode: string;
+    phoneNumber: string;
+    email: string;
+}
 
 export type NewReservation = Omit<Reservation, 'id' | 'endAt' | 'feedback'>;
 export type NewInquiry = Omit<Inquiry, 'id'>;

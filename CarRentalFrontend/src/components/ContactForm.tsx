@@ -34,8 +34,8 @@ const ContactForm = () => {
                     validations={
                         {
                             required: { value: true, message: "This field is required" },
-                            maxLength: { value: 12, message: "This field is 12 characters at most" },
-                            minLength: { value: 6, message: "This field is 6 characters at least" }
+                            maxLength: { value: 13, message: "This field is 13 characters at most" },
+                            minLength: { value: 10, message: "This field is 10 characters at least" }
                         }}
 
                 />
@@ -47,7 +47,7 @@ const ContactForm = () => {
                     validations={
                         {
                             required: { value: true, message: "This field is required" },
-                            pattern: { value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i, message: ">This field is required and of format firstname@lastname.domain" }
+                            pattern: { value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/i, message: ">This field is required and of format firstname@lastname.domain" }
                         }}
 
                 />

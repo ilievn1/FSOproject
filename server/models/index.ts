@@ -3,6 +3,7 @@ const Customer = require('./customer');
 const Reservation = require('./reservation');
 const Inquiry = require('./inquiry');
 const Feedback = require('./feedback');
+const Location = require('./location');
 
 Customer.hasMany(Reservation);
 Reservation.belongsTo(Customer);
@@ -21,6 +22,21 @@ Reservation.hasOne(Feedback, {
 });
 Feedback.belongsTo(Reservation);
 
+Location.hasOne(Reservation, {
+  foreignKey: {
+    allowNull: false // Cannot have reservation w/o location_id
+  }
+});
+Reservation.belongsTo(Location, { as: 'pickUpLocation' });
+
+Location.hasOne(Reservation, {
+  foreignKey: {
+    allowNull: false // Cannot have reservation w/o location_id
+  }
+});
+Reservation.belongsTo(Location, { as: 'dropOffLocation' });
+
+
 export {
-  Vehicle, Customer, Reservation, Inquiry, Feedback
+  Vehicle, Customer, Reservation, Inquiry, Feedback, Location
 };

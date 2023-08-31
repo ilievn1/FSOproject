@@ -28,13 +28,10 @@ if (NODE_ENV !== 'production') {
   morgan.token('body', (req: Request) => JSON.stringify(req.body));
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 }
+// TODO: Pick-up/Drop-off locations -> , returned registrations from db include: clause - not necessarily filter condition
 
-// TODO: Inquiries - validations, optional proofing
+// TODO: Dates for pick-up drop-off - routes should not use new date obj but parse date in body; End date MUST > start date;
 
-// TODO: Dates for pick-up drop-off
-
-// TODO: correct all redirects - tanStack to frontend first
-// TODO: Pick-up/Drop-off locations -> types, fields in tables, returned registrations from db include: clause - not necessarily filter condition
 // TODO: fix api tests to test vehicle.all retrieval and remove tests that involve user creation
 
 // TODO: clear all printing middlewares + console.log statements from google strat, /api/auth handlers
