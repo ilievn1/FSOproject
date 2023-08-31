@@ -19,6 +19,8 @@ case 'production':{
 
 module.exports = {
   DATABASE_URL,
+  BASE_URL: process.env.BASE_URL,
+  CLIENT_URL: process.env.CLIENT_URL,
   PORT: process.env.PORT || 3001,
   SECRET: process.env.SECRET,
   NODE_ENV: process.env.NODE_ENV,

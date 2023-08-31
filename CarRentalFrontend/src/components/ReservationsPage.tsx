@@ -37,7 +37,7 @@ const ReservationsPage = () => {
 
                     <tbody>
                         {reservationsQuery.isLoading
-                            ? (<p>Loading...</p>)
+                            ? (<tr><td>Loading...</td></tr>)
                             : (reservationsQuery.data?.map((r, idx) => <ReservationRow key={r.id} index={idx} reservation={r} />))
 
                         }

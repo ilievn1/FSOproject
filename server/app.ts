@@ -14,11 +14,12 @@ import sessionStore from './utils/sessionStore';
 const { NODE_ENV } = require('./utils/config');
 require('express-async-errors');
 configurePassport(passport);
+const { CLIENT_URL } = require('./config');
 
 const app = express();
 const middleware = require('./utils/middleware');
 
-app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+app.use(cors({ credentials: true, origin: CLIENT_URL }));
 
 app.use(express.static('build'));
 app.use(express.json());
@@ -27,11 +28,6 @@ if (NODE_ENV !== 'production') {
   morgan.token('body', (req: Request) => JSON.stringify(req.body));
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 }
-
-// TODO: protect routes so that if logged user id != customer id param in url it is forbidden
-
-// HOSTING
-// TODO: localhost addresses to env var
 
 // TODO: Inquiries - validations, optional proofing
 

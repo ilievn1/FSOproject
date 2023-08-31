@@ -1,6 +1,7 @@
 
 import express from 'express';
 import passport from 'passport';
+const { CLIENT_URL } = require('./config');
 const authRouter = express.Router();
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -14,14 +15,14 @@ authRouter.get('/google/callback',
     console.log('Object.keys(req):\n', Object.keys(req));
     console.log('Contents of req.user:\n', req.user);
 
-    res.redirect('http://localhost:5173?authenticated=true');
+    res.redirect(CLIENT_URL);
 
   });
 
 authRouter.get('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) { return next(err); }
-    res.redirect('http://localhost:5173');
+    res.redirect(CLIENT_URL);
   });
 });
 
