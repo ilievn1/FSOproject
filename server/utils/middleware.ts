@@ -1,4 +1,5 @@
 import { RequestHandler, ErrorRequestHandler } from 'express';
+import { Customer } from '../types';
 
 const checkAuth: RequestHandler = (request, response, next) => {
   if (request.isAuthenticated()) {
@@ -8,11 +9,13 @@ const checkAuth: RequestHandler = (request, response, next) => {
   }
 };
 
-const checkGuest: RequestHandler = (request, response, next) => {
-  if (request.isAuthenticated()) {
-    response.redirect('http://localhost:5173');
-  } else {
+const checkOwner: RequestHandler = (request, response, next) => {
+  const urlAsArray = request.url.split('/').filter(Boolean); // i.e [customers , 67 , reservations...]
+  const loggedCustomer = request.user as Customer;
+  if (urlAsArray.length > 1 && !isNaN(Number(urlAsArray[1])) && Number(urlAsArray[1]) === loggedCustomer.id) {
     return next();
+  } else {
+    response.status(401).end();
   }
 };
 
@@ -21,6 +24,10 @@ const headerLogger: RequestHandler = (request, _response, next) => {
   console.log('request.session\n',request.session);
   console.log('======================================');
   console.log('request.isAuthenticated()\n',request.isAuthenticated());
+  console.log('======================================');
+  console.log('request.params\n', request.url);
+  const urlAsArray = request.url.split('/').filter(Boolean);
+  console.log(urlAsArray);
   console.log('======================================');
   console.log('======= headerLogger END =======\n');
   next();
@@ -58,6 +65,6 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   checkAuth,
-  checkGuest,
+  checkOwner,
   headerLogger
 };

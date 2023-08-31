@@ -4,6 +4,8 @@ export type Transmittion = 'Automatic' | 'Manual';
 
 export type Seats = 2 | 4 | 5 | 7 | 9;
 
+export type Rating = 1 | 2 | 3 | 4 | 5;
+
 export interface Vehicle {
     id: number;
     carImage: string;
@@ -17,7 +19,7 @@ export interface Vehicle {
     fuelEfficiencyHighway: number;
     seats: Seats;
     rentPrice: number;
-    rating: 1 | 2 | 3 | 4 | 5;
+    rating: Rating;
     licenceNumber: string;
     available: boolean;
 }
