@@ -1,9 +1,10 @@
 import { Op } from 'sequelize';
-const { Reservation, Feedback, Vehicle } = require('../models');
+const { Reservation, Feedback, Vehicle, Location } = require('../models');
+import { NewReservation, Reservation } from '../types';
 
-const getCustomerReservations = async (id: string | number) => {
+const getCustomerReservations = async (id: number): Promise<Reservation[]> => {
   const reservations = await Reservation.findAll({
-    include: [{ model: Feedback }, { model: Vehicle }],
+    include: [{ model: Feedback }, { model: Vehicle }, { model: Location, as: 'pickUpLocation' }, { model: Location, as: 'dropOffLocation' }],
     where: {
       customerId: id,
       [Op.or]: [
@@ -20,13 +21,7 @@ const getCustomerReservations = async (id: string | number) => {
   return reservations;
 };
 
-interface Props {
-  vehicleId: number;
-  customerId: number;
-  startAt: string;
-}
-
-const addCustomerReservation = async (props: Props) => {
+const addCustomerReservation = async (props: NewReservation): Promise<Reservation> => {
 
   const newReservation = await Reservation.create(props);
 
