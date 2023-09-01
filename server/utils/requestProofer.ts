@@ -41,11 +41,11 @@ const parseInquiry = (inquiry: unknown): string => {
   return inquiry;
 };
 
-const parseLocation = (location: unknown): Location => {
-  if (!isNumber(location) || !isLocation(location)) {
+const parseLocation = (locationId: unknown): Location => {
+  if (!isNumber(locationId) || !isLocation(locationId)) {
     throw new Error('Invalid location - not in allowed values');
   }
-  return ALLOWED_LOCATIONS.find((l) => l.id === location)!;
+  return ALLOWED_LOCATIONS.find((l) => l.id === locationId)!;
 };
 
 // const parseDate = (date: unknown): string => {
@@ -127,7 +127,7 @@ const toNewReservation = (object: unknown) => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data - Expected req.body object');
   }
-  const requiredParamsPresent = 'vehicleId' in object && 'customerId' in object && 'startAt' in object && 'pickUpLocation' in object && 'dropOffLocation' in object;
+  const requiredParamsPresent = 'vehicleId' in object && 'pickUpLocation' in object && 'dropOffLocation' in object; // && 'customerId' in object && 'startAt' in object
 
   if (requiredParamsPresent) {
     const params = {

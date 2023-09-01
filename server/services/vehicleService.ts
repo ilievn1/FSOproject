@@ -20,6 +20,7 @@ const getRentableVehicle = async (params: SeachParamsProps) => {
     {
       model: Reservation,
       required: false, // This allows vehicles with no reservations to be included
+      attributes: { exclude: ['locationId'] },
       where: {
         endAt: null
       },

@@ -53,3 +53,13 @@ export interface Customer {
     email: string;
     picture: string;
 }
+
+export interface Location {
+    id: number;
+    name: string;
+    address: string;
+    city: string;
+    postalCode: string;
+    phoneNumber: string;
+    email: string;
+}

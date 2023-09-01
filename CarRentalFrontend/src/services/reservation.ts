@@ -8,9 +8,9 @@ const getCustomerReservations = async (customerId: number): Promise<Reservation[
     return resp.data
 }
 
-const postCustomerReservation = async ({ customerId, vehicleId }: { customerId: number, vehicleId: number }): Promise<Reservation> => {
+const postCustomerReservation = async ({ customerId, vehicleId, pickUpLocationId, dropOffLocationId }: { customerId: number, vehicleId: number, pickUpLocationId: number, dropOffLocationId: number }): Promise<Reservation> => {
     const postUrl = `${baseUrl}/${customerId}/reservations`
-    const resp = await axios.post(postUrl, { vehicleId: vehicleId }, { withCredentials: true })
+    const resp = await axios.post(postUrl, { vehicleId, pickUpLocationId, dropOffLocationId }, { withCredentials: true })
     return resp.data
 }
 

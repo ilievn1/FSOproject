@@ -61,7 +61,7 @@ app.use('/api/auth', authRouter);
 
 if (NODE_ENV !== 'test') {
   app.use(middleware.checkAuth);
-  app.use(middleware.checkOwner);
+  // app.use(middleware.checkOwner);
 }
 app.use('/api/customers', customersRouter);
 
