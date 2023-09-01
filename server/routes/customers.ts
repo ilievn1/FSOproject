@@ -10,18 +10,18 @@ const customersRouter = express.Router();
 customersRouter.get('/current', (req, res) => res.json(req.user));
 
 customersRouter.get('/:id/reservations', async (req, res) => {
-  const customerReservations = await reservationService.getCustomerReservations(req.params.id);
+  const customerReservations = await reservationService.getCustomerReservations(Number(req.params.id));
   res.json(customerReservations);
 });
 
 customersRouter.post('/:id/reservations', async (req, res, next) => {
   try {
-    const { vehicleId } = proofer.toNewReservation(req.body);
+    const { vehicleId, pickUpLocation, dropOffLocation } = proofer.toNewReservation(req.body);
     const customerId = Number(req.params.id);
     const startAt = new Date().toJSON().slice(0, 10);
-    const newReservation = await reservationService.addCustomerReservation({ vehicleId, customerId, startAt });
+    const reservationBody = { vehicleId, customerId, startAt, pickUpLocationId: pickUpLocation.id, dropOffLocationId: dropOffLocation.id };
+    const newReservation = await reservationService.addCustomerReservation(reservationBody);
     res.status(201).json(newReservation);
-
   } catch (err: unknown) {
     next(err);
   }

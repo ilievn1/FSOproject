@@ -1,5 +1,6 @@
-import { NewFeedback, NewInquiry, Rating } from '../types';
-
+import { data } from '../mockData/locations';
+import { Location, NewFeedback, NewInquiry, Rating } from '../types';
+const ALLOWED_LOCATIONS = data;
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string';
@@ -9,16 +10,21 @@ const isNumber = (text: unknown): text is number => {
   return !isNaN(Number(text));
 };
 
+const isRating = (param: number): param is Rating => {
+  return [1, 2, 3, 4, 5].includes(param);
+
+};
+
+const isLocation = (id: number): boolean => {
+  return ALLOWED_LOCATIONS.some((l) => l.id === id);
+};
+
+
 const parseId = (id: unknown): number => {
   if (!isNumber(id)) {
     throw new Error('Incorrect id format');
   }
   return Number(id);
-
-};
-const isRating = (param: number): param is Rating => {
-  return [1, 2, 3, 4, 5].includes(param);
-
 };
 
 const parseRating = (rating: unknown): Rating => {
@@ -33,7 +39,13 @@ const parseInquiry = (inquiry: unknown): string => {
     throw new Error('Incorrect inquiry format - text max length is 255 characters');
   }
   return inquiry;
+};
 
+const parseLocation = (location: unknown): Location => {
+  if (!isNumber(location) || !isLocation(location)) {
+    throw new Error('Invalid location - not in allowed values');
+  }
+  return ALLOWED_LOCATIONS.find((l) => l.id === location)!;
 };
 
 // const parseDate = (date: unknown): string => {
@@ -115,15 +127,19 @@ const toNewReservation = (object: unknown) => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data - Expected req.body object');
   }
-  if ('vehicleId' in object) {
+  const requiredParamsPresent = 'vehicleId' in object && 'customerId' in object && 'startAt' in object && 'pickUpLocation' in object && 'dropOffLocation' in object;
+
+  if (requiredParamsPresent) {
     const params = {
       vehicleId: parseId(object.vehicleId),
+      pickUpLocation: parseLocation(object.pickUpLocation),
+      dropOffLocation: parseLocation(object.dropOffLocation),
     };
 
     return params;
 
   } else {
-    throw new Error('Incorrect data: req.body expected field is vehicleId');
+    throw new Error('Incorrect data: expected field are vehicleId, customerId, startAt, pickUpLocation and dropOffLocation');
   }
 };
 

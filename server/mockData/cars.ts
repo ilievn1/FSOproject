@@ -384,7 +384,7 @@ export const data: Array<Vehicle> = [{
   licenceNumber: 'RZO-818',
   available: true,
 },];
-// Exists solely to comply with sequelize api insert format
+// Exists solely to comply with sequelize api insert format - camelCase to sql native underscored columns
 export const seedVehicles = data.map(obj => {
   const { carImage, fuelEfficiencyCity, fuelEfficiencyHighway, licenceNumber, rentPrice, ...rest } = obj;
   return {

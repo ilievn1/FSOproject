@@ -50,10 +50,12 @@ export interface Reservation {
     customerId: number;
     vehicleId: number;
     startAt: string;
+    pickUpLocation: Location
     endAt: string;
+    dropOffLocation: Location
     feedback?: Feedback
 }
-export interface Reservation {
+export interface Location {
     id: number;
     name: string;
     address: string;
@@ -63,6 +65,6 @@ export interface Reservation {
     email: string;
 }
 
-export type NewReservation = Omit<Reservation, 'id' | 'endAt' | 'feedback'>;
+export type NewReservation = Omit<Reservation, 'id' | 'endAt' | 'feedback' | 'pickUpLocation' | 'dropOffLocation'> & { pickUpLocationId: number } & { dropOffLocationId: number };
 export type NewInquiry = Omit<Inquiry, 'id'>;
 export type NewFeedback = Omit<Feedback, 'id'>;
