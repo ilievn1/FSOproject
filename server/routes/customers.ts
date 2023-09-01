@@ -16,10 +16,10 @@ customersRouter.get('/:id/reservations', async (req, res) => {
 
 customersRouter.post('/:id/reservations', async (req, res, next) => {
   try {
-    const { vehicleId, pickUpLocation, dropOffLocation } = proofer.toNewReservation(req.body);
+    const validatedResBody = proofer.toNewReservation(req.body);
     const customerId = Number(req.params.id);
     const startAt = new Date().toJSON().slice(0, 10);
-    const reservationBody = { vehicleId, customerId, startAt, pickUpLocationId: pickUpLocation.id, dropOffLocationId: dropOffLocation.id };
+    const reservationBody = { ...validatedResBody, customerId, startAt };
     const newReservation = await reservationService.addCustomerReservation(reservationBody);
     res.status(201).json(newReservation);
   } catch (err: unknown) {

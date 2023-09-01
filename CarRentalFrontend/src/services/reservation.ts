@@ -4,7 +4,7 @@ import { Feedback, Reservation } from '../types';
 const baseUrl = `${import.meta.env.VITE_BACKEND_URL}/api/customers`
 
 const getCustomerReservations = async (customerId: number): Promise<Reservation[]> => {
-    const resp = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations`, { withCredentials: true })
+    const resp = await axios.get(`${baseUrl}/${customerId}/reservations`, { withCredentials: true })
     return resp.data
 }
 
@@ -15,7 +15,7 @@ const postCustomerReservation = async ({ customerId, vehicleId, pickUpLocationId
 }
 
 const endCustomerReservation = async ({ customerId, reservationId }: { customerId: number, reservationId: number }): Promise<Reservation> => {
-    const patchUrl = `${import.meta.env.VITE_BACKEND_URL}/customers/${customerId}/reservations/${reservationId}`
+    const patchUrl = `${baseUrl}/${customerId}/reservations/${reservationId}`
     const resp = await axios.patch(patchUrl, { endAt: new Date().toJSON().slice(0, 10) }, { withCredentials: true });
     return resp.data
 }

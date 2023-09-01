@@ -38,8 +38,8 @@ const ReservationRow = ({ index,reservation }: { index:number, reservation: Rese
         <td>{reservation.vehicle.model}</td>
         <td>{reservation.vehicle.year}</td>
         <td>{reservation.startAt}</td>
-        <td>{reservation.endAt}</td>
         <td>Pick-up Location</td>
+        <td>{reservation.endAt}</td>
         <td>Drop-off Location</td>
         <td>{reservation.endAt ? null : (<button className="btn btn-error" onClick={handleEnd}>End</button>)}</td>
         <td>{reservation.feedback ? null : (<button className='btn' onClick={() => openModal()}>Feedback</button>)}</td>

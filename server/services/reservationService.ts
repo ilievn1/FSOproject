@@ -1,10 +1,10 @@
 import { Op } from 'sequelize';
-const { Reservation, Feedback, Vehicle, Location } = require('../models');
+const { Reservation, Feedback, Vehicle } = require('../models');
 import { NewReservation, Reservation } from '../types';
 
 const getCustomerReservations = async (id: number): Promise<Reservation[]> => {
   const reservations = await Reservation.findAll({
-    include: [{ model: Feedback }, { model: Vehicle }, { model: Location, as: 'pickUpLocation' }, { model: Location, as: 'dropOffLocation' }],
+    include: [{ model: Feedback }, { model: Vehicle }, { association: 'pickUpLocation' },{ association: 'dropOffLocation' }],
     where: {
       customerId: id,
       [Op.or]: [
@@ -17,7 +17,6 @@ const getCustomerReservations = async (id: number): Promise<Reservation[]> => {
       ]
     },
   });
-
   return reservations;
 };
 
@@ -28,7 +27,7 @@ const addCustomerReservation = async (props: NewReservation): Promise<Reservatio
   return newReservation;
 };
 
-const endCustomerReservation = async (rId: string, cId: string, endDate: string) => {
+const endCustomerReservation = async (rId: string, cId: string, endDate: string): Promise<Reservation> => {
 
   const toBeEnded = await Reservation.findOne({
     where: {
@@ -42,5 +41,5 @@ const endCustomerReservation = async (rId: string, cId: string, endDate: string)
   return toBeEnded;
 };
 export default {
-  getCustomerReservations, addCustomerReservation, endCustomerReservation
+  getAllReservations, getCustomerReservations, addCustomerReservation, endCustomerReservation
 };

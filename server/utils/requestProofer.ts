@@ -1,5 +1,5 @@
 import { data } from '../mockData/locations';
-import { Location, NewFeedback, NewInquiry, Rating } from '../types';
+import { NewFeedback, NewInquiry, Rating } from '../types';
 const ALLOWED_LOCATIONS = data;
 
 const isString = (text: unknown): text is string => {
@@ -41,11 +41,11 @@ const parseInquiry = (inquiry: unknown): string => {
   return inquiry;
 };
 
-const parseLocation = (locationId: unknown): Location => {
+const parseLocation = (locationId: unknown): number => {
   if (!isNumber(locationId) || !isLocation(locationId)) {
     throw new Error('Invalid location - not in allowed values');
   }
-  return ALLOWED_LOCATIONS.find((l) => l.id === locationId)!;
+  return locationId;
 };
 
 // const parseDate = (date: unknown): string => {
@@ -127,19 +127,19 @@ const toNewReservation = (object: unknown) => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data - Expected req.body object');
   }
-  const requiredParamsPresent = 'vehicleId' in object && 'pickUpLocation' in object && 'dropOffLocation' in object; // && 'customerId' in object && 'startAt' in object
+  const requiredParamsPresent = 'vehicleId' in object && 'pickUpLocationId' in object && 'dropOffLocationId' in object; // && 'customerId' in object && 'startAt' in object
 
   if (requiredParamsPresent) {
     const params = {
       vehicleId: parseId(object.vehicleId),
-      pickUpLocation: parseLocation(object.pickUpLocation),
-      dropOffLocation: parseLocation(object.dropOffLocation),
+      pickUpLocationId: parseLocation(object.pickUpLocationId),
+      dropOffLocationId: parseLocation(object.dropOffLocationId),
     };
 
     return params;
 
   } else {
-    throw new Error('Incorrect data: expected field are vehicleId, customerId, startAt, pickUpLocation and dropOffLocation');
+    throw new Error('Incorrect data: expected field are vehicleId, customerId, startAt, pickUpLocationId and dropOffLocationId');
   }
 };
 
