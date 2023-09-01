@@ -11,6 +11,7 @@ import passport from 'passport';
 import expressSessConfig from './utils/session';
 import configurePassport from './utils/passport';
 import sessionStore from './utils/sessionStore';
+import locationsRouter from './routes/locations';
 const { NODE_ENV } = require('./utils/config');
 require('express-async-errors');
 configurePassport(passport);
@@ -28,7 +29,8 @@ if (NODE_ENV !== 'production') {
   morgan.token('body', (req: Request) => JSON.stringify(req.body));
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 }
-// TODO: Pick-up/Drop-off locations -> , returned registrations from db include: clause - not necessarily filter condition
+
+// TODO: Paranoid reservations -> soft deletes for user, i.e. can del from front-end, but records are kept for stats and book-keeping
 
 // TODO: Dates for pick-up drop-off - routes should not use new date obj but parse date in body; End date MUST > start date;
 
@@ -54,6 +56,7 @@ app.get('/clearSess', (_req, resp) => {
 });
 app.use('/api/inquiries', inquiriesRouter);
 app.use('/api/vehicles', vehiclesRouter);
+app.use('/api/locations', locationsRouter);
 app.use('/api/auth', authRouter);
 
 if (NODE_ENV !== 'test') {
