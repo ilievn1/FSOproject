@@ -2,6 +2,13 @@ import { Op } from 'sequelize';
 const { Reservation, Feedback, Vehicle } = require('../models');
 import { NewReservation, Reservation } from '../types';
 
+const getAllReservations = async () => {
+  const reservations = await Reservation.findAll({
+    include: [{ association: 'pickUpLocation' }, { association: 'dropOffLocation' }]
+  });
+  return reservations;
+};
+
 const getCustomerReservations = async (id: number): Promise<Reservation[]> => {
   const reservations = await Reservation.findAll({
     include: [{ model: Feedback }, { model: Vehicle }, { association: 'pickUpLocation' },{ association: 'dropOffLocation' }],

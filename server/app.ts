@@ -12,6 +12,8 @@ import expressSessConfig from './utils/session';
 import configurePassport from './utils/passport';
 import sessionStore from './utils/sessionStore';
 import locationsRouter from './routes/locations';
+import reservationService from './services/reservationService';
+
 const { NODE_ENV } = require('./utils/config');
 require('express-async-errors');
 configurePassport(passport);
@@ -30,9 +32,12 @@ if (NODE_ENV !== 'production') {
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 }
 
+// TODO: Dates for pick-up drop-off - routes should not use new date obj but parse date in body;
+
+// TODO: Feedback should not be able to be given if today is not after reservation end
+
 // TODO: Paranoid reservations -> soft deletes for user, i.e. can del from front-end, but records are kept for stats and book-keeping
 
-// TODO: Dates for pick-up drop-off - routes should not use new date obj but parse date in body; End date MUST > start date;
 
 // TODO: fix api tests to test vehicle.all retrieval and remove tests that involve user creation
 
@@ -58,6 +63,11 @@ app.use('/api/inquiries', inquiriesRouter);
 app.use('/api/vehicles', vehiclesRouter);
 app.use('/api/locations', locationsRouter);
 app.use('/api/auth', authRouter);
+
+app.get('/api/getAllReservations', async (_req, res) => {
+  const customerReservations = await reservationService.getAllReservations();
+  res.json(customerReservations);
+});
 
 if (NODE_ENV !== 'test') {
   app.use(middleware.checkAuth);

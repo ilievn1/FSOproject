@@ -31,13 +31,25 @@ Location.hasOne(Reservation, {
 
 Location.hasOne(Reservation, {
   foreignKey: {
-    name: 'dropOffLocationId',
+    name: 'pickUpLocationId',
     allowNull: false // Cannot have reservation w/o location_id
   }
 });
 
-Reservation.belongsTo(Location, { as: 'pickUpLocation', foreignKey: 'pickUpLocationId' });
-Reservation.belongsTo(Location, { as: 'dropOffLocation', foreignKey: 'dropOffLocationId' });
+Reservation.belongsTo(Location, {
+  as: 'pickUpLocation',
+  foreignKey: {
+    name: 'pickUpLocationId',
+    allowNull: false // Cannot have reservation w/o location_id
+  }
+} );
+Reservation.belongsTo(Location, {
+  as: 'dropOffLocation',
+  foreignKey: {
+    name: 'dropOffLocationId',
+    allowNull: false // Cannot have reservation w/o location_id
+  }
+});
 
 
 

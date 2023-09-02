@@ -6,6 +6,7 @@ export type Seats = 2 | 4 | 5 | 7 | 9;
 
 export type Rating = 1 | 2 | 3 | 4 | 5;
 
+export type DateRange = (Date | null) | [Date | null, Date | null];
 
 export interface Vehicle {
     id: number;
