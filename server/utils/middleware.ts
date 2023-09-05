@@ -1,5 +1,6 @@
 import { RequestHandler, ErrorRequestHandler } from 'express';
 import { Customer } from '../types';
+import { DateRangeError, EarlyDeleteError, EarlyFeedbackError, FeedbackToDeletedError, NoAvailableVehiclesError } from './errors';
 
 const checkAuth: RequestHandler = (request, response, next) => {
   if (request.isAuthenticated()) {
@@ -10,11 +11,14 @@ const checkAuth: RequestHandler = (request, response, next) => {
 };
 
 const checkOwner: RequestHandler = (request, response, next) => {
+  console.log('checkOwner sees url as:\n', request.url);
   const urlAsArray = request.url.split('/').filter(Boolean); // i.e [customers , 67 , reservations...]
   const loggedCustomer = request.user as Customer;
+  console.log(urlAsArray);
+
   if (urlAsArray.length <= 1 ) {
     return next();
-  } else if (urlAsArray.length > 1 && !isNaN(Number(urlAsArray[1])) && Number(urlAsArray[1]) === loggedCustomer.id) {
+  } else if (urlAsArray.length > 1 && !isNaN(Number(urlAsArray[0])) && Number(urlAsArray[0]) === loggedCustomer.id) {
     return next();
   } else {
     response.status(401).end();
@@ -42,24 +46,27 @@ const unknownEndpoint: RequestHandler = (_request, response) => {
 const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
   console.error(error.name);
   console.error(error.message);
-  // console.error(Object.keys(error));
-  // console.error(Object.entries(error));
 
-  if (error.name === 'SequelizeUniqueConstraintError' && error.parent.table ==='customers') {
-    response.status(409).send({ error: `Username ${error.fields.username} is taken` });
-  }
-  if (error.message === 'Incorrect data: req.body expected fields are name, username and password') {
-    response.status(422).send({ error: error.message });
-  }
-  if (error.message === 'Incorrect year format') {
-    response.status(400).send({ error: 'Incorrect year format' });
-  }
-  if (error.message === 'Incorrect data: req.query expected fields are brand, model and year') {
+  switch (error.constructor) {
+  case NoAvailableVehiclesError:
+    response.status(404).send({ error: error.message });
+    break;
+
+  case DateRangeError:
     response.status(400).send({ error: error.message });
-  }
-  if (error.message === 'Password is below 5 characters') {
+    break;
+
+  case EarlyDeleteError:
+  case EarlyFeedbackError:
+  case FeedbackToDeletedError:
     response.status(403).send({ error: error.message });
+    break;
+
+  default:
+    response.status(500).send({ error: 'Internal Server Error' });
   }
+
+
   next(error);
 };
 
