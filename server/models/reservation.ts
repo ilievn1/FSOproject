@@ -20,17 +20,25 @@ Reservation.init({
     allowNull: false,
     references: { model: 'vehicles', key: 'id' },
   },
-  startAt: {
+  rentDate: {
     type: DataTypes.DATEONLY,
     allowNull: false
   },
-  endAt: {
+  returnDate: {
     type: DataTypes.DATEONLY,
+    allowNull: false
   },
 }, {
   sequelize,
   underscored: true,
-  timestamps: false,
+
+  // Paranoid tables need timestamps
+  timestamps: true,
+  createdAt: false,
+  updatedAt: false,
+
+  paranoid: true,
+  deletedAt: 'deletedByUser',
   modelName: 'reservation'
 });
 
