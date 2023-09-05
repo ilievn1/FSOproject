@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-import { Feedback, Reservation } from '../types';
+import { Feedback, NewReservation, Reservation } from '../types';
 const baseUrl = `${import.meta.env.VITE_BACKEND_URL}/api/customers`
 
 const getCustomerReservations = async (customerId: number): Promise<Reservation[]> => {
@@ -8,15 +8,15 @@ const getCustomerReservations = async (customerId: number): Promise<Reservation[
     return resp.data
 }
 
-const postCustomerReservation = async ({ customerId, vehicleId, pickUpLocationId, dropOffLocationId }: { customerId: number, vehicleId: number, pickUpLocationId: number, dropOffLocationId: number }): Promise<Reservation> => {
+const postCustomerReservation = async ({ brand, year, model, customerId, rentDate, pickUpLocationId, returnDate, dropOffLocationId }: NewReservation): Promise<Reservation> => {
     const postUrl = `${baseUrl}/${customerId}/reservations`
-    const resp = await axios.post(postUrl, { vehicleId, pickUpLocationId, dropOffLocationId }, { withCredentials: true })
+    const resp = await axios.post(postUrl, { brand, year, model, rentDate, pickUpLocationId, returnDate, dropOffLocationId }, { withCredentials: true })
     return resp.data
 }
 
-const endCustomerReservation = async ({ customerId, reservationId }: { customerId: number, reservationId: number }): Promise<Reservation> => {
-    const patchUrl = `${baseUrl}/${customerId}/reservations/${reservationId}`
-    const resp = await axios.patch(patchUrl, { endAt: new Date().toJSON().slice(0, 10) }, { withCredentials: true });
+const deleteReservationForCustomer = async ({ customerId, reservationId, }: { customerId: number, reservationId: number }) => {
+    const deleteUrl = `${baseUrl}/${customerId}/reservations/${reservationId}`
+    const resp = await axios.delete(deleteUrl, { withCredentials: true })
     return resp.data
 }
 
@@ -27,5 +27,5 @@ const giveReservationFeedback = async ({ customerId, reservationId, feedbackBody
 }
 
 export default {
-    getCustomerReservations, postCustomerReservation, endCustomerReservation, giveReservationFeedback
+    getCustomerReservations, postCustomerReservation, deleteReservationForCustomer, giveReservationFeedback
 }

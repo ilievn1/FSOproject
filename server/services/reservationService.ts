@@ -1,27 +1,12 @@
-import { Op } from 'sequelize';
 const { Reservation, Feedback, Vehicle } = require('../models');
 import { NewReservation, Reservation } from '../types';
 
-const getAllReservations = async () => {
-  const reservations = await Reservation.findAll({
-    include: [{ association: 'pickUpLocation' }, { association: 'dropOffLocation' }]
-  });
-  return reservations;
-};
-
 const getCustomerReservations = async (id: number): Promise<Reservation[]> => {
   const reservations = await Reservation.findAll({
-    include: [{ model: Feedback }, { model: Vehicle }, { association: 'pickUpLocation' },{ association: 'dropOffLocation' }],
+    include: [{ model: Feedback }, { model: Vehicle }, { association: 'pickUpLocation' }, { association: 'dropOffLocation' }],
     where: {
       customerId: id,
-      [Op.or]: [
-        {
-          endAt: null
-        },
-        {
-          '$feedback$': null,
-        }
-      ]
+      '$feedback$': null,
     },
   });
   return reservations;
@@ -33,20 +18,17 @@ const addCustomerReservation = async (props: NewReservation): Promise<Reservatio
 
   return newReservation;
 };
-
-const endCustomerReservation = async (rId: string, cId: string, endDate: string): Promise<Reservation> => {
-
-  const toBeEnded = await Reservation.findOne({
+const deleteReservationForCustomer = async (reservationId: number) => {
+  const newReservation = await Reservation.destroy({
     where: {
-      id: rId,
-      customerId: cId,
-    },
+      id: reservationId
+    }
   });
-  toBeEnded.endAt = endDate;
-  await toBeEnded.save();
 
-  return toBeEnded;
+  return newReservation;
 };
+
+
 export default {
-  getAllReservations, getCustomerReservations, addCustomerReservation, endCustomerReservation
+  getCustomerReservations, addCustomerReservation, deleteReservationForCustomer
 };

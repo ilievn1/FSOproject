@@ -6,7 +6,7 @@ export type Seats = 2 | 4 | 5 | 7 | 9;
 
 export type Rating = 1 | 2 | 3 | 4 | 5;
 
-export type DateRange = (Date | null) | [Date | null, Date | null];
+export type DateRange = (Date | null)|[Date | null, Date | null];
 
 export interface Vehicle {
     id: number;
@@ -41,9 +41,23 @@ export interface Feedback {
 export interface Reservation {
     id: number;
     vehicle: Vehicle;
-    startAt: string;
-    endAt?: string;
+    rentDate: string;
+    pickUpLocation: Location
+    returnDate: string;
+    dropOffLocation: Location
     feedback?: Feedback
+
+}
+export interface NewReservation {
+    customerId: number;
+    brand: string;
+    model: string;
+    year: number| string;
+    rentDate: string;
+    pickUpLocationId: number;
+    returnDate: string;
+    dropOffLocationId: number;
+
 }
 
 export interface Customer {

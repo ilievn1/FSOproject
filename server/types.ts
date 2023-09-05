@@ -22,6 +22,7 @@ export interface Vehicle {
     rating: Rating;
     licenceNumber: string;
     available: boolean;
+    reservations?: Reservation[];
 }
 export interface Customer {
     id: number;
@@ -45,16 +46,7 @@ export interface Feedback {
     rating: Rating;
     comment?: string;
 }
-export interface Reservation {
-    id: number;
-    customerId: number;
-    vehicleId: number;
-    startAt: string;
-    pickUpLocation: Location
-    endAt: string;
-    dropOffLocation: Location
-    feedback?: Feedback
-}
+
 export interface Location {
     id: number;
     name: string;
@@ -65,6 +57,21 @@ export interface Location {
     email: string;
 }
 
-export type NewReservation = Omit<Reservation, 'id' | 'endAt' | 'feedback' | 'pickUpLocation' | 'dropOffLocation'> & { pickUpLocationId: number } & { dropOffLocationId: number };
+export interface Reservation {
+    id: number;
+    customerId: number;
+    vehicleId: number;
+    rentDate: string;
+    pickUpLocation: Location
+    returnDate: string;
+    dropOffLocation: Location
+    feedback?: Feedback
+}
+export interface DateRange
+{
+    rentDate: string;
+    returnDate: string;
+}
+export type NewReservation = Omit<Reservation, 'id' | 'feedback' | 'pickUpLocation' | 'dropOffLocation'> & { pickUpLocationId: number } & { dropOffLocationId: number };
 export type NewInquiry = Omit<Inquiry, 'id'>;
 export type NewFeedback = Omit<Feedback, 'id'>;
