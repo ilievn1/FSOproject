@@ -5,10 +5,11 @@ const Inquiry = require('./inquiry');
 const Feedback = require('./feedback');
 const Location = require('./location');
 
+// Double One-to-Many relationship === Many-to-Many, but is more convenient and more methods available
 Customer.hasMany(Reservation);
 Reservation.belongsTo(Customer);
 
-Vehicle.hasOne(Reservation, {
+Vehicle.hasMany(Reservation, {
   foreignKey: {
     allowNull: false // Cannot have reservation w/o vehicle_id
   }
