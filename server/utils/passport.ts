@@ -19,7 +19,7 @@ export default function configurePassport(passport : PassportStatic) {
 
     const newCustomer = {
       googleId: profile.id,
-      username: profile.displayName,
+      username: `${profile.displayName}${profile.id.substring(0,4)} `,
       name: profile._json.name,
       email: profile._json.email,
       picture: profile._json.picture,
