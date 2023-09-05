@@ -1,20 +1,45 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Breadcrumbs from "./Breadcrumbs";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Customer } from '../types';
-import { SyntheticEvent, useMemo, useRef } from 'react';
+import { SyntheticEvent, useMemo, useRef, useState } from 'react';
 import vehicleService from '../services/vehicle'
 import reservationService from '../services/reservation'
 import locationService from '../services/location'
-const TODAY = new Date().toISOString().split('T')[0];
+import customerService from '../services/customer'
+import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import { DateRange } from '../types';
+import '@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css';
+import 'react-calendar/dist/Calendar.css';
+
+const formatDate = (date: Date | null): string =>{
+    if (date === null) {
+        return "";
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+const formatDateRangeArrayToISO = (dateRange: DateRange): [string, string] | null =>{
+    if (Array.isArray(dateRange) && dateRange.length === 2) {
+        return [formatDate(dateRange[0]), formatDate(dateRange[1])];
+    } else {
+        return null;
+    }
+}
+
+
 
 const RentPage = () => {
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { pathname } = useLocation();
-
     const queryClient = useQueryClient();
+    const [dateRange, setDateRange] = useState<DateRange>([new Date(), new Date()]);
 
     const [brand, model, year] = useMemo(() => {
         const brandValue = searchParams.get('brand')
@@ -25,126 +50,59 @@ const RentPage = () => {
     }, [searchParams]);
 
     // In reality params can be null. Parameter integrity checking delegated to server
-    const rentVehicleQuery = useQuery({ queryKey: ['rentVehicle'], queryFn: () => vehicleService.getRentVehicle(brand!, model!, year!) })
+    const vehicleNonAvailableDatesQuery = useQuery({ queryKey: ['vehicleNonAvailableDates'], queryFn: () => vehicleService.vehicleNonAvailableDates(brand!, model!, year!), refetchOnMount: "always" })
     const locationsQuery = useQuery(['locations'], locationService.getAll)
 
-    const rentDateRef = useRef<HTMLInputElement>(null);
-    const returnDateRef = useRef<HTMLInputElement>(null);
     const pickUpLocationRef = useRef<HTMLSelectElement>(null);
     const dropOffLocationRef = useRef<HTMLSelectElement>(null);
 
-    const mutation = useMutation({
+    const postReservationMutation = useMutation({
         mutationFn: reservationService.postCustomerReservation,
         onSuccess: () => {
-            // TODO: Invalidate or refetch???
             queryClient.invalidateQueries(['reservations']);
+        },
+        onError: (error) => {
+            window.alert(`Error creating reservation: \n${error}`);
+            console.error("Error creating reservation:", error);
         },
     });
 
-    if (rentVehicleQuery.isLoading || locationsQuery.isLoading) {
+    if (vehicleNonAvailableDatesQuery.isLoading || locationsQuery.isLoading) {
         return (<p>Fetching data...</p>)
     }
 
-    if (rentVehicleQuery.isError) {
-        window.alert("All vehicles of selected model are reserved.\nPlease choose another vehicle.")
-        navigate('/vehicles')
-    }
     if (locationsQuery.isError) {
         return (<p>Error fetching locations...</p>)
     }
-
-    const setMinAndMaxDates = () => {
-        if (rentDateRef.current && returnDateRef.current) {
-            if (rentDateRef.current.value === "" && returnDateRef.current.value === "") {
-                console.log('#1111')
-                rentDateRef.current.min = TODAY;
-                rentDateRef.current.max = "";
-                returnDateRef.current.min = TODAY;
-                returnDateRef.current.max = "";
-
-            } else if (rentDateRef.current.value !== "" && returnDateRef.current.value !== "") {
-                console.log('#2222')
-
-                // Calculate the maximum return date (1 month from the rent date)
-                const chosenRentDate = new Date(rentDateRef.current.value);
-                console.log('🆁🅴🅽🆃 chosenRentDate', chosenRentDate.toISOString().split('T')[0])
-                const maxReturnDate = new Date(chosenRentDate);
-                maxReturnDate.setMonth(chosenRentDate.getMonth() + 1)
-                console.log('🆁🅴🅽🆃 maxReturnDate', maxReturnDate.toISOString().split('T')[0])
-
-                rentDateRef.current.min = TODAY;
-                console.log('🆁🅴🅽🆃 set rentDateRef.current.min', TODAY)
-                rentDateRef.current.max = returnDateRef.current.value;
-                console.log('🆁🅴🅽🆃 set rentDateRef.current.max', returnDateRef.current.value)
-                returnDateRef.current.min = chosenRentDate.toISOString().split('T')[0];
-                console.log('🆁🅴🅽🆃 set returnDateRef.current.min', chosenRentDate.toISOString().split('T')[0])
-
-                returnDateRef.current.max = maxReturnDate.toISOString().split('T')[0];
-                console.log('🆁🅴🅽🆃 set returnDateRef.current.max', maxReturnDate.toISOString().split('T')[0])
-
-            } else if (rentDateRef.current.value) {
-                console.log('#3333')
-
-                // Calculate the maximum return date (1 month from the rent date)
-                const chosenRentDate = new Date(rentDateRef.current.value);
-                console.log('🆁🅴🅽🆃 chosenRentDate', chosenRentDate.toISOString().split('T')[0])
-                const maxReturnDate = new Date(chosenRentDate);
-                maxReturnDate.setMonth(chosenRentDate.getMonth() + 1)
-                console.log('🆁🅴🅽🆃 maxReturnDate', maxReturnDate.toISOString().split('T')[0])
-
-                rentDateRef.current.min = TODAY;
-                console.log('🆁🅴🅽🆃 set rentDateRef.current.min', TODAY)
-                rentDateRef.current.max = "";
-                console.log('🆁🅴🅽🆃 set rentDateRef.current.max', "")
-                returnDateRef.current.min = chosenRentDate.toISOString().split('T')[0];
-                console.log('🆁🅴🅽🆃 set returnDateRef.current.min', chosenRentDate.toISOString().split('T')[0])
-
-                returnDateRef.current.max = maxReturnDate.toISOString().split('T')[0];
-                console.log('🆁🅴🅽🆃 set returnDateRef.current.max', maxReturnDate.toISOString().split('T')[0])
-
-
-            } else if (returnDateRef.current.value) {
-                console.log('#4444')
-
-                // Calculate the maximum return date (1 month from the rent date)
-                const maxReturnDate = new Date(returnDateRef.current.value);
-                console.log('🆁🅴🆃🆄🆁🅽 maxReturnDate', maxReturnDate)
-                const minRentDate = new Date(maxReturnDate);
-                minRentDate.setMonth(maxReturnDate.getMonth() - 1)
-                console.log('🆁🅴🆃🆄🆁🅽 minRentDate', minRentDate)
-
-                if (new Date() > minRentDate) {
-                    rentDateRef.current.min = TODAY;
-                    console.log(' 🆁🅴🆃🆄🆁🅽 rentDate min if', TODAY)
-
-                } else {
-                    rentDateRef.current.min = minRentDate.toISOString().split('T')[0];
-                    console.log(' 🆁🅴🆃🆄🆁🅽 rentDate min else', minRentDate.toISOString().split('T')[0])
-
-                }
-                rentDateRef.current.max = maxReturnDate.toISOString().split('T')[0];
-                console.log(' 🆁🅴🆃🆄🆁🅽 rentDateRef max', maxReturnDate.toISOString().split('T')[0])
-
-                // returnDateRef.current.min = rentDateRef.current.min
-                // returnDateRef.current.max = maxReturnDate.toISOString().split('T')[0];
-                returnDateRef.current.min = TODAY
-                returnDateRef.current.max = ""
-                console.log(' 🆁🅴🆃🆄🆁🅽 returnDateRef min', TODAY)
-                console.log(' 🆁🅴🆃🆄🆁🅽 returnDateRef max', "")
-            }
-        }
-    };
+    console.log('dateRange?.toLocaleString()', dateRange?.toLocaleString());
+    console.log('vehicleNonAvailableDatesQuery.data', vehicleNonAvailableDatesQuery.data);
 
     const handleSubmit = async (event: SyntheticEvent) => {
         event.preventDefault()
 
-        const customer: Customer = queryClient.getQueryData(['customer'])!
-        const vid = rentVehicleQuery.data?.id
+        const customer = await queryClient.ensureQueryData(['customer'], customerService.getCustomer)
 
         const pickUpLocationId = Number(pickUpLocationRef.current?.value);
         const dropOffLocationId = Number(dropOffLocationRef.current?.value);
 
-        await mutation.mutateAsync({ customerId: customer.id, vehicleId: vid!, pickUpLocationId, dropOffLocationId });
+        if (!customer.id
+            || !pickUpLocationId
+            || !dropOffLocationId
+            || !dateRange
+            || !formatDateRangeArrayToISO(dateRange)) {
+            window.alert('Missing fields');
+            return;
+        }
+        await postReservationMutation.mutateAsync({
+            brand: brand!,
+            model: model!,
+            year: year!,
+            customerId: customer.id,
+            rentDate: formatDateRangeArrayToISO(dateRange)![0],
+            returnDate: formatDateRangeArrayToISO(dateRange)![1],
+            pickUpLocationId,
+            dropOffLocationId
+        });
         navigate('/reservations')
     }
     return (
@@ -153,9 +111,10 @@ const RentPage = () => {
             <div className="flex justify-center">
                 <form onSubmit={handleSubmit} className="p-6 shadow-xl rounded-lg basis-2/3">
                     <h1 className="text-2xl font-semibold mb-4">Fill out rent form</h1>
+                    <DateRangePicker onChange={setDateRange} value={dateRange} minDate={new Date()} tileDisabled={({ date: calendarDate }) => vehicleNonAvailableDatesQuery.data.includes(calendarDate.toISOString().split('T').at(0))} required={true} />
 
-                    <label htmlFor="rentDateInput">Rent date:</label>
-                    <input type="date" id="rentDateInput" min={TODAY} ref={rentDateRef} onChange={setMinAndMaxDates} required={true} />
+                    {/* <label htmlFor="rentDateInput">Rent date:</label>
+                    <input type="date" id="rentDateInput" min={TODAY} ref={rentDateRef} onChange={setMinAndMaxDates} required={true} /> */}
 
                     <div className="mb-4 form-control w-full">
                         <label className="block text-sm font-medium mb-1">Select pick-up location</label>
@@ -170,8 +129,8 @@ const RentPage = () => {
                     </div>
 
 
-                    <label htmlFor="returnDateInput">Return date:</label>
-                    <input type="date" id="returnDateInput" min={TODAY} ref={returnDateRef} onChange={setMinAndMaxDates} required={true} />
+                    {/* <label htmlFor="returnDateInput">Return date:</label>
+                    <input type="date" id="returnDateInput" min={TODAY} ref={returnDateRef} onChange={setMinAndMaxDates} required={true} /> */}
 
                     <div className="mb-4 form-control w-full">
                         <label className="block text-sm font-medium mb-1">Select drop-off location</label>

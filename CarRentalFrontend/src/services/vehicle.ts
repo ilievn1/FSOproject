@@ -8,18 +8,15 @@ const getAll = async(): Promise<Vehicle[]> => {
     return resp.data
 }
 
-const getRentVehicle = async (brand: string, model: string, year: number | string): Promise<Vehicle | undefined> => {
-    const resp = await axios.get(`${baseUrl}?brand=${brand}&model=${model}&year=${year}`, { withCredentials: true });
-    if (resp.status === 404) {
-        return undefined
-    }
+const vehicleNonAvailableDates = async (brand: string, model: string, year: number | string)=> {
+    const resp = await axios.get(`${baseUrl}?brand=${brand}&model=${model}&year=${year}`);
     return resp.data
 }
 const getTopThreeVehicles = async (): Promise<Vehicle[]> => {
-    const resp = await axios.get(`${baseUrl}?top=3`, { withCredentials: true });
+    const resp = await axios.get(`${baseUrl}?top=3`);
     return resp.data
 }
 
 export default {
-    getAll, getRentVehicle, getTopThreeVehicles
+    getAll, vehicleNonAvailableDates, getTopThreeVehicles
 }
