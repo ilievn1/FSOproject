@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Feedback, Rating } from "../types";
+import { Feedback, Rating, Reservation } from "../types";
 import FormInput from "./FormInput";
 import reservationService from '../services/reservation'
 
@@ -22,9 +22,14 @@ const FeedbackModal = ({ customerId, reservationId, isOpened, closeModal }: Prop
 
     const feedbackMutation = useMutation({
         mutationFn: reservationService.giveReservationFeedback,
-        onSuccess: () => {
-            // TODO: Invalidate or refetch???
-            queryClient.invalidateQueries(['reservations']);
+        onSuccess: (_, mutateParams) => {
+            queryClient.setQueryData(['reservations'], (oldData: Array<Reservation> | undefined) => {
+                return oldData ? oldData.filter((reservation) => reservation.id !== mutateParams.reservationId) : undefined;
+            });
+        },
+        onError: (error) => {
+            window.alert(`Error giving reservation feedback: \n${error}`);
+            console.error("Error giving reservation feedback:", error);
         },
     });
     
