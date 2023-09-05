@@ -1,20 +1,11 @@
 import { useNavigate } from "react-router-dom"
 import { Vehicle } from "../types"
-import { useQueryClient } from "@tanstack/react-query"
-import vehicleService from '../services/vehicle'
 
 const CarCard = ({ car }: { car: Vehicle }) => {
     const navigate = useNavigate()
-    const queryClient = useQueryClient();
 
     const handleRent = async () => {
-        try {
-            await queryClient.fetchQuery({ queryKey: ['rentVehicle'], queryFn: () => vehicleService.getRentVehicle(car.brand, car.model, car.year) })
-            navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`)
-        } catch (error) {
-            window.alert("All vehicles of selected model are reserved.\nPlease choose another vehicle.")
-        }
-
+        navigate(`/rent?brand=${car.brand}&model=${car.model}&year=${car.year}`)
     }
     return (
         <div className="card xs:card-side md:card card-compact lg:card-normal shadow-xl">

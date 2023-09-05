@@ -13,7 +13,7 @@ const ReservationsPage = () => {
 
     const reservationsQuery = useQuery(['reservations'], ()=>reservationService.getCustomerReservations(customer.id))
 
-
+    
     return (
         <>
             <Breadcrumbs route={pathname} />
@@ -22,23 +22,23 @@ const ReservationsPage = () => {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>License plate</th>
                             <th>Brand</th>
                             <th>Model</th>
                             <th>Year</th>
-                            <th>Rented</th>
+                            <th>Rent Date</th>
                             <th>Pick-up Location</th>
-                            <th>Returned</th>
+                            <th>Return Date</th>
                             <th>Drop-off Location</th>
-                            <th></th>
-                            <th></th>
+                            <th>Feedback</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {reservationsQuery.isLoading
                             ? (<tr><td>Loading...</td></tr>)
-                            : (reservationsQuery.data?.map((r, idx) => <ReservationRow key={r.id} index={idx} reservation={r} />))
+                            : (reservationsQuery.data?.map((r) => <ReservationRow key={r.id} reservation={r} />))
 
                         }
                     </tbody>

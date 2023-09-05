@@ -19,18 +19,15 @@ vehiclesRouter.get('/', async (req, res, next) => {
 
   try {
     const searchParams = proofer.toSearchParams(req.query);
-    const toBeRented = await vehicleService.getRentableVehicle(searchParams);
+    const date = await vehicleService.vehicleNonAvailableDates(searchParams);
 
-    if (toBeRented) {
-      res.json(toBeRented);
-    } else {
-      res.status(404).send({ error: 'No vehicles available of said model' });
-    }
+    res.json(date);
+    // if (date) {
+    // } else {
+    //   res.status(404).send({ error: 'No vehicles available of said model' });
+    // }
   } catch (err: unknown) {
     next(err);
-    // if (error instanceof Error) {
-    //   res.status(400).send({ error: error.message });
-    // }
   }
 });
 

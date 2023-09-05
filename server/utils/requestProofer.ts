@@ -1,5 +1,8 @@
 import { data } from '../mockData/locations';
-import { NewFeedback, NewInquiry, Rating } from '../types';
+import { DateRange, NewFeedback, NewInquiry, NewReservation, Rating, Vehicle } from '../types';
+import { Vehicle as VehicleModel, Reservation as ReservationModel } from '../models';
+import { NoAvailableVehiclesError, DateRangeError } from './errors';
+
 const ALLOWED_LOCATIONS = data;
 
 const isString = (text: unknown): text is string => {
@@ -48,12 +51,18 @@ const parseLocation = (locationId: unknown): number => {
   return locationId;
 };
 
-// const parseDate = (date: unknown): string => {
-//   if (!isString(date) || !Date.parse(date)) {
-//     throw new Error(`Incorrect date: ${date}`);
-//   }
-//   return date;
-// };
+const parseDate = (date: unknown): string => {
+  if (!isString(date) || !Date.parse(date)) {
+    throw new Error(`Incorrect date: ${date}`);
+  }
+  return date;
+};
+
+const isWithinAMonth = (startDate: Date, endDate: Date): boolean => {
+  const oneMonthLater = new Date(startDate);
+  oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+  return endDate <= oneMonthLater;
+};
 
 const parseString = (text: unknown): string => {
   if (!isString(text)) {
@@ -123,23 +132,90 @@ const toSearchParams = (object: unknown): SearchParams => {
   }
 };
 
-const toNewReservation = (object: unknown) => {
+const isDateInRange = (date: string, startDate: string, endDate: string): boolean => {
+  const currentDate = new Date(date);
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  return currentDate >= start && currentDate <= end;
+};
+
+const isVehicleFree = (vehicle: Vehicle, requestedDateRange: DateRange): boolean => {
+  console.log('===Checking vehicle isVehicleFree===\n',vehicle);
+  if (!vehicle.reservations) {
+    return true; // No reservations, vehicle is free.
+  }
+
+  // Check if any reservation overlaps with the given date range.
+  return !vehicle.reservations.some(reservation =>
+    isDateInRange(requestedDateRange.rentDate, reservation.rentDate, reservation.returnDate) ||
+    isDateInRange(requestedDateRange.returnDate, reservation.rentDate, reservation.returnDate)
+  );
+};
+
+const findAvailableVehicle = (vehicles: Vehicle[], requestedDateRange: DateRange): Vehicle => {
+  console.log('===Checking if all vehicles of said model===\n',vehicles);
+  for (const vehicle of vehicles) {
+    if (isVehicleFree(vehicle, requestedDateRange)) {
+      return vehicle;
+    }
+  }
+  throw new NoAvailableVehiclesError('No free vehicle of said model for that date range');
+};
+
+
+
+const toNewReservation = async (object: unknown): Promise<NewReservation> => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data - Expected req.body object');
   }
-  const requiredParamsPresent = 'vehicleId' in object && 'pickUpLocationId' in object && 'dropOffLocationId' in object; // && 'customerId' in object && 'startAt' in object
+  const requiredParamsPresent =
+    'brand' in object &&
+    'model' in object &&
+    'year' in object &&
+    'customerId' in object &&
+    'rentDate' in object &&
+    'pickUpLocationId' in object &&
+    'returnDate' in object &&
+    'dropOffLocationId' in object;
 
   if (requiredParamsPresent) {
-    const params = {
-      vehicleId: parseId(object.vehicleId),
+
+    const rentDate = parseDate(object.rentDate);
+    const returnDate = parseDate(object.returnDate);
+
+    if (!isWithinAMonth(new Date(rentDate), new Date(returnDate))) {
+      throw new DateRangeError('Rent and return date must be at most a month apart');
+    }
+
+    const vehiclesByCriteria = await VehicleModel.findAll({
+      include: [
+        {
+          model: ReservationModel,
+          required: false, // This allows vehicles with no reservations to be included
+        },
+      ], where: {
+        brand: parseString(object.brand),
+        model: parseString(object.model),
+        year: parseYear(object.year),
+        available: true,
+      }
+    });
+
+    const vehicle = findAvailableVehicle(JSON.parse(JSON.stringify(vehiclesByCriteria)), { rentDate, returnDate });
+
+    const params: NewReservation = {
+      vehicleId: vehicle.id,
+      customerId: parseId(object.customerId),
+      rentDate: rentDate,
       pickUpLocationId: parseLocation(object.pickUpLocationId),
+      returnDate: returnDate,
       dropOffLocationId: parseLocation(object.dropOffLocationId),
     };
 
     return params;
 
   } else {
-    throw new Error('Incorrect data: expected field are vehicleId, customerId, startAt, pickUpLocationId and dropOffLocationId');
+    throw new Error('Incorrect data: expected field are brand, model, year, customerId, rentDate, pickUpLocationId, returnDate and dropOffLocationId');
   }
 };
 
@@ -182,4 +258,22 @@ const toNewInquiry = (object: unknown): NewInquiry => {
   }
 };
 
-export default { toSearchParams, toNewReservation, toNewFeedback, toNewInquiry };
+const toDeleteParams = (object: unknown) => {
+  if (!object || typeof object !== 'object') {
+    throw new Error('Incorrect or missing data - Expected req.params object');
+  }
+  const requiredParamsPresent = 'customerId' in object && 'reservationId' in object;
+  if (requiredParamsPresent) {
+    const params = {
+      customerId: parseId(object.customerId),
+      reservationId: parseId(object.reservationId),
+    };
+
+    return params;
+
+  } else {
+    throw new Error('Incorrect data: req.params expected fields are customerId and reservationId');
+  }
+};
+
+export default { toSearchParams, toNewReservation, toNewFeedback, toNewInquiry, toDeleteParams };
